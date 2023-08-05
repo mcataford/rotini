@@ -1,3 +1,7 @@
 #!/bin/bash
 
-nvm use && corepack enable && yarn
+if [[ $CI != 1 ]]; then
+    nvm use
+fi
+
+corepack enable && yarn
