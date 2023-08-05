@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "jsx": "react-jsx",
+        "module": "commonjs",
+        "rootDir": "./src",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true,
+        "types": ["jest"]
+    }
+}
