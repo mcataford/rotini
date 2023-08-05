@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+    branches:
+      main
+  pull_request:
+
+env:
+  NODE_VERSION: lts/hydrogen
+  CI: 1
+
+jobs:
+  fe-setup:
+    runs-on: ubuntu-latest
+    name: Setup (frontend)
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: . script/bootstrap
+  fe-lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    defaults:
+      run:
+        working-directory: frontend
+    needs: fe-setup
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - name: Lint
+        run: |
+          . script/bootstrap
+          yarn lint
+  fe-test:
+    runs-on: ubuntu-latest
+    name: Test
+    defaults:
+      run:
+        working-directory: frontend
+    needs: fe-setup
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - name: Test
+        run: |
+          . script/bootstrap
+          yarn test
+
+  fe-build:
+    runs-on: ubuntu-latest
+    name: Build App
+    defaults:
+      run:
+        working-directory: frontend
+    needs: fe-setup
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - name: Parcel cache
+        uses: actions/cache@v3
+        id: parcel-cache-restore
+        with:
+          path: |
+            .parcel-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}-parcel
+      - run: |
+          . script/bootstrap
+          yarn build
+      - name: Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: packages/app/dist
+  fe-preview:
+    runs-on: ubuntu-latest
+    name: Deploy preview
+    if: ${{ false && github.ref != 'refs/heads/main' }}
+    needs: fe-build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        id: node-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - run: . script/bootstrap
+      - name: Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: packages/app/dist
+      - name: Deploy
+        id: preview-deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          yarn netlify deploy --dir=packages/app/dist --json | jq .deploy_url > output.log
+          echo "::set-output name=draft-url::$(cat output.log)"
+      - name: Report
+        uses: actions/github-script@v6
+        env:
+          DRAFT_URL: ${{ steps.preview-deploy.outputs.draft-url }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `:eyes: Branch deployed at ${process.env.DRAFT_URL}`
+            })
+  fe-deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    needs: fe-build
+    if: ${{ false }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        id: node-setup
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache-restore
+        with:
+          path: |
+            .yarn
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+      - run: . script/bootstrap
+      - name: Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: packages/app/dist
+      - name: Netlify CLI setup
+        run: npm install -g netlify-cli
+      - name: Deploy
+        id: preview-deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          yarn netlify deploy --dir=packages/app/dist --prod
