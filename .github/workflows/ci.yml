@@ -66,6 +66,31 @@ jobs:
       - name: Install dependencies
         if: steps.cache-restore.outputs.cache-hit != 'true'
         run: . script/bootstrap
+  be-lint:
+    runs-on: ubuntu-latest
+    name: Lint (backend)
+    needs: be-setup
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: get-python-version
+        run: |
+          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ steps.get-python-version.outputs.python_version }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
+      - name: Lint
+        run: |
+          . script/bootstrap
+          black . --check
   fe-setup:
     runs-on: ubuntu-latest
     name: Setup (frontend)
@@ -90,7 +115,7 @@ jobs:
         run: . script/bootstrap
   fe-lint:
     runs-on: ubuntu-latest
-    name: Lint
+    name: Lint (frontend)
     defaults:
       run:
         working-directory: frontend
@@ -113,7 +138,7 @@ jobs:
           yarn lint
   fe-test:
     runs-on: ubuntu-latest
-    name: Test
+    name: Test (frontend)
     defaults:
       run:
         working-directory: frontend
