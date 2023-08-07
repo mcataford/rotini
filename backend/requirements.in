@@ -1,2 +1,3 @@
 fastapi~=0.101
 uvicorn[standard]
+psycopg2
