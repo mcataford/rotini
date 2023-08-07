@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  be.bootstrap:
+    internal: true
+    cmds:
+      - . script/bootstrap
+    dir: backend
+  be.lint:
+    desc: "Lints /backend using black + pylint."
+    deps: [be.bootstrap]
+    cmds:
+      - black . --check
+      - pylint
+    dir: backend
+  be.lintfix:
+    desc: "Lints and fixes /backend using black + pylint."
+    deps: [be.bootstrap]
+    cmds:
+      - black .
+      - pylint
+    dir: backend
+  be.start:
+    desc: "Starts the backend application."
+    deps: [be.bootstrap]
+    cmds:
+      - source ../.venv/bin/activate && python -m uvicorn main:app
+    dir: backend/rotini
+  fe.bootstrap:
+    internal: true
+    cmds:
+      - . script/bootstrap
+    dir: frontend
+  fe.start:
+    desc: "Starts the frontend application."
+    deps: [fe.bootstrap]
+    cmds:
+      - yarn start
+    dir: frontend
