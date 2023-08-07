@@ -26,6 +26,12 @@ tasks:
     cmds:
       - source ../.venv/bin/activate && python -m uvicorn main:app
     dir: backend/rotini
+  be.lock-deps:
+    desc: "Locks production and development dependencies"
+    deps: [be.bootstrap]
+    cmds:
+      - source .venv/bin/activate && . script/requirements-lock
+    dir: backend
   fe.bootstrap:
     internal: true
     cmds:
@@ -37,3 +43,4 @@ tasks:
     cmds:
       - yarn start
     dir: frontend
+
