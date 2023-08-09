@@ -5,8 +5,8 @@ import FileList from "../src/components/FileList"
 
 describe("FileList", () => {
 	const mockItems = [
-		{ title: "Item 1", filename: "item1.txt", size: 1, uid: "123" },
-		{ title: "Item 2", filename: "item2.txt", size: 1, uid: "456" },
+		{ title: "Item 1", filename: "item1.txt", size: 1, id: "123" },
+		{ title: "Item 2", filename: "item2.txt", size: 1, id: "456" },
 	]
 
 	const mockAsyncTasks = [
