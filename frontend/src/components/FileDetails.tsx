@@ -7,17 +7,17 @@ import MuiDeleteIcon from "@mui/icons-material/Delete"
 import MuiDownloadIcon from "@mui/icons-material/Download"
 import MuiIconButton from "@mui/material/IconButton"
 
+import { useFileDetails } from "../queries/files"
+
 interface FileDetailsProps {
 	itemId: string
 }
 
-// TODO: API data.
-const mockData = {
-	title: "My File",
-	size: 123123123,
-}
-
 function FileDetails({ itemId }: FileDetailsProps) {
+	const { isLoading, data } = useFileDetails(itemId)
+
+	if (isLoading) return null
+
 	const handleDownloadClick = () => {
 		console.log("download click")
 	}
@@ -25,6 +25,8 @@ function FileDetails({ itemId }: FileDetailsProps) {
 	const handleDeleteClick = () => {
 		console.log("delete click")
 	}
+
+	const currentFileDetails = data
 
 	return (
 		<MuiCard sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -34,9 +36,11 @@ function FileDetails({ itemId }: FileDetailsProps) {
 			>
 				<MuiArticleIcon sx={{ fontSize: 120 }} />
 				<MuiTypography variant="h1" sx={{ fontSize: 30 }}>
-					{mockData.title}
+					{currentFileDetails.title ?? currentFileDetails.filename}
 				</MuiTypography>
-				<MuiTypography>{byteSizeToUnits(mockData.size)}</MuiTypography>
+				<MuiTypography>
+					{byteSizeToUnits(currentFileDetails.size)}
+				</MuiTypography>
 			</MuiBox>
 			<MuiBox sx={{ display: "flex", justifyContent: "center" }}>
 				<>

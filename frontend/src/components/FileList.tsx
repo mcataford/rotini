@@ -23,7 +23,7 @@ interface FileListItemData {
 	/* Size of the file in bytes. */
 	size: number
 	/* Unique identifier */
-	uid: string
+	id: string
 }
 
 interface FileListProps {
@@ -110,7 +110,7 @@ function FileList({ data }: FileListProps) {
 				size={itemData.size}
 				filename={itemData.filename}
 				onClickHandler={() =>
-					onClickHandler("uid" in itemData ? itemData.uid : "")
+					onClickHandler("id" in itemData ? itemData.id : "")
 				}
 				onDownloadHandler={onDownloadHandler}
 				onDeleteHandler={onDeleteHandler}

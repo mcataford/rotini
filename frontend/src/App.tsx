@@ -1,25 +1,13 @@
 import { Box } from "@mui/material"
+import { QueryClient, QueryClientProvider, useQuery } from "react-query"
 
 import NavigationBar from "./components/NavigationBar"
 import FileList from "./components/FileList"
 import FileDetails from "./components/FileDetails"
 import AsyncTaskContext from "./contexts/AsyncTaskContext"
 import LocationContext, { useLocationContext } from "./contexts/LocationContext"
+import { useOwnFileList } from "./queries/files"
 
-const mockData = [
-	{
-		title: "Test file",
-		filename: "testfile.txt",
-		size: 1023,
-		uid: "123",
-	},
-	{
-		title: "Other file",
-		filename: "testfile2.txt",
-		size: 535346,
-		uid: "456",
-	},
-]
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
 }
@@ -30,13 +18,16 @@ const routes = {
 
 const App = () => {
 	const { location } = useLocationContext()
+	const { isLoading, data } = useOwnFileList()
+
+	if (isLoading) return
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 			<NavigationBar />
 			<Box component="main" sx={{ display: "flex", paddingTop: "10px" }}>
 				<Box component="div" sx={{ flexGrow: 1 }}>
-					<FileList data={mockData} />
+					<FileList data={data} />
 				</Box>
 				{location.label === routeLabels.ITEM_DETAILS ? (
 					<Box component="div" sx={{ flexGrow: 1 }}>
@@ -48,12 +39,16 @@ const App = () => {
 	)
 }
 
+const queryClient = new QueryClient()
+
 const AppWithContexts = () => (
-	<AsyncTaskContext>
-		<LocationContext routes={routes}>
-			<App />
-		</LocationContext>
-	</AsyncTaskContext>
+	<QueryClientProvider client={queryClient}>
+		<AsyncTaskContext>
+			<LocationContext routes={routes}>
+				<App />
+			</LocationContext>
+		</AsyncTaskContext>
+	</QueryClientProvider>
 )
 
 export default AppWithContexts
