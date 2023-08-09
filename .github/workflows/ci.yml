@@ -11,9 +11,91 @@ env:
   CI: 1
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    name: Preflight checks
+    outputs:
+      be_changed: ${{ steps.be-changes.outputs.be_changed }}
+      fe_changed: ${{ steps.fe-changes.outputs.fe_changed }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+      - name: Change check (frontend)
+        id: fe-changes
+        run: |
+          git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./frontend
+          if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./frontend)" ]
+          then
+            echo "fe_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Change check (backend)
+        id: be-changes
+        run: |
+          git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./backend
+          if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./backend)" ]
+          then
+            echo "be_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Summary
+        run: |
+          echo ${{ steps.be-changes.outputs.be_changed }}
+          echo ${{ steps.fe-changes.outputs.fe_changed }}
+  be-setup:
+    runs-on: ubuntu-latest
+    name: Setup (backend)
+    needs: preflight
+    if: needs.preflight.outputs.be_changed == 'true'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: get-python-version
+        run: |
+          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ steps.get-python-version.outputs.python_version }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
+      - name: Install dependencies
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: . script/bootstrap
+  be-lint:
+    runs-on: ubuntu-latest
+    name: Lint (backend)
+    needs: be-setup
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: get-python-version
+        run: |
+          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ steps.get-python-version.outputs.python_version }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
+      - name: Lint
+        run: |
+          . script/bootstrap
+          black . --check
   fe-setup:
     runs-on: ubuntu-latest
     name: Setup (frontend)
+    needs: preflight
+    if: needs.preflight.outputs.fe_changed == 'true'
     defaults:
       run:
         working-directory: frontend
@@ -33,7 +115,7 @@ jobs:
         run: . script/bootstrap
   fe-lint:
     runs-on: ubuntu-latest
-    name: Lint
+    name: Lint (frontend)
     defaults:
       run:
         working-directory: frontend
@@ -56,7 +138,7 @@ jobs:
           yarn lint
   fe-test:
     runs-on: ubuntu-latest
-    name: Test
+    name: Test (frontend)
     defaults:
       run:
         working-directory: frontend

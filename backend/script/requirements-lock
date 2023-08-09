@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pip-compile requirements.in --no-header && pip-compile requirements_dev.in --no-header

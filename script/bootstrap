@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TASK_VERSION="v3.28.0"
+BIN_PATH=$PWD/bin
+
+if [[ ! -f $BIN_PATH/task || -z "$($BIN_PATH/task --version | grep $TASK_VERSION)" ]]; then
+    sh -c "$(curl --location https://taskfile.dev/install.sh)" -- $TASK_VERSION -d
+fi
+
+BIN_PATH=$PWD/bin
+BIN_MATCH=$(echo $PATH | grep "\:$BIN_PATH")
+
+if [[ -z $BIN_MATCH ]]; then
+    echo "Adding Task to \$PATH."
+    export PATH=$PATH:$BIN_PATH
+fi
+
+echo "All done!"

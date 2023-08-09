@@ -1,0 +1,52 @@
+version: '3'
+
+tasks:
+  be.bootstrap:
+    internal: true
+    cmds:
+      - . script/bootstrap
+    dir: backend
+  be.lint:
+    desc: "Lints /backend using black + pylint."
+    deps: [be.bootstrap]
+    cmds:
+      - black . --check
+      - pylint
+    dir: backend
+  be.lintfix:
+    desc: "Lints and fixes /backend using black + pylint."
+    deps: [be.bootstrap]
+    cmds:
+      - black .
+      - pylint rotini
+    dir: backend
+  be.start:
+    desc: "Starts the backend application."
+    deps: [be.bootstrap]
+    cmds:
+      - source ../.venv/bin/activate && source ../.env && python -m uvicorn main:app
+    dir: backend/rotini
+  be.migrate:
+    desc: "Applies migrations. Usage: be.migrate -- <up|down>"
+    deps: [be.bootstrap]
+    cmds:
+      - source ../../.venv/bin/activate && source ../../.env && python migrate.py {{.CLI_ARGS}}
+    dir: backend/rotini/migrations
+  be.lock-deps:
+    desc: "Locks production and development dependencies"
+    deps: [be.bootstrap]
+    cmds:
+      - source .venv/bin/activate && . script/requirements-lock
+    dir: backend
+  fe.bootstrap:
+    internal: true
+    cmds:
+      - . script/bootstrap
+    dir: frontend
+  fe.start:
+    desc: "Starts the frontend application."
+    deps: [fe.bootstrap]
+    cmds:
+      - yarn start
+    dir: frontend
+
