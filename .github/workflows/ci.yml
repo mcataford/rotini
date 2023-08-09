@@ -24,6 +24,11 @@ jobs:
       - name: Change check (frontend)
         id: fe-changes
         run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]
+          then
+            echo "fe_changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./frontend
           if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./frontend)" ]
           then
@@ -32,6 +37,11 @@ jobs:
       - name: Change check (backend)
         id: be-changes
         run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]
+          then
+            echo "be_changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./backend
           if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./backend)" ]
           then
