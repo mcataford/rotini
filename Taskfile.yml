@@ -24,8 +24,14 @@ tasks:
     desc: "Starts the backend application."
     deps: [be.bootstrap]
     cmds:
-      - source ../.venv/bin/activate && python -m uvicorn main:app
+      - source ../.venv/bin/activate && source ../.env && python -m uvicorn main:app
     dir: backend/rotini
+  be.migrate:
+    desc: "Applies migrations. Usage: be.migrate -- <up|down>"
+    deps: [be.bootstrap]
+    cmds:
+      - source ../../.venv/bin/activate && source ../../.env && python migrate.py {{.CLI_ARGS}}
+    dir: backend/rotini/migrations
   be.lock-deps:
     desc: "Locks production and development dependencies"
     deps: [be.bootstrap]
