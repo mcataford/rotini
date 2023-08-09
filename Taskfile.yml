@@ -49,4 +49,9 @@ tasks:
     cmds:
       - yarn start
     dir: frontend
-
+  fe.test:
+    desc: "Runs the frontend test suite."
+    deps: [fe.bootstrap]
+    cmds:
+      - yarn test
+    dir: frontend
