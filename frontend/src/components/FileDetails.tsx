@@ -16,7 +16,7 @@ interface FileDetailsProps {
 function FileDetails({ itemId }: FileDetailsProps) {
 	const { isLoading, data } = useFileDetails(itemId)
 
-	if (isLoading) return null
+	if (isLoading || !data) return null
 
 	const handleDownloadClick = () => {
 		console.log("download click")
