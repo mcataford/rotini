@@ -14,7 +14,8 @@
     "build": "parcel build src/index.html",
     "lint": "rome check tests src *.js --verbose && rome format tests src *.js --verbose",
     "lint:fix": "rome check tests src ./*.js --apply --verbose && rome format tests src ./*.js --write --verbose",
-    "test": "yarn jest"
+    "test": "yarn jest",
+    "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
     "@parcel/core": "^2.9.3",

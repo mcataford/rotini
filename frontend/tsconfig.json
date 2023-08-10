@@ -3,7 +3,7 @@
         "target": "ESNext",
         "jsx": "react-jsx",
         "module": "commonjs",
-        "rootDir": "./src",
+        "rootDir": ".",
         "moduleResolution": "node",
         "allowJs": false,
         "esModuleInterop": true,
