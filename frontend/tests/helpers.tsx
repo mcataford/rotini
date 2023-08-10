@@ -1,5 +1,6 @@
 import { type ReactNode } from "react"
 import { render } from "@testing-library/react"
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 
 import AsyncTaskContext, {
 	type AsyncTask,
@@ -22,10 +23,12 @@ export function renderWithContexts(
 ) {
 	const contextValues = { ...defaultContextValues, ...(initialValues ?? {}) }
 	return render(
-		<LocationContext routes={contextValues.locationContext}>
-			<AsyncTaskContext initialValue={contextValues.asyncTaskContext}>
-				{component}
-			</AsyncTaskContext>
-		</LocationContext>,
+		<QueryClientProvider client={new QueryClient()}>
+			<LocationContext routes={contextValues.locationContext}>
+				<AsyncTaskContext initialValue={contextValues.asyncTaskContext}>
+					{component}
+				</AsyncTaskContext>
+			</LocationContext>
+		</QueryClientProvider>,
 	)
 }

@@ -1,4 +1,5 @@
-import { useRef } from "react"
+import { useRef, useCallback, ChangeEvent } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
@@ -6,35 +7,37 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import UploadIcon from "@mui/icons-material/Upload"
 
-import { useAsyncTaskContext } from "../contexts/AsyncTaskContext"
+import { uploadFile } from "../queries/files"
 
 function UploadFileButton() {
 	const fileRef = useRef(null)
-	const { addTask, tasks } = useAsyncTaskContext()
+	const queryClient = useQueryClient()
 
-	const uploadFile = () => {
-		fileRef.current.click()
+	const onClick = () => {
+		if (fileRef.current) (fileRef.current as HTMLInputElement).click()
 	}
+
+	const onSelectedFileChange = useCallback(
+		async (e: ChangeEvent<HTMLInputElement>) => {
+			const inputFiles = e.target.files
+			if (!inputFiles || inputFiles.length === 0) return
+
+			const selectedFile = inputFiles[0]
+			const response = await uploadFile(selectedFile)
+			queryClient.invalidateQueries({ queryKey: ["file-list"] })
+		},
+		[uploadFile, queryClient],
+	)
 	return (
 		<>
-			<Button color="inherit" startIcon={<UploadIcon />} onClick={uploadFile}>
+			<Button color="inherit" startIcon={<UploadIcon />} onClick={onClick}>
 				Upload file
 			</Button>
 			<input
 				style={{ display: "none" }}
 				type="file"
 				ref={fileRef}
-				onChange={(e) => {
-					if (e.target.files.length === 0) return
-
-					const selectedFile = e.target.files[0]
-					addTask({
-						type: "upload",
-						filename: selectedFile.name,
-						size: selectedFile.size,
-						title: selectedFile.name,
-					})
-				}}
+				onChange={onSelectedFileChange}
 			/>
 		</>
 	)

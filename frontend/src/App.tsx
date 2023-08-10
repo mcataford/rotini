@@ -1,5 +1,9 @@
 import { Box } from "@mui/material"
-import { QueryClient, QueryClientProvider, useQuery } from "react-query"
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from "@tanstack/react-query"
 
 import NavigationBar from "./components/NavigationBar"
 import FileList from "./components/FileList"
@@ -20,7 +24,7 @@ const App = () => {
 	const { location } = useLocationContext()
 	const { isLoading, data } = useOwnFileList()
 
-	if (isLoading) return
+	if (isLoading || !data) return
 
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
