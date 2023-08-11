@@ -1,5 +1,8 @@
 version: '3'
 
+env:
+  VENV_ACTIVATE: "/{{ .TASKFILE_DIR }}/backend/.venv/bin/activate"
+
 tasks:
   bootstrap:
     internal: true
@@ -9,33 +12,37 @@ tasks:
   lint:
     desc: "Lints /backend using black + pylint."
     deps: [bootstrap]
-    cmds:
-      - black . --check
-      - pylint
+    cmd: source {{ .VENV_ACTIVATE }} && black . --check && pylint ./rotini
     dir: backend
   lintfix:
     desc: "Lints and fixes /backend using black + pylint."
     deps: [bootstrap]
-    cmds:
-      - black .
-      - pylint rotini
+    cmd: source {{ .VENV_ACTIVATE }} && black . && pylint ./rotini
+    dir: backend
+  test:
+    desc: "Run the test suites."
+    deps: [bootstrap]
+    cmd: source {{ .VENV_ACTIVATE }} && pytest .
     dir: backend
   start:
     desc: "Starts the backend application."
     deps: [bootstrap]
-    cmds:
-      - source ../.venv/bin/activate && source ../.env && python -m uvicorn main:app
+    dotenv:
+      - "../.env"
+    cmd: source {{ .VENV_ACTIVATE }} && python -m uvicorn main:app
     dir: backend/rotini
   migrate:
     desc: "Applies migrations. Usage: be:migrate -- <up|down>"
     deps: [bootstrap]
+    dotenv:
+      - "../../.env"
     cmds:
-      - source ../../.venv/bin/activate && source ../../.env && python migrate.py {{.CLI_ARGS}}
+      - source {{ .VENV_ACTIVATE }} && python migrate.py {{.CLI_ARGS}}
     dir: backend/rotini/migrations
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
     cmds:
-      - source .venv/bin/activate && . script/requirements-lock
+      - source {{ .VENV_ACTIVATE }} && . script/requirements-lock
     dir: backend
 
