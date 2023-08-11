@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: lts/hydrogen
   CI: 1
 
 jobs:
@@ -24,7 +23,7 @@ jobs:
       - name: Change check (frontend)
         id: fe-changes
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]
+          if [ "${{ github.ref }}" == "refs/heads/main" ] | [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./.github)" ]
           then
             echo "fe_changed=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -37,7 +36,7 @@ jobs:
       - name: Change check (backend)
         id: be-changes
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]
+          if [ "${{ github.ref }}" == "refs/heads/main" ] | [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./.github)" ]
           then
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -47,238 +46,11 @@ jobs:
           then
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Summary
-        run: |
-          echo ${{ steps.be-changes.outputs.be_changed }}
-          echo ${{ steps.fe-changes.outputs.fe_changed }}
-  be-setup:
-    runs-on: ubuntu-latest
-    name: Setup (backend)
+  backend:
+    uses: ./.github/workflows/backend-pipeline.yml
     needs: preflight
     if: needs.preflight.outputs.be_changed == 'true'
-    defaults:
-      run:
-        working-directory: backend
-    steps:
-      - uses: actions/checkout@v3
-      - name: get-python-version
-        run: |
-          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
-      - uses: actions/setup-python@v3
-        with:
-          python-version: ${{ steps.get-python-version.outputs.python_version }}
-      - uses: actions/cache@v3
-        id: cache-restore
-        with:
-          path: |
-            .venv
-          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
-      - name: Install dependencies
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        run: . script/bootstrap
-  be-lint:
-    runs-on: ubuntu-latest
-    name: Lint (backend)
-    needs: be-setup
-    defaults:
-      run:
-        working-directory: backend
-    steps:
-      - uses: actions/checkout@v3
-      - name: get-python-version
-        run: |
-          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
-      - uses: actions/setup-python@v3
-        with:
-          python-version: ${{ steps.get-python-version.outputs.python_version }}
-      - uses: actions/cache@v3
-        id: cache-restore
-        with:
-          path: |
-            .venv
-          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
-      - name: Lint
-        run: |
-          . script/bootstrap
-          black . --check
-  fe-setup:
-    runs-on: ubuntu-latest
-    name: Setup (frontend)
+  frontend:
+    uses: ./.github/workflows/frontend-pipeline.yml
     needs: preflight
     if: needs.preflight.outputs.fe_changed == 'true'
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - uses: actions/cache@v3
-        id: cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - name: Install dependencies
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        run: . script/bootstrap
-  fe-lint:
-    runs-on: ubuntu-latest
-    name: Lint (frontend)
-    defaults:
-      run:
-        working-directory: frontend
-    needs: fe-setup
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - name: Lint
-        run: |
-          . script/bootstrap
-          yarn lint
-  fe-test:
-    runs-on: ubuntu-latest
-    name: Test (frontend)
-    defaults:
-      run:
-        working-directory: frontend
-    needs: fe-setup
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - name: Test
-        run: |
-          . script/bootstrap
-          yarn test
-
-  fe-build:
-    runs-on: ubuntu-latest
-    name: Build App
-    defaults:
-      run:
-        working-directory: frontend
-    needs: fe-setup
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - name: Parcel cache
-        uses: actions/cache@v3
-        id: parcel-cache-restore
-        with:
-          path: |
-            .parcel-cache
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}-parcel
-      - run: |
-          . script/bootstrap
-          yarn build
-      - name: Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts
-          path: packages/app/dist
-  fe-preview:
-    runs-on: ubuntu-latest
-    name: Deploy preview
-    if: ${{ false && github.ref != 'refs/heads/main' }}
-    needs: fe-build
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        id: node-setup
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - run: . script/bootstrap
-      - name: Build Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts
-          path: packages/app/dist
-      - name: Deploy
-        id: preview-deploy
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          yarn netlify deploy --dir=packages/app/dist --json | jq .deploy_url > output.log
-          echo "::set-output name=draft-url::$(cat output.log)"
-      - name: Report
-        uses: actions/github-script@v6
-        env:
-          DRAFT_URL: ${{ steps.preview-deploy.outputs.draft-url }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `:eyes: Branch deployed at ${process.env.DRAFT_URL}`
-            })
-  fe-deploy:
-    runs-on: ubuntu-latest
-    name: Deploy
-    needs: fe-build
-    if: ${{ false }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        id: node-setup
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache-restore
-        with:
-          path: |
-            .yarn
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
-      - run: . script/bootstrap
-      - name: Build Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts
-          path: packages/app/dist
-      - name: Netlify CLI setup
-        run: npm install -g netlify-cli
-      - name: Deploy
-        id: preview-deploy
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          yarn netlify deploy --dir=packages/app/dist --prod

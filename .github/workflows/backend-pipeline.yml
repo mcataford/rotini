@@ -1,0 +1,54 @@
+name: Backend Pipeline
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    name: Setup
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: get-python-version
+        run: |
+          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ steps.get-python-version.outputs.python_version }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
+      - name: Install dependencies
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: . script/bootstrap
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    needs: setup
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v3
+      - name: get-python-version
+        run: |
+          echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ steps.get-python-version.outputs.python_version }}
+      - uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
+      - name: Lint
+        run: |
+          . script/bootstrap
+          black . --check
