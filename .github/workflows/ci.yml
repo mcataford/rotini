@@ -58,3 +58,46 @@ jobs:
       task-version: ${{ needs.preflight.outputs.task_version }}
     needs: preflight
     if: needs.preflight.outputs.fe_changed == 'true'
+  frontend-ok:
+    name: Frontend Pipeline Success
+    runs-on: ubuntu-latest
+    needs: [frontend, preflight]
+    if: |
+      always()
+      && (
+        needs.frontend.outputs.pipeline-success == 'true'
+        || needs.preflight.outputs.fe_changed == 'false'
+      )
+    steps:
+      - run: |
+          if [ "${{ needs.preflight.outputs.fe_changed }}" == "false" ]
+          then
+            exit 0
+          fi
+          if [ "${{ needs.frontend.outputs.pipeline-success }}" == "true" ]
+          then
+            exit 0
+          fi
+          exit 1
+  backend-ok:
+    name: Backend Pipeline Success
+    runs-on: ubuntu-latest
+    needs: [backend, preflight]
+    if: |
+      always()
+      && (
+        needs.backend.outputs.pipeline-success == 'true'
+        || needs.preflight.outputs.be_changed == 'false'
+      )
+    steps:
+      - run: |
+          if [ "${{ needs.preflight.outputs.be_changed }}" == "false" ]
+          then
+            exit 0
+          fi
+          if [ "${{ needs.backend.outputs.pipeline-success }}" == "true" ]
+          then
+            exit 0
+          fi
+          exit 1
+

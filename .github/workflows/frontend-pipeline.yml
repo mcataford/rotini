@@ -6,6 +6,9 @@ on:
       task-version:
         required: true
         type: string
+    outputs:
+      pipeline-success:
+        value: ${{ jobs.notify-success.outputs.pipeline_success }}
 
 env:
   NODE_VERSION: lts/hydrogen
@@ -177,6 +180,16 @@ jobs:
               repo: context.repo.repo,
               body: `:eyes: Branch deployed at ${process.env.DRAFT_URL}`
             })
+  notify-success:
+    runs-on: ubuntu-latest
+    name: Notify success
+    needs: [lint, test, typecheck, build]
+    steps:
+      - id: set-output
+        working-directory: /
+        run: echo "pipeline_success=true" >> "$GITHUB_OUTPUT"
+    outputs:
+      pipeline_success: ${{ steps.set-output.outputs.pipeline_success }}
   fe-deploy:
     runs-on: ubuntu-latest
     name: Deploy
