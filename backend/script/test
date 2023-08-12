@@ -11,8 +11,8 @@ docker run \
 
 sleep 2
 
-PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up
-.venv/bin/pytest .
+PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || echo "Migrations failed."
+.venv/bin/pytest . -vv -s || echo "Test run failed."
 
 docker stop $TEST_DB_CONTAINER
 docker remove $TEST_DB_CONTAINER
