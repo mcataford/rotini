@@ -3,42 +3,35 @@ version: '3'
 tasks:
   bootstrap:
     internal: true
-    cmds:
-      - . script/bootstrap
+    cmd: . script/bootstrap
     dir: frontend
   start:
     desc: "Starts the frontend application."
     deps: [bootstrap]
-    cmds:
-      - yarn start
+    cmd: yarn start
     dir: frontend
   build:
     desc: "Build the app."
     deps: [bootstrap]
-    cmds:
-      - yarn build
+    cmd: yarn build
     dir: frontend
   test:
     desc: "Runs the frontend test suite."
     deps: [bootstrap]
-    cmds:
-      - yarn test
+    cmd: yarn test
     dir: frontend
   lint:
     desc: "Checks lint and formatting."
     deps: [bootstrap]
-    cmds:
-      - yarn lint
+    cmd: yarn lint
     dir: frontend
   lintfix:
     desc: "Fixes lint and formatting."
     deps: [bootstrap]
-    cmds:
-      - yarn lint:fix
+    cmd: yarn lint:fix
     dir: frontend
   typecheck:
     desc: "Validates types."
     deps: [bootstrap]
-    cmds:
-      - yarn typecheck
+    cmd: yarn typecheck
     dir: frontend
