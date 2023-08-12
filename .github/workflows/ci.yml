@@ -8,6 +8,7 @@ on:
 
 env:
   CI: 1
+  TASK_VERSION: "3.28.0"
 
 jobs:
   preflight:
@@ -16,6 +17,7 @@ jobs:
     outputs:
       be_changed: ${{ steps.change-check.outputs.be_changed }}
       fe_changed: ${{ steps.change-check.outputs.fe_changed }}
+      task_version: ${{ env.TASK_VERSION }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,6 +48,8 @@ jobs:
           fi
   backend:
     uses: ./.github/workflows/backend-pipeline.yml
+    with:
+      task-version: ${{ needs.preflight.outputs.task_version }}
     needs: preflight
     if: needs.preflight.outputs.be_changed == 'true'
   frontend:
