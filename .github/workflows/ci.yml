@@ -54,5 +54,7 @@ jobs:
     if: needs.preflight.outputs.be_changed == 'true'
   frontend:
     uses: ./.github/workflows/frontend-pipeline.yml
+    with:
+      task-version: ${{ needs.preflight.outputs.task_version }}
     needs: preflight
     if: needs.preflight.outputs.fe_changed == 'true'
