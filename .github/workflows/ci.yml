@@ -41,10 +41,14 @@ jobs:
           if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./frontend)" ]
           then
             echo "fe_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "fe_changed=false" >> "$GITHUB_OUTPUT"
           fi
           if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./backend)" ]
           then
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "be_changed=false" >> "$GITHUB_OUTPUT"
           fi
   backend:
     uses: ./.github/workflows/backend-pipeline.yml
