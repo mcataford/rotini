@@ -37,6 +37,6 @@ def get_file_details(file_id: str):
     file = files_use_cases.get_file_record_by_id(file_id)
 
     if file is None:
-        return HTTPException(status_code=404)
+        raise HTTPException(status_code=404)
 
     return file
