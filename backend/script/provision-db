@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Provisions a Postgres database locally.
+#
+# This is useful if you are not hosting your database instance
+# elsewhere or want a simple setup for development purposes.
+
+docker run \
+    --name rotini_db \
+    -e POSTGRES_PASSWORD=$DATABASE_PASSWORD \
+    -e POSTGRES_USER=$DATABASE_USER \
+    -e POSTGRES_DB=$DATABASE_NAME \
+    -v $DATABASE_STORAGE_PATH:/var/lib/postgresql/data \
+    -p 5432:5432 \
+    -d \
+    postgres:15.4
+
+sleep 3
+
+PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up
