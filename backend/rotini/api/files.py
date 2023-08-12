@@ -40,3 +40,23 @@ def get_file_details(file_id: str):
         raise HTTPException(status_code=404)
 
     return file
+
+
+@router.delete("/{file_id}/")
+def delete_file(file_id: str):
+    """
+    Deletes a file given its ID.
+
+    This will delete the file in the database records as well
+    as on disk. The operation is not reversible.
+
+    DELETE /files/{file_id}/
+
+    200 { <FileData> }
+    """
+    try:
+        file = files_use_cases.delete_file_record_by_id(file_id)
+    except files_use_cases.DoesNotExist as exc:
+        raise HTTPException(status_code=404) from exc
+
+    return file
