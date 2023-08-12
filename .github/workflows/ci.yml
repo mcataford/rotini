@@ -33,7 +33,7 @@ jobs:
           fi
           if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./.github)" ]
           then
-            echo "fe_changed=false" >> "$GITHUB_OUTPUT"
+            echo "fe_changed=true" >> "$GITHUB_OUTPUT"
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -69,4 +69,35 @@ jobs:
         || needs.preflight.outputs.fe_changed == 'false'
       )
     steps:
-      - run: true
+      - run: |
+          if [ "${{ needs.preflight.outputs.fe_changed }}" == "false" ]
+          then
+            exit 0
+          fi
+          if [ "${{ needs.frontend.outputs.pipeline-success }}" == "true" ]
+          then
+            exit 0
+          fi
+          exit 1
+  backend-ok:
+    name: Backend Pipeline Success
+    runs-on: ubuntu-latest
+    needs: [backend, preflight]
+    if: |
+      always()
+      && (
+        needs.backend.outputs.pipeline-success == 'true'
+        || needs.preflight.outputs.be_changed == 'false'
+      )
+    steps:
+      - run: |
+          if [ "${{ needs.preflight.outputs.be_changed }}" == "false" ]
+          then
+            exit 0
+          fi
+          if [ "${{ needs.backend.outputs.pipeline-success }}" == "true" ]
+          then
+            exit 0
+          fi
+          exit 1
+
