@@ -1,7 +1,10 @@
 version: '3'
 
 env:
-  VENV_ACTIVATE: "/{{ .TASKFILE_DIR }}/backend/.venv/bin/activate"
+  VENV_PATH: "/{{ .TASKFILE_DIR }}/backend/.venv"
+  VENV_BIN: "{{ .VENV_PATH }}/bin"
+  VENV_ACTIVATE: "{{ .VENV_BIN }}/activate"
+  DOTENV: "/{{ .TASKFILE_DIR }}/backend/.env"
 
 tasks:
   bootstrap:
@@ -12,12 +15,16 @@ tasks:
   lint:
     desc: "Lints /backend using black + pylint."
     deps: [bootstrap]
-    cmd: source {{ .VENV_ACTIVATE }} && black . --check && pylint ./rotini
+    cmds:
+      - "{{ .VENV_BIN }}/black . --check"
+      - "{{ .VENV_BIN }}/pylint ./rotini"
     dir: backend
   lintfix:
     desc: "Lints and fixes /backend using black + pylint."
     deps: [bootstrap]
-    cmd: source {{ .VENV_ACTIVATE }} && black . && pylint ./rotini
+    cmds:
+      - "{{ .VENV_BIN }}/black ."
+      - "{{ .VENV_BIN }}/pylint ./rotini"
     dir: backend
   test:
     desc: "Run the test suites."
@@ -28,27 +35,25 @@ tasks:
     desc: "Starts the backend application."
     deps: [bootstrap]
     dotenv:
-      - "../.env"
-    cmd: source {{ .VENV_ACTIVATE }} && python -m uvicorn main:app
+      - "{{ .DOTENV }}"
+    cmd: "{{ .VENV_BIN }}/python -m uvicorn main:app"
     dir: backend/rotini
   start-db:
     desc: "Provisions a local Postgres database."
     dotenv:
-      - ".env"
+      - "{{ .DOTENV }}"
     cmd: . script/provision-db
     dir: backend
   migrate:
     desc: "Applies migrations. Usage: be:migrate -- <up|down>"
     deps: [bootstrap]
     dotenv:
-      - "../../.env"
-    cmds:
-      - source {{ .VENV_ACTIVATE }} && python migrate.py {{.CLI_ARGS}}
+      - "{{ .DOTENV }}"
+    cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"
     dir: backend/rotini/migrations
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
-    cmds:
-      - source {{ .VENV_ACTIVATE }} && . script/requirements-lock
+    cmd: . script/requirements-lock
     dir: backend
 
