@@ -31,6 +31,12 @@ tasks:
       - "../.env"
     cmd: source {{ .VENV_ACTIVATE }} && python -m uvicorn main:app
     dir: backend/rotini
+  start-db:
+    desc: "Provisions a local Postgres database."
+    dotenv:
+      - ".env"
+    cmd: . script/provision-db
+    dir: backend
   migrate:
     desc: "Applies migrations. Usage: be:migrate -- <up|down>"
     deps: [bootstrap]
