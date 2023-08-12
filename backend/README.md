@@ -4,7 +4,7 @@
 
 Before starting, make sure to run the [root bootstrap script](../README.md#Development) so the `task` commands are enabled.
 
-Locally, a Postgres database that can be used for development can be started via `docker-compose up -d`.
+`task be:start-db` will provision a database for local usage.
 
 An envfile should be present at `.env` and should define:
 
