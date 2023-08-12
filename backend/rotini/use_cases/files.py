@@ -37,7 +37,7 @@ def create_file_record(path: str, size: int) -> FileRecord:
             "INSERT INTO files (path, size) VALUES (%s, %s) RETURNING id", (path, size)
         )
 
-        inserted_id = cursor.fetchone()
+        inserted_id = cursor.fetchone()[0]
 
     filename = pathlib.Path(path).name
 
