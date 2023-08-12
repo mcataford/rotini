@@ -26,7 +26,7 @@ jobs:
         id: cache-restore
         with:
           path: |
-            .venv
+            backend/.venv
           key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
       - name: Install dependencies
         if: steps.cache-restore.outputs.cache-hit != 'true'
@@ -54,7 +54,7 @@ jobs:
         id: cache-restore
         with:
           path: |
-            .venv
+            backend/.venv
           key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
       - name: Lint
         run: |
@@ -82,7 +82,7 @@ jobs:
         id: cache-restore
         with:
           path: |
-            .venv
+            backend/.venv
           key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.get-python-version.outputs.python_version }}
       - name: Test
         run: |
