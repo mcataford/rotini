@@ -23,7 +23,7 @@ jobs:
         id: cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Install dependencies
         if: steps.cache-restore.outputs.cache-hit != 'true'
@@ -45,7 +45,7 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Lint
         run: |
@@ -68,7 +68,7 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Test
         run: |
@@ -91,13 +91,12 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Typecheck
         run: |
           . script/bootstrap
           yarn typecheck
-
   build:
     runs-on: ubuntu-latest
     name: Build App
@@ -115,14 +114,14 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Parcel cache
         uses: actions/cache@v3
         id: parcel-cache-restore
         with:
           path: |
-            .parcel-cache
+            frontend/.parcel-cache
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}-parcel
       - run: |
           . script/bootstrap
@@ -148,7 +147,7 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - run: . script/bootstrap
       - name: Build Artifacts
@@ -193,7 +192,7 @@ jobs:
         id: yarn-cache-restore
         with:
           path: |
-            .yarn
+            frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - run: . script/bootstrap
       - name: Build Artifacts
