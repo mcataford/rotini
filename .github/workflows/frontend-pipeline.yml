@@ -2,6 +2,10 @@ name: Frontend Pipeline
 
 on:
   workflow_call:
+    inputs:
+      task-version:
+        required: true
+        type: string
 
 env:
   NODE_VERSION: lts/hydrogen
@@ -40,6 +44,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Task
+        uses: arduino/setup-task@v1
+        with:
+          version: ${{ inputs.task-version }}
       - name: Yarn cache
         uses: actions/cache@v3
         id: yarn-cache-restore
@@ -48,9 +56,7 @@ jobs:
             frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Lint
-        run: |
-          . script/bootstrap
-          yarn lint
+        run: task fe:lint
   test:
     runs-on: ubuntu-latest
     name: Test
@@ -63,6 +69,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Task
+        uses: arduino/setup-task@v1
+        with:
+          version: ${{ inputs.task-version }}
       - name: Yarn cache
         uses: actions/cache@v3
         id: yarn-cache-restore
@@ -71,9 +81,7 @@ jobs:
             frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Test
-        run: |
-          . script/bootstrap
-          yarn test
+        run: task fe:test
   typecheck:
     runs-on: ubuntu-latest
     name: Typecheck
@@ -86,6 +94,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Task
+        uses: arduino/setup-task@v1
+        with:
+          version: ${{ inputs.task-version }}
       - name: Yarn cache
         uses: actions/cache@v3
         id: yarn-cache-restore
@@ -94,9 +106,7 @@ jobs:
             frontend/.yarn
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
       - name: Typecheck
-        run: |
-          . script/bootstrap
-          yarn typecheck
+        run: task fe:typecheck
   build:
     runs-on: ubuntu-latest
     name: Build App
@@ -109,6 +119,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Task
+        uses: arduino/setup-task@v1
+        with:
+          version: ${{ inputs.task-version }}
       - name: Yarn cache
         uses: actions/cache@v3
         id: yarn-cache-restore
@@ -123,9 +137,7 @@ jobs:
           path: |
             frontend/.parcel-cache
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}-parcel
-      - run: |
-          . script/bootstrap
-          yarn build
+      - run: task fe:build
       - name: Build Artifacts
         uses: actions/upload-artifact@v3
         with:

@@ -12,6 +12,12 @@ tasks:
     cmds:
       - yarn start
     dir: frontend
+  build:
+    desc: "Build the app."
+    deps: [bootstrap]
+    cmds:
+      - yarn build
+    dir: frontend
   test:
     desc: "Runs the frontend test suite."
     deps: [bootstrap]
