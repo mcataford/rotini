@@ -22,7 +22,7 @@ tasks:
   test:
     desc: "Run the test suites."
     deps: [bootstrap]
-    cmd: source {{ .VENV_ACTIVATE }} && pytest .
+    cmd: . script/test
     dir: backend
   start:
     desc: "Starts the backend application."

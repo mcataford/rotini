@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TEST_DB_CONTAINER=rotini-test-ephemeral
+
+docker run \
+    --name $TEST_DB_CONTAINER \
+    -e POSTGRES_PASSWORD=test \
+    -p 5431:5432 \
+    -d \
+    postgres:15.4
+
+sleep 2
+
+PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up
+.venv/bin/pytest .
+
+docker stop $TEST_DB_CONTAINER
+docker remove $TEST_DB_CONTAINER

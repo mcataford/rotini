@@ -38,6 +38,8 @@ import sys
 
 import psycopg2
 
+import settings
+
 VALID_COMMANDS = ["up", "down", "new"]
 
 DIRECTION_UP = 1
@@ -57,11 +59,11 @@ def _get_connection():
     Create a database connection.
     """
     return psycopg2.connect(
-        user=os.environ["DATABASE_USERNAME"],
-        password=os.environ["DATABASE_PASSWORD"],
-        host=os.environ["DATABASE_HOST"],
-        port=os.environ["DATABASE_PORT"],
-        database=os.environ["DATABASE_NAME"],
+        user=settings.DATABASE_USERNAME,
+        password=settings.DATABASE_PASSWORD,
+        host=settings.DATABASE_HOST,
+        port=settings.DATABASE_PORT,
+        database=settings.DATABASE_NAME,
     )
 
 
@@ -90,7 +92,7 @@ def _get_migration_sequence() -> typing.List[MigrationItem]:
     This will detect duplicates and breaks in the sequence
     and raise if the history is not linear and complete.
     """
-    migrations_dir = pathlib.Path(".")
+    migrations_dir = pathlib.Path(__file__).parent
     migrations: typing.Dict[MigrationID, MigrationModuleName] = {}
     dependency_map: typing.Dict[MigrationID, MigrationID] = {}
 
@@ -177,6 +179,7 @@ def migrate(direction: typing.Union[typing.Literal[1], typing.Literal[-1]]):
             print(f"Applying {migrations_to_apply[pos][1]}")
             cursor.execute(sql)
 
+        print(migrations_to_apply)
         next_last_applied = (
             None if direction == DIRECTION_DOWN else migrations_to_apply[-1].id
         )
