@@ -10,13 +10,14 @@ on:
 env:
   ROTINI_CI: 1
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     name: Setup
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v3
       - name: get-python-version
@@ -38,9 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     needs: setup
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v3
       - name: get-python-version
@@ -66,9 +64,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Test
     needs: setup
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v3
       - name: get-python-version
