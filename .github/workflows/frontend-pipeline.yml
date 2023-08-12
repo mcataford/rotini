@@ -183,7 +183,7 @@ jobs:
   notify-success:
     runs-on: ubuntu-latest
     name: Notify success
-    needs: [lint, test, typecheck]
+    needs: [lint, test, typecheck, build]
     steps:
       - id: set-output
         working-directory: /
