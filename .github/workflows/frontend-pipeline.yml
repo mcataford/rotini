@@ -11,13 +11,14 @@ env:
   NODE_VERSION: lts/hydrogen
   CI: 1
 
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     name: Setup
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -35,9 +36,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint
-    defaults:
-      run:
-        working-directory: frontend
     needs: setup
     steps:
       - uses: actions/checkout@v3
@@ -60,9 +58,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Test
-    defaults:
-      run:
-        working-directory: frontend
     needs: setup
     steps:
       - uses: actions/checkout@v3
@@ -85,9 +80,6 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     name: Typecheck
-    defaults:
-      run:
-        working-directory: frontend
     needs: setup
     steps:
       - uses: actions/checkout@v3
@@ -110,9 +102,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build App
-    defaults:
-      run:
-        working-directory: frontend
     needs: setup
     steps:
       - uses: actions/checkout@v3
