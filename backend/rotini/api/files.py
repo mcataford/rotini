@@ -26,7 +26,6 @@ async def upload_file(file: UploadFile):
     size = len(content)
     await file.seek(0)
 
-    print("ROOT:", settings.STORAGE_ROOT)
     dest_path = pathlib.Path(settings.STORAGE_ROOT, file.filename)
     with open(dest_path, "wb") as f:
         content = await file.read()

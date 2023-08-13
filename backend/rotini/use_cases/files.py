@@ -104,10 +104,11 @@ def delete_file_record_by_id(file_id: str) -> typing.Union[typing.NoReturn, File
     with get_connection() as connection, connection.cursor() as cursor:
         cursor.execute("DELETE FROM files WHERE id=%s RETURNING *;", (file_id,))
         row = cursor.fetchone()
-        pathlib.Path(pathlib.Path(settings.STORAGE_ROOT, row[1])).unlink()
 
     if row is None:
         raise DoesNotExist()
+
+    pathlib.Path(pathlib.Path(settings.STORAGE_ROOT, row[1])).unlink()
 
     return FileRecord(
         id=row[0], path=row[1], size=row[2], filename=pathlib.Path(row[1]).name
