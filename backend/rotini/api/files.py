@@ -5,9 +5,12 @@ This API allows users to create and query for existing data about
 files that live in the system.
 """
 
+import pathlib
+
 from fastapi import APIRouter, HTTPException, UploadFile
 
 import use_cases.files as files_use_cases
+from settings import settings
 
 router = APIRouter(prefix="/files")
 
@@ -23,11 +26,13 @@ async def upload_file(file: UploadFile):
     size = len(content)
     await file.seek(0)
 
-    with open(file.filename, "wb") as f:
+    print("ROOT:", settings.STORAGE_ROOT)
+    dest_path = pathlib.Path(settings.STORAGE_ROOT, file.filename)
+    with open(dest_path, "wb") as f:
         content = await file.read()
         f.write(content)
 
-    created_record = files_use_cases.create_file_record(file.filename, size)
+    created_record = files_use_cases.create_file_record(str(dest_path), size)
 
     return created_record
 

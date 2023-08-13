@@ -9,6 +9,7 @@ import typing
 import pathlib
 
 from db import get_connection
+from settings import settings
 
 
 class DoesNotExist(Exception):
@@ -103,7 +104,7 @@ def delete_file_record_by_id(file_id: str) -> typing.Union[typing.NoReturn, File
     with get_connection() as connection, connection.cursor() as cursor:
         cursor.execute("DELETE FROM files WHERE id=%s RETURNING *;", (file_id,))
         row = cursor.fetchone()
-        pathlib.Path(row[1]).unlink()
+        pathlib.Path(pathlib.Path(settings.STORAGE_ROOT, row[1])).unlink()
 
     if row is None:
         raise DoesNotExist()

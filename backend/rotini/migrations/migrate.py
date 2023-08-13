@@ -27,7 +27,6 @@ Not including a migration name executes everything from the last executed
 migration.
 """
 
-import os
 import collections
 import pathlib
 import datetime
@@ -38,7 +37,7 @@ import sys
 
 import psycopg2
 
-import settings
+from settings import settings
 
 VALID_COMMANDS = ["up", "down", "new"]
 
