@@ -5,8 +5,9 @@ Use cases and data structures defined in this file
 manipulate file records in the database or represent them
 after they have been read.
 """
-import typing
 import pathlib
+
+import typing_extensions as typing
 
 from db import get_connection
 from settings import settings

@@ -47,7 +47,7 @@ def get_file_details(file_id: str):
 
 
 @router.delete("/{file_id}/")
-def delete_file(file_id: str):
+def delete_file(file_id: str) -> files_use_cases.FileRecord:
     """
     Deletes a file given its ID.
 
@@ -56,7 +56,15 @@ def delete_file(file_id: str):
 
     DELETE /files/{file_id}/
 
-    200 { <FileData> }
+    200 { <FileRecord> }
+
+        The file exists and has been deleted from storage and
+        from the database.
+
+    404 {}
+
+        The file ID did not map to anything.
+
     """
     try:
         file = files_use_cases.delete_file_record_by_id(file_id)
