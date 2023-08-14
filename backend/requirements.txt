@@ -34,6 +34,7 @@ starlette==0.27.0
     # via fastapi
 typing-extensions==4.7.1
     # via
+    #   -r requirements.in
     #   fastapi
     #   pydantic
     #   pydantic-core

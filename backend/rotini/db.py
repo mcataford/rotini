@@ -1,6 +1,6 @@
 import psycopg2
 
-import settings
+from settings import settings
 
 
 def get_connection():

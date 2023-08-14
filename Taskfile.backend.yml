@@ -47,6 +47,8 @@ tasks:
   migrate:
     desc: "Applies migrations. Usage: be:migrate -- <up|down>"
     deps: [bootstrap]
+    env:
+      PYTHONPATH: '..'
     dotenv:
       - "{{ .DOTENV }}"
     cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"
