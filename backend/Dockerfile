@@ -1,38 +1,14 @@
-FROM ubuntu:jammy
-
 ARG PYTHON_VERSION
 
+FROM python:$PYTHON_VERSION-slim
+
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TARGET_PYTHON_VERSION=$PYTHON_VERSION
 
 RUN apt update && apt upgrade -y
 
 RUN apt-get install -y \
-        build-essential \
-        checkinstall \
-        libreadline-dev \
-        libncursesw5-dev \
-        libssl-dev \
-        libsqlite3-dev \
-        tk-dev \
-        libgdbm-dev \
-        libc6-dev \
-        libbz2-dev \
-        libpq-dev \
-        wget
-
-WORKDIR /app
-
-COPY .python-version ./
-
-WORKDIR /tmp
-
-RUN wget https://www.python.org/ftp/python/$TARGET_PYTHON_VERSION/Python-$TARGET_PYTHON_VERSION.tgz
-RUN tar xzf ./Python-$TARGET_PYTHON_VERSION.tgz
-
-WORKDIR /tmp/Python-$TARGET_PYTHON_VERSION
-
-RUN ./configure && make install
+        gcc \
+        libpq-dev
 
 WORKDIR /app
 
