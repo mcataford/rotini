@@ -19,4 +19,25 @@ The application requires a Postgres database instance to be made available to th
 
 Starting the backend and frontend applications can be done via `task be:start` and `task fe:start`.
 
-See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements (i.e. environment dotfiles).
+#### Starting the backend application
+
+The backend application is available as a container, which you can run as
+
+```sh
+task be:start
+```
+
+If you opt to run your database in an adjacent container, you can either run containers in such a manner than they share
+a network or define the database's host via `docker.host.internal`:
+
+```sh
+task be:start -- --add-host docker.host.internal:host-gateway
+```
+
+More generally, extra options can be passed to the `docker run` call that runs the application this way:
+
+```sh
+task be:start -- <options>
+```
+
+See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements..
