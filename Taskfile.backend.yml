@@ -33,10 +33,8 @@ tasks:
     dir: backend
   start:
     desc: "Starts the backend application."
-    deps: [bootstrap]
-    dotenv:
-      - "{{ .DOTENV }}"
-    cmd: "{{ .VENV_BIN }}/python -m uvicorn main:app"
+    deps: [docker-build]
+    cmd: docker run -d -p 8000:8000 --name rotini_app {{ .CLI_ARGS }} rotini:dev
     dir: backend/rotini
   start-db:
     desc: "Provisions a local Postgres database."
@@ -58,4 +56,7 @@ tasks:
     deps: [bootstrap]
     cmd: . script/requirements-lock
     dir: backend
-
+  docker-build:
+    desc: "Builds a docker image from /backend"
+    cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
+    dir: backend
