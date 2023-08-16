@@ -1,5 +1,15 @@
-# rotini
-An unnamed cloud storage app
+<p align="center">
+    <img src="./assets/rotini-logo.png">
+</p>
+<h1 align="center">Rotini</h1>
+
+## Overview
+
+**Rotini** is a self-hosted cloud storage application that gives you full-control over the data you store. It aims
+for simplicity and extensibility, such that you can get started in minutes and easily fork or contribute upstream if you
+fancy a feature that's not already there.
+
+It's roadmap is currently TBD and will become better defined as it gets closer to a first release.
 
 ## Development
 
@@ -40,4 +50,4 @@ More generally, extra options can be passed to the `docker run` call that runs t
 task be:start -- <options>
 ```
 
-See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements..
+See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements.)
