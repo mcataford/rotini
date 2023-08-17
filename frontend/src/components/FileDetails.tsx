@@ -7,7 +7,8 @@ import MuiDeleteIcon from "@mui/icons-material/Delete"
 import MuiDownloadIcon from "@mui/icons-material/Download"
 import MuiIconButton from "@mui/material/IconButton"
 
-import { useFileDetails } from "../queries/files"
+import { useLocationContext } from "../contexts/LocationContext"
+import { useFileDetails, useFileMutations } from "../queries/files"
 
 interface FileDetailsProps {
 	itemId: string
@@ -15,15 +16,13 @@ interface FileDetailsProps {
 
 function FileDetails({ itemId }: FileDetailsProps) {
 	const { isLoading, data } = useFileDetails(itemId)
+	const { deleteFile } = useFileMutations()
+	const { navigate } = useLocationContext()
 
 	if (isLoading || !data) return null
 
 	const handleDownloadClick = () => {
 		console.log("download click")
-	}
-
-	const handleDeleteClick = () => {
-		console.log("delete click")
 	}
 
 	const currentFileDetails = data
@@ -52,7 +51,10 @@ function FileDetails({ itemId }: FileDetailsProps) {
 					</MuiIconButton>
 					<MuiIconButton
 						aria-label="delete item"
-						onClick={() => handleDeleteClick()}
+						onClick={async () => {
+							await deleteFile(itemId)
+							navigate("/")
+						}}
 					>
 						<MuiDeleteIcon />
 					</MuiIconButton>

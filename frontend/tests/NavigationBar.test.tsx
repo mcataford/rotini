@@ -1,16 +1,10 @@
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
-import { renderWithContexts as render } from "./helpers"
+import { renderWithContexts as render, applyMakeRequestMock } from "./helpers"
 import NavigationBar from "../src/components/NavigationBar"
 import * as requestUtil from "../src/queries/requestUtils"
 import { type FileData } from "../src/queries/files"
-
-function applyMakeRequestMock<Schema>(
-	impl: typeof requestUtil.default<Schema>,
-) {
-	return jest.spyOn(requestUtil, "default").mockImplementation(impl)
-}
 
 describe("NavigationBar", () => {
 	describe("Upload functionality", () => {

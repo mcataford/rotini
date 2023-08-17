@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import makeRequest from "./requestUtils"
 
@@ -34,6 +34,28 @@ function useFileDetails(fileId: string) {
 }
 
 /*
+ * `useFileMutations` provides helpers that trigger API interactions
+ * with the backend to modify files stored in the system.
+ */
+function useFileMutations(): {
+	deleteFile: (fileId: string) => Promise<FileData>
+} {
+	const queryClient = useQueryClient()
+
+	const deleteFile = async (fileId: string): Promise<FileData> => {
+		const response = await makeRequest<FileData>(
+			`http://localhost:8000/files/${fileId}`,
+			{ method: "DELETE" },
+		)
+
+		queryClient.invalidateQueries({ queryKey: ["file-list"] })
+		return response.json
+	}
+
+	return { deleteFile }
+}
+
+/*
  * Uploads a file.
  */
 async function uploadFile(file: File) {
@@ -48,7 +70,7 @@ async function uploadFile(file: File) {
 	return response.json
 }
 
-export { useOwnFileList, useFileDetails, uploadFile }
+export { useOwnFileList, useFileDetails, useFileMutations, uploadFile }
 
 // Types
 export { FileData }

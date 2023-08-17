@@ -7,7 +7,7 @@
 
 interface RequestOptions {
 	method: string
-	body: FormData | string
+	body?: FormData | string
 }
 
 interface Response<ResponseSchema> {
