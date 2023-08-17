@@ -8,7 +8,7 @@ files that live in the system.
 import pathlib
 
 from fastapi import APIRouter, HTTPException, UploadFile
-
+from fastapi.responses import FileResponse
 import use_cases.files as files_use_cases
 from settings import settings
 
@@ -44,6 +44,35 @@ def get_file_details(file_id: str):
         raise HTTPException(status_code=404)
 
     return file
+
+
+@router.get("/{file_id}/content/")
+def get_file_content(file_id: str) -> FileResponse:
+    """
+    Retrieves the file data associated with a given File ID.
+
+    This returns the file for download as a streamed file.
+
+    GET /files/{file_id}/content/
+
+    200 { <File> }
+
+        The file data is returned as a stream if the file exists.
+
+    404 {}
+
+        The file ID did not map to anything.
+    """
+    file = files_use_cases.get_file_record_by_id(file_id)
+
+    if file is None:
+        raise HTTPException(status_code=404)
+
+    return FileResponse(
+        path=file["path"],
+        media_type="application/octet-stream",
+        filename=file["filename"],
+    )
 
 
 @router.delete("/{file_id}/")
