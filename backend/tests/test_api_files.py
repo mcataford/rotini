@@ -92,3 +92,26 @@ def test_file_deletion_200_and_return_deleted_resource(client, tmp_path):
 
     assert response.status_code == 200
     assert response.json() == response_data
+
+
+def test_file_downloads_200_and_return_file(client, tmp_path):
+    mock_file = tmp_path / "test.txt"
+    mock_file.write_text("testtest")
+
+    with open(str(mock_file), "rb") as mock_file_stream:
+        response = client.post("/files/", files={"file": mock_file_stream})
+
+    response_data = response.json()
+    file_id = response_data["id"]
+
+    response = client.get(f"/files/{file_id}/content/")
+
+    assert response.status_code == 200
+    assert response.text == mock_file.read_text()
+
+
+def test_file_downloads_404_if_does_not_exist(client):
+    non_existent_id = "06f02980-864d-4832-a894-2e9d2543a79a"
+    response = client.get(f"/files/{non_existent_id}/content/")
+
+    assert response.status_code == 404
