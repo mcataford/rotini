@@ -8,7 +8,11 @@ import MuiDownloadIcon from "@mui/icons-material/Download"
 import MuiIconButton from "@mui/material/IconButton"
 
 import { useLocationContext } from "../contexts/LocationContext"
-import { useFileDetails, useFileMutations } from "../queries/files"
+import {
+	useFileDetails,
+	useFileMutations,
+	useFileFetches,
+} from "../queries/files"
 
 interface FileDetailsProps {
 	itemId: string
@@ -18,12 +22,9 @@ function FileDetails({ itemId }: FileDetailsProps) {
 	const { isLoading, data } = useFileDetails(itemId)
 	const { deleteFile } = useFileMutations()
 	const { navigate } = useLocationContext()
+	const { downloadFile } = useFileFetches()
 
 	if (isLoading || !data) return null
-
-	const handleDownloadClick = () => {
-		console.log("download click")
-	}
 
 	const currentFileDetails = data
 
@@ -45,7 +46,9 @@ function FileDetails({ itemId }: FileDetailsProps) {
 				<>
 					<MuiIconButton
 						aria-label="download item"
-						onClick={() => handleDownloadClick()}
+						onClick={async () => {
+							await downloadFile(itemId, currentFileDetails.filename)
+						}}
 					>
 						<MuiDownloadIcon />
 					</MuiIconButton>
