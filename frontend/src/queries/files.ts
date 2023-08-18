@@ -1,6 +1,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-import makeRequest from "./requestUtils"
+import axios from "axios"
+
+export const axiosWithDefaults = axios.create({
+	baseURL: "http://localhost:8000",
+})
 
 interface FileData {
 	/* Displayed title of the item. */
@@ -15,21 +19,17 @@ interface FileData {
 
 function useOwnFileList() {
 	return useQuery(["file-list"], async () => {
-		const response = await makeRequest<Array<FileData>>(
-			"http://localhost:8000/files/",
-		)
+		const response = await axiosWithDefaults.get<Array<FileData>>("/files/")
 
-		return response.json
+		return response.data
 	})
 }
 
 function useFileDetails(fileId: string) {
 	return useQuery(["file-details", fileId], async () => {
-		const response = await makeRequest<FileData>(
-			`http://localhost:8000/files/${fileId}/`,
-		)
+		const response = await axiosWithDefaults.get<FileData>(`/files/${fileId}/`)
 
-		return response.json
+		return response.data
 	})
 }
 
@@ -43,13 +43,12 @@ function useFileMutations(): {
 	const queryClient = useQueryClient()
 
 	const deleteFile = async (fileId: string): Promise<FileData> => {
-		const response = await makeRequest<FileData>(
-			`http://localhost:8000/files/${fileId}`,
-			{ method: "DELETE" },
+		const response = await axiosWithDefaults.delete<FileData>(
+			`/files/${fileId}/`,
 		)
 
 		queryClient.invalidateQueries({ queryKey: ["file-list"] })
-		return response.json
+		return response.data
 	}
 
 	return { deleteFile }
@@ -62,12 +61,12 @@ async function uploadFile(file: File) {
 	const formData = new FormData()
 	formData.append("file", file)
 
-	const response = await makeRequest<FileData>("http://localhost:8000/files/", {
-		method: "POST",
-		body: formData,
-	})
+	const response = await axiosWithDefaults.postForm<FileData>(
+		"/files/",
+		formData,
+	)
 
-	return response.json
+	return response.data
 }
 
 export { useOwnFileList, useFileDetails, useFileMutations, uploadFile }

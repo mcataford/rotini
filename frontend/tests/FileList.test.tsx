@@ -1,10 +1,9 @@
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
-import { renderWithContexts as render, applyMakeRequestMock } from "./helpers"
+import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
 import FileList from "../src/components/FileList"
-import * as requestUtil from "../src/queries/requestUtils"
-import { type FileData } from "../src/queries/files"
+import AxiosMockAdapter from "axios-mock-adapter"
 
 describe("FileList", () => {
 	const mockItems = [
@@ -75,12 +74,12 @@ describe("FileList", () => {
 		)
 
 		test("Clicking the delete button fires request to delete file", async () => {
-			const spy = applyMakeRequestMock<FileData>(
-				async (url: string, opts?: requestUtil.RequestOptions) => ({
-					status: 200,
-					json: mockItems[0],
-				}),
-			)
+			const expectedUrlPattern = new RegExp(`/files/${mockItems[0].id}/$`)
+
+			const axiosMock = getAxiosMockAdapter()
+
+			axiosMock.onDelete(expectedUrlPattern).reply(200, mockItems[0])
+
 			const user = userEvent.setup()
 
 			const { getByLabelText, debug } = render(
@@ -90,14 +89,13 @@ describe("FileList", () => {
 
 			await user.click(deleteButton)
 
-			expect(spy.mock.calls.length).toEqual(1)
+			const deleteRequests = axiosMock.history.delete
 
-			const deleteRequest = spy.mock.calls[0]
+			expect(deleteRequests.length).toEqual(1)
 
-			expect(deleteRequest[0]).toMatch(
-				new RegExp(`\/files\/${mockItems[0].id}\$`),
-			)
-			expect(deleteRequest[1]?.method).toEqual("DELETE")
+			const deleteRequest = deleteRequests[0]
+
+			expect(deleteRequest.url).toMatch(expectedUrlPattern)
 		})
 	})
 })
