@@ -14,11 +14,7 @@ import MuiTypography from "@mui/material/Typography"
 import { byteSizeToUnits } from "../utils"
 import { useLocationContext } from "../contexts/LocationContext"
 import { useAsyncTaskContext } from "../contexts/AsyncTaskContext"
-import {
-	type FileData,
-	useFileMutations,
-	useFileFetches,
-} from "../queries/files"
+import { type FileData, useFileMutations, useFileFetches } from "../hooks/files"
 
 interface FileListProps {
 	data: Array<FileData>

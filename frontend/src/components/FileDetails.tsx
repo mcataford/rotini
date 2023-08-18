@@ -12,7 +12,7 @@ import {
 	useFileDetails,
 	useFileMutations,
 	useFileFetches,
-} from "../queries/files"
+} from "../hooks/files"
 
 interface FileDetailsProps {
 	itemId: string

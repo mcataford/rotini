@@ -39,6 +39,7 @@ function useFileDetails(fileId: string) {
  */
 function useFileMutations(): {
 	deleteFile: (fileId: string) => Promise<FileData>
+	uploadFile: (file: File) => Promise<FileData>
 } {
 	const queryClient = useQueryClient()
 
@@ -51,7 +52,19 @@ function useFileMutations(): {
 		return response.data
 	}
 
-	return { deleteFile }
+	const uploadFile = async (file: File) => {
+		const formData = new FormData()
+		formData.append("file", file)
+
+		const response = await axiosWithDefaults.postForm<FileData>(
+			"/files/",
+			formData,
+		)
+
+		return response.data
+	}
+
+	return { deleteFile, uploadFile }
 }
 
 /*
@@ -83,28 +96,7 @@ function useFileFetches(): {
 	return { downloadFile }
 }
 
-/*
- * Uploads a file.
- */
-async function uploadFile(file: File) {
-	const formData = new FormData()
-	formData.append("file", file)
-
-	const response = await axiosWithDefaults.postForm<FileData>(
-		"/files/",
-		formData,
-	)
-
-	return response.data
-}
-
-export {
-	useOwnFileList,
-	useFileDetails,
-	useFileMutations,
-	useFileFetches,
-	uploadFile,
-}
+export { useOwnFileList, useFileDetails, useFileMutations, useFileFetches }
 
 // Types
 export { FileData }

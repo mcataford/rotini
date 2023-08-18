@@ -1,7 +1,7 @@
 import { type ReactNode } from "react"
 import { render } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-import { axiosWithDefaults } from "../src/queries/files"
+import { axiosWithDefaults } from "../src/hooks/files"
 import AxiosMockAdapter from "axios-mock-adapter"
 
 import AsyncTaskContext, {
