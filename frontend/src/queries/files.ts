@@ -54,18 +54,30 @@ function useFileMutations(): {
 	return { deleteFile }
 }
 
+/*
+ * Hook providing callable async functions implementing one-off
+ * fetches on the files API.
+ *
+ * Returns:
+ *  downloadFile: Triggers a file download.
+ *
+ */
 function useFileFetches(): {
 	downloadFile: (fileId: string, fileName: string) => Promise<void>
 } {
+	/*
+	 * Downloading the file is done by fetching the binary blob from the
+	 * API and creating a "virtual" anchor element that we programmatically
+	 * click. This is a hack to trigger a file download from a non-file URL.
+	 */
 	const downloadFile = async (fileId: string, fileName: string) => {
-		const r = await axiosWithDefaults.get(`/files/${fileId}/content/`)
-		const a = document.createElement("a")
-		const b = r.data
-		a.href = URL.createObjectURL(
-			new Blob([b], { type: "application/octet-stream" }),
+		const response = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+		const virtualAnchor = document.createElement("a")
+		virtualAnchor.href = URL.createObjectURL(
+			new Blob([response.data], { type: "application/octet-stream" }),
 		)
-		a.download = fileName
-		a.click()
+		virtualAnchor.download = fileName
+		virtualAnchor.click()
 	}
 
 	return { downloadFile }
