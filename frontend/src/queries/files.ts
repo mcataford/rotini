@@ -54,21 +54,21 @@ function useFileMutations(): {
 	return { deleteFile }
 }
 
-/*
- * Downloads a file given its ID.
- *
- * This function returns nothing and is intended to trigger a download
- * action in the browser directly.
- */
-async function downloadFile(fileId: string, fileName: string) {
-	const r = await axiosWithDefaults.get(`/files/${fileId}/content/`)
-	const a = document.createElement("a")
-	const b = r.data
-	a.href = URL.createObjectURL(
-		new Blob([b], { type: "application/octet-stream" }),
-	)
-	a.download = fileName
-	a.click()
+function useFileFetches(): {
+	downloadFile: (fileId: string, fileName: string) => Promise<void>
+} {
+	const downloadFile = async (fileId: string, fileName: string) => {
+		const r = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+		const a = document.createElement("a")
+		const b = r.data
+		a.href = URL.createObjectURL(
+			new Blob([b], { type: "application/octet-stream" }),
+		)
+		a.download = fileName
+		a.click()
+	}
+
+	return { downloadFile }
 }
 
 /*
@@ -90,8 +90,8 @@ export {
 	useOwnFileList,
 	useFileDetails,
 	useFileMutations,
+	useFileFetches,
 	uploadFile,
-	downloadFile,
 }
 
 // Types

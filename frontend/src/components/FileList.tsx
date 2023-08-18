@@ -14,7 +14,11 @@ import MuiTypography from "@mui/material/Typography"
 import { byteSizeToUnits } from "../utils"
 import { useLocationContext } from "../contexts/LocationContext"
 import { useAsyncTaskContext } from "../contexts/AsyncTaskContext"
-import { type FileData, useFileMutations, downloadFile } from "../queries/files"
+import {
+	type FileData,
+	useFileMutations,
+	useFileFetches,
+} from "../queries/files"
 
 interface FileListProps {
 	data: Array<FileData>
@@ -81,6 +85,8 @@ function FileList({ data }: FileListProps) {
 	const { tasks } = useAsyncTaskContext()
 	const { navigate } = useLocationContext()
 	const { deleteFile } = useFileMutations()
+	const { downloadFile } = useFileFetches()
+
 	const onClickHandler = (uid: string) => {
 		navigate(`/item/${uid}/`)
 	}
