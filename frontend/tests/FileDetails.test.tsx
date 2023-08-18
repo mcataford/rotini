@@ -3,9 +3,8 @@ import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 import { type UseQueryResult } from "@tanstack/react-query"
 
-import { renderWithContexts as render, applyMakeRequestMock } from "./helpers"
+import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
 import FileDetails from "../src/components/FileDetails"
-import * as requestUtil from "../src/queries/requestUtils"
 import { type FileData } from "../src/queries/files"
 import * as fileQueries from "../src/queries/files"
 import * as locationContextUtils from "../src/contexts/LocationContext"
@@ -18,12 +17,11 @@ describe("FileDetails", () => {
 		id: "b61bf93d-a9db-473e-822e-a65003b1b7e3",
 	}
 	test("Clicking the delete button fires request to delete file", async () => {
-		const spy = applyMakeRequestMock<FileData>(
-			async (url: string, opts?: requestUtil.RequestOptions) => ({
-				status: 200,
-				json: mockItem,
-			}),
-		)
+		const expectedUrlPattern = new RegExp(`/files/${mockItem.id}/$`)
+
+		const axiosMock = getAxiosMockAdapter()
+
+		axiosMock.onDelete(expectedUrlPattern).reply(200, mockItem)
 
 		jest
 			.spyOn(fileQueries, "useFileDetails")
@@ -41,21 +39,21 @@ describe("FileDetails", () => {
 
 		await user.click(deleteButton)
 
-		expect(spy.mock.calls.length).toEqual(1)
+		const deleteRequests = axiosMock.history.delete
 
-		const deleteRequest = spy.mock.calls[0]
+		expect(deleteRequests.length).toEqual(1)
 
-		expect(deleteRequest[0]).toMatch(new RegExp(`\/files\/${mockItem.id}\$`))
-		expect(deleteRequest[1]?.method).toEqual("DELETE")
+		const deleteRequest = deleteRequests[0]
+
+		expect(deleteRequest.url).toMatch(expectedUrlPattern)
 	})
 
 	test("Clicking the delete button redirects to the file list after success", async () => {
-		const spy = applyMakeRequestMock<FileData>(
-			async (url: string, opts?: requestUtil.RequestOptions) => ({
-				status: 200,
-				json: mockItem,
-			}),
-		)
+		const expectedUrlPattern = new RegExp(`/files/${mockItem.id}/$`)
+
+		const axiosMock = getAxiosMockAdapter()
+
+		axiosMock.onDelete(expectedUrlPattern).reply(200, mockItem)
 
 		jest
 			.spyOn(fileQueries, "useFileDetails")

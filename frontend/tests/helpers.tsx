@@ -1,13 +1,13 @@
 import { type ReactNode } from "react"
 import { render } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
+import { axiosWithDefaults } from "../src/queries/files"
+import AxiosMockAdapter from "axios-mock-adapter"
 
 import AsyncTaskContext, {
 	type AsyncTask,
 } from "../src/contexts/AsyncTaskContext"
 import LocationContext from "../src/contexts/LocationContext"
-import * as requestUtil from "../src/queries/requestUtils"
-import { type FileData } from "../src/queries/files"
 
 interface ContextInitialValues {
 	asyncTaskContext: Array<AsyncTask>
@@ -19,7 +19,7 @@ const defaultContextValues = {
 	locationContext: { default: "/" },
 }
 
-export function renderWithContexts(
+function renderWithContexts(
 	component: ReactNode,
 	initialValues?: Partial<ContextInitialValues>,
 ) {
@@ -35,8 +35,8 @@ export function renderWithContexts(
 	)
 }
 
-export function applyMakeRequestMock<Schema>(
-	impl: typeof requestUtil.default<Schema>,
-) {
-	return jest.spyOn(requestUtil, "default").mockImplementation(impl)
+function getAxiosMockAdapter() {
+	return new AxiosMockAdapter(axiosWithDefaults)
 }
+
+export { getAxiosMockAdapter, renderWithContexts }
