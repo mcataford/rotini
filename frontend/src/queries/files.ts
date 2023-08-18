@@ -55,6 +55,23 @@ function useFileMutations(): {
 }
 
 /*
+ * Downloads a file given its ID.
+ *
+ * This function returns nothing and is intended to trigger a download
+ * action in the browser directly.
+ */
+async function downloadFile(fileId: string, fileName: string) {
+	const r = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+	const a = document.createElement("a")
+	const b = r.data
+	a.href = URL.createObjectURL(
+		new Blob([b], { type: "application/octet-stream" }),
+	)
+	a.download = fileName
+	a.click()
+}
+
+/*
  * Uploads a file.
  */
 async function uploadFile(file: File) {
@@ -69,7 +86,13 @@ async function uploadFile(file: File) {
 	return response.data
 }
 
-export { useOwnFileList, useFileDetails, useFileMutations, uploadFile }
+export {
+	useOwnFileList,
+	useFileDetails,
+	useFileMutations,
+	uploadFile,
+	downloadFile,
+}
 
 // Types
 export { FileData }
