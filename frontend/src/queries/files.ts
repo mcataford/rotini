@@ -55,6 +55,35 @@ function useFileMutations(): {
 }
 
 /*
+ * Hook providing callable async functions implementing one-off
+ * fetches on the files API.
+ *
+ * Returns:
+ *  downloadFile: Triggers a file download.
+ *
+ */
+function useFileFetches(): {
+	downloadFile: (fileId: string, fileName: string) => Promise<void>
+} {
+	/*
+	 * Downloading the file is done by fetching the binary blob from the
+	 * API and creating a "virtual" anchor element that we programmatically
+	 * click. This is a hack to trigger a file download from a non-file URL.
+	 */
+	const downloadFile = async (fileId: string, fileName: string) => {
+		const response = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+		const virtualAnchor = document.createElement("a")
+		virtualAnchor.href = URL.createObjectURL(
+			new Blob([response.data], { type: "application/octet-stream" }),
+		)
+		virtualAnchor.download = fileName
+		virtualAnchor.click()
+	}
+
+	return { downloadFile }
+}
+
+/*
  * Uploads a file.
  */
 async function uploadFile(file: File) {
@@ -69,7 +98,13 @@ async function uploadFile(file: File) {
 	return response.data
 }
 
-export { useOwnFileList, useFileDetails, useFileMutations, uploadFile }
+export {
+	useOwnFileList,
+	useFileDetails,
+	useFileMutations,
+	useFileFetches,
+	uploadFile,
+}
 
 // Types
 export { FileData }

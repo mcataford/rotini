@@ -97,5 +97,34 @@ describe("FileList", () => {
 
 			expect(deleteRequest.url).toMatch(expectedUrlPattern)
 		})
+
+		test("Clicking the download button trigger a file download", async () => {
+			// FIXME: Validating file downloads is ... tricky. The current interaction with dynamically created DOM
+			// elements is not visible by jest.
+			const expectedUrlPattern = new RegExp(
+				`/files/${mockItems[0].id}/content/$`,
+			)
+
+			const axiosMock = getAxiosMockAdapter()
+
+			axiosMock.onGet(expectedUrlPattern).reply(200, mockItems[0])
+
+			const user = userEvent.setup()
+
+			const { getByLabelText, debug } = render(
+				<FileList data={[mockItems[0]]} />,
+			)
+			const downloadButton = getByLabelText("download item")
+
+			await user.click(downloadButton)
+
+			const getRequests = axiosMock.history.get
+
+			expect(getRequests.length).toEqual(1)
+
+			const getRequest = getRequests[0]
+
+			expect(getRequest.url).toMatch(expectedUrlPattern)
+		})
 	})
 })
