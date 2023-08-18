@@ -18,7 +18,7 @@ tasks:
   test:
     desc: "Runs the frontend test suite."
     deps: [bootstrap]
-    cmd: yarn test
+    cmd: yarn test {{ .CLI_ARGS }}
     dir: frontend
   lint:
     desc: "Checks lint and formatting."
