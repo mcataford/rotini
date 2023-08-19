@@ -20,15 +20,22 @@ def list_files():
     return files_use_cases.get_all_file_records()
 
 
-@router.post("/")
-async def upload_file(file: UploadFile):
+@router.post("/", status_code=201)
+async def upload_file(file: UploadFile) -> files_use_cases.FileRecord:
+    """
+    Receives files uploaded by the user, saving them to disk and
+    recording their existence in the database.
+
+    201 { <FileRecord> }
+
+        The file was uploaded and registered successfully.
+    """
+
     content = await file.read()
     size = len(content)
-    await file.seek(0)
-
     dest_path = pathlib.Path(settings.STORAGE_ROOT, file.filename)
+
     with open(dest_path, "wb") as f:
-        content = await file.read()
         f.write(content)
 
     created_record = files_use_cases.create_file_record(str(dest_path), size)
