@@ -1,16 +1,21 @@
 version: '3'
 
 env:
-  VENV_PATH: "/{{ .TASKFILE_DIR }}/backend/.venv"
+  BASE_PATH: "/{{ .TASKFILE_DIR }}/backend"
+  VENV_PATH: "{{ .BASE_PATH }}/.venv"
   VENV_BIN: "{{ .VENV_PATH }}/bin"
   VENV_ACTIVATE: "{{ .VENV_BIN }}/activate"
-  DOTENV: "/{{ .TASKFILE_DIR }}/backend/.env"
+  DOTENV: "{{ .BASE_PATH }}/.env"
 
 tasks:
   bootstrap:
     internal: true
     cmds:
       - . script/bootstrap
+    sources:
+      - "{{ .BASE_PATH }}/*.in"
+    generates:
+      - "{{ .VENV_PATH }}/*"
     dir: backend
   lint:
     desc: "Lints /backend using black + pylint."
