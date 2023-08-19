@@ -9,10 +9,13 @@ docker run \
     -d \
     postgres:15.4
 
-sleep 2
+until [ -n "$(docker exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
+    echo "Waiting for DB to come alive..."
+    sleep 0.1;
+done;
 
-ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || echo "Migrations failed." && exit 1
-ROTINI_TEST=1 .venv/bin/pytest . -vv -s || echo "Test run failed." && exit 1
+ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || (echo "Migrations failed." && exit
+1)
+ROTINI_TEST=1 .venv/bin/pytest . -vv -s || (echo "Test run failed." && exit 1)
 
-docker stop $TEST_DB_CONTAINER > /dev/null || echo "Failed to stop test database container."
-docker remove $TEST_DB_CONTAINER > /dev/null || echo "Failed to clean up test database container."
+docker rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
