@@ -10,7 +10,7 @@ import FileList from "./components/FileList"
 import FileDetails from "./components/FileDetails"
 import AsyncTaskContext from "./contexts/AsyncTaskContext"
 import LocationContext, { useLocationContext } from "./contexts/LocationContext"
-import { useOwnFileList } from "./queries/files"
+import { useOwnFileList } from "./hooks/files"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",

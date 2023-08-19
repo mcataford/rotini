@@ -5,8 +5,8 @@ import { type UseQueryResult } from "@tanstack/react-query"
 
 import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
 import FileDetails from "../src/components/FileDetails"
-import { type FileData } from "../src/queries/files"
-import * as fileQueries from "../src/queries/files"
+import { type FileData } from "../src/types/files"
+import * as fileQueries from "../src/hooks/files"
 import * as locationContextUtils from "../src/contexts/LocationContext"
 
 describe("FileDetails", () => {

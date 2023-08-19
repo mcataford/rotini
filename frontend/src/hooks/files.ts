@@ -1,25 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-import axios from "axios"
-
-export const axiosWithDefaults = axios.create({
-	baseURL: "http://localhost:8000",
-})
-
-interface FileData {
-	/* Displayed title of the item. */
-	title: string
-	/* Filename of the item as it appears on disk. */
-	filename: string
-	/* Size of the file in bytes. */
-	size: number
-	/* Unique identifier */
-	id: string
-}
+import axios from "../axios"
+import { type FileData } from "../types/files"
 
 function useOwnFileList() {
 	return useQuery(["file-list"], async () => {
-		const response = await axiosWithDefaults.get<Array<FileData>>("/files/")
+		const response = await axios.get<Array<FileData>>("/files/")
 
 		return response.data
 	})
@@ -27,7 +13,7 @@ function useOwnFileList() {
 
 function useFileDetails(fileId: string) {
 	return useQuery(["file-details", fileId], async () => {
-		const response = await axiosWithDefaults.get<FileData>(`/files/${fileId}/`)
+		const response = await axios.get<FileData>(`/files/${fileId}/`)
 
 		return response.data
 	})
@@ -39,19 +25,27 @@ function useFileDetails(fileId: string) {
  */
 function useFileMutations(): {
 	deleteFile: (fileId: string) => Promise<FileData>
+	uploadFile: (file: File) => Promise<FileData>
 } {
 	const queryClient = useQueryClient()
 
 	const deleteFile = async (fileId: string): Promise<FileData> => {
-		const response = await axiosWithDefaults.delete<FileData>(
-			`/files/${fileId}/`,
-		)
+		const response = await axios.delete<FileData>(`/files/${fileId}/`)
 
 		queryClient.invalidateQueries({ queryKey: ["file-list"] })
 		return response.data
 	}
 
-	return { deleteFile }
+	const uploadFile = async (file: File) => {
+		const formData = new FormData()
+		formData.append("file", file)
+
+		const response = await axios.postForm<FileData>("/files/", formData)
+
+		return response.data
+	}
+
+	return { deleteFile, uploadFile }
 }
 
 /*
@@ -71,7 +65,7 @@ function useFileFetches(): {
 	 * click. This is a hack to trigger a file download from a non-file URL.
 	 */
 	const downloadFile = async (fileId: string, fileName: string) => {
-		const response = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+		const response = await axios.get(`/files/${fileId}/content/`)
 		const virtualAnchor = document.createElement("a")
 		virtualAnchor.href = URL.createObjectURL(
 			new Blob([response.data], { type: "application/octet-stream" }),
@@ -83,28 +77,4 @@ function useFileFetches(): {
 	return { downloadFile }
 }
 
-/*
- * Uploads a file.
- */
-async function uploadFile(file: File) {
-	const formData = new FormData()
-	formData.append("file", file)
-
-	const response = await axiosWithDefaults.postForm<FileData>(
-		"/files/",
-		formData,
-	)
-
-	return response.data
-}
-
-export {
-	useOwnFileList,
-	useFileDetails,
-	useFileMutations,
-	useFileFetches,
-	uploadFile,
-}
-
-// Types
-export { FileData }
+export { useOwnFileList, useFileDetails, useFileMutations, useFileFetches }

@@ -7,11 +7,12 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import UploadIcon from "@mui/icons-material/Upload"
 
-import { uploadFile } from "../queries/files"
+import { useFileMutations } from "../hooks/files"
 
 function UploadFileButton() {
 	const fileRef = useRef(null)
 	const queryClient = useQueryClient()
+	const { uploadFile } = useFileMutations()
 
 	const onClick = () => {
 		if (fileRef.current) (fileRef.current as HTMLInputElement).click()

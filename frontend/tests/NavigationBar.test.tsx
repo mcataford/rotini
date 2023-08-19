@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event"
 import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
 import NavigationBar from "../src/components/NavigationBar"
 
-import { type FileData } from "../src/queries/files"
+import { type FileData } from "../src/types/files"
 
 describe("NavigationBar", () => {
 	describe("Upload functionality", () => {
