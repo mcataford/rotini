@@ -31,12 +31,11 @@ async def upload_file(file: UploadFile) -> files_use_cases.FileRecord:
         The file was uploaded and registered successfully.
     """
 
-    size = None
+    content = await file.read()
+    size = len(content)
     dest_path = pathlib.Path(settings.STORAGE_ROOT, file.filename)
 
     with open(dest_path, "wb") as f:
-        content = await file.read()
-        size = len(content)
         f.write(content)
 
     created_record = files_use_cases.create_file_record(str(dest_path), size)
