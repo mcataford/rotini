@@ -22,13 +22,12 @@ def list_files():
 
 @router.post("/")
 async def upload_file(file: UploadFile):
-    content = await file.read()
-    size = len(content)
-    await file.seek(0)
-
+    size = None
     dest_path = pathlib.Path(settings.STORAGE_ROOT, file.filename)
+
     with open(dest_path, "wb") as f:
         content = await file.read()
+        size = len(content)
         f.write(content)
 
     created_record = files_use_cases.create_file_record(str(dest_path), size)
