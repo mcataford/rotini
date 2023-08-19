@@ -5,8 +5,10 @@
 # This is useful if you are not hosting your database instance
 # elsewhere or want a simple setup for development purposes.
 
+CONTAINER_NAME=rotini_db
+
 docker run \
-    --name rotini_db \
+    --name $CONTAINER_NAME \
     -e POSTGRES_PASSWORD=$DATABASE_PASSWORD \
     -e POSTGRES_USER=$DATABASE_USER \
     -e POSTGRES_DB=$DATABASE_NAME \
@@ -15,6 +17,9 @@ docker run \
     -d \
     postgres:15.4
 
-sleep 3
+until [ -n "$(docker exec $CONTAINER_NAME pg_isready | grep accepting)" ]; do
+    echo "Waiting for DB to come alive..."
+    sleep 0.1;
+done;
 
 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up

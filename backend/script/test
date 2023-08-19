@@ -15,8 +15,6 @@ until [ -n "$(docker exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
     sleep 0.1;
 done;
 
-sleep 1;
-
 ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || (echo "Migrations failed." && FAILED=1)
 ROTINI_TEST=1 .venv/bin/pytest . -vv -s || (echo "Test run failed." && FAILED=1)
 
