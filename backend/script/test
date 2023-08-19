@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TEST_DB_CONTAINER=rotini-test-ephemeral
+FAILED=0
 
 docker run \
     --name $TEST_DB_CONTAINER \
@@ -16,8 +17,12 @@ done;
 
 sleep 1;
 
-ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || (echo "Migrations failed." && exit
-1)
-ROTINI_TEST=1 .venv/bin/pytest . -vv -s || (echo "Test run failed." && exit 1)
+ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || (echo "Migrations failed." && FAILED=1)
+ROTINI_TEST=1 .venv/bin/pytest . -vv -s || (echo "Test run failed." && FAILED=1)
 
 docker rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
+
+if [ $FAILED -eq 1 ];
+then
+    exit 1
+fi
