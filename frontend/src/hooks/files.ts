@@ -1,16 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-import axios from "axios"
-
+import axios from "../axios"
 import { type FileData } from "../types/files"
-
-export const axiosWithDefaults = axios.create({
-	baseURL: "http://localhost:8000",
-})
 
 function useOwnFileList() {
 	return useQuery(["file-list"], async () => {
-		const response = await axiosWithDefaults.get<Array<FileData>>("/files/")
+		const response = await axios.get<Array<FileData>>("/files/")
 
 		return response.data
 	})
@@ -18,7 +13,7 @@ function useOwnFileList() {
 
 function useFileDetails(fileId: string) {
 	return useQuery(["file-details", fileId], async () => {
-		const response = await axiosWithDefaults.get<FileData>(`/files/${fileId}/`)
+		const response = await axios.get<FileData>(`/files/${fileId}/`)
 
 		return response.data
 	})
@@ -35,9 +30,7 @@ function useFileMutations(): {
 	const queryClient = useQueryClient()
 
 	const deleteFile = async (fileId: string): Promise<FileData> => {
-		const response = await axiosWithDefaults.delete<FileData>(
-			`/files/${fileId}/`,
-		)
+		const response = await axios.delete<FileData>(`/files/${fileId}/`)
 
 		queryClient.invalidateQueries({ queryKey: ["file-list"] })
 		return response.data
@@ -47,10 +40,7 @@ function useFileMutations(): {
 		const formData = new FormData()
 		formData.append("file", file)
 
-		const response = await axiosWithDefaults.postForm<FileData>(
-			"/files/",
-			formData,
-		)
+		const response = await axios.postForm<FileData>("/files/", formData)
 
 		return response.data
 	}
@@ -75,7 +65,7 @@ function useFileFetches(): {
 	 * click. This is a hack to trigger a file download from a non-file URL.
 	 */
 	const downloadFile = async (fileId: string, fileName: string) => {
-		const response = await axiosWithDefaults.get(`/files/${fileId}/content/`)
+		const response = await axios.get(`/files/${fileId}/content/`)
 		const virtualAnchor = document.createElement("a")
 		virtualAnchor.href = URL.createObjectURL(
 			new Blob([response.data], { type: "application/octet-stream" }),
@@ -88,6 +78,3 @@ function useFileFetches(): {
 }
 
 export { useOwnFileList, useFileDetails, useFileMutations, useFileFetches }
-
-// Types
-export { FileData }
