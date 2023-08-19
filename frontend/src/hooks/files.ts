@@ -2,20 +2,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import axios from "axios"
 
+import { type FileData } from "../types/files"
+
 export const axiosWithDefaults = axios.create({
 	baseURL: "http://localhost:8000",
 })
-
-interface FileData {
-	/* Displayed title of the item. */
-	title: string
-	/* Filename of the item as it appears on disk. */
-	filename: string
-	/* Size of the file in bytes. */
-	size: number
-	/* Unique identifier */
-	id: string
-}
 
 function useOwnFileList() {
 	return useQuery(["file-list"], async () => {
