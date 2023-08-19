@@ -1,16 +1,16 @@
 version: '3'
 
 env:
-  BASE_PATH: "/{{ .TASKFILE_DIR }}/frontend"
+  FE_BASE_PATH: "/{{ .TASKFILE_DIR }}/frontend"
 
 tasks:
   bootstrap:
     internal: true
     cmd: . script/bootstrap
     sources:
-      - "{{ .BASE_PATH }}/yarn.lock"
+      - "{{ .FE_BASE_PATH }}/yarn.lock"
     generates:
-      - "{{ .BASE_PATH }}/.yarn/*"
+      - "{{ .FE_BASE_PATH }}/.yarn/*"
     dir: frontend
   start:
     desc: "Starts the frontend application."

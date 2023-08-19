@@ -31,7 +31,7 @@ jobs:
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./.github)" ]
+          if [ -n "$(git diff --name-only origin/main origin/${GITHUB_HEAD_REF} -- ./.github ./Taskfile*.yml)" ]
           then
             echo "fe_changed=true" >> "$GITHUB_OUTPUT"
             echo "be_changed=true" >> "$GITHUB_OUTPUT"
