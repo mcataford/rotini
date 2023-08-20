@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import auth.routes as auth_routes
-import api.files as files_routes
+import files.routes as files_routes
 
 app = FastAPI()
 
