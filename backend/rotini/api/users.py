@@ -35,7 +35,17 @@ async def create_user(request: Request):
 
 @router.post("/session/")
 async def log_in(request: Request):
-    """ """
+    """
+    Attempts to log a user in.
+
+    200 { <User> }
+
+        If the supplied credentials are correct, the user is returned.
+
+    401 {}
+
+        If the credentials are incorrect, immediate failure.
+    """
 
     body = await request.json()
 

@@ -3,10 +3,10 @@ User-related use cases.
 
 Functions in this file are focused on users and passwords.
 """
-import argon2
-
 import datetime
 import typing_extensions as typing
+
+import argon2
 
 from db import get_connection
 from use_cases.exceptions import DoesNotExist
@@ -30,6 +30,13 @@ class User(typing.TypedDict):
 
 
 def create_new_user(*, username: str, raw_password: str) -> User:
+    """
+    Creates a new user record given a username and password.
+
+    The password is hashed (see `_hash_secret`) and the hash is stored.
+
+    If successful, returns a dictionary representing the user.
+    """
     password_hash = _hash_secret(raw_password)
 
     with get_connection() as connection, connection.cursor() as cursor:
@@ -55,12 +62,21 @@ def create_new_user(*, username: str, raw_password: str) -> User:
 
 
 def _hash_secret(secret: str) -> str:
+    """
+    Produces a hash of the given secret.
+    """
     return password_hasher.hash(secret)
 
 
 def get_user(
     *, username: str = None, user_id: int = None
 ) -> typing.Union[typing.NoReturn, User]:
+    """
+    Retrieves a user record, if one exists, for the given user.
+
+    Querying can be done via username or user ID. The first one supplied, in this
+    order, is used and any other values are ignored.
+    """
     with get_connection() as connection, connection.cursor() as cursor:
         if username is not None:
             cursor.execute(
@@ -76,7 +92,7 @@ def get_user(
         fetched = cursor.fetchone()
 
     if fetched is None:
-        raise RuntimeError("ho")
+        raise DoesNotExist()
 
     return User(
         id=fetched[0],
@@ -88,16 +104,17 @@ def get_user(
 
 
 def validate_password_for_user(user_id: int, raw_password: str) -> bool:
+    """
+    Validates whether a password is correct for the given user.
+
+    Always returns a boolean representing whether it was a match or not.
+    """
     try:
-        current_secret_hash = _get_password_hash_for_user(user_id)
+        with get_connection() as connection, connection.cursor() as cursor:
+            cursor.execute("SELECT password_hash FROM users WHERE id = %s", (user_id,))
+            fetched = cursor.fetchone()
+
+        current_secret_hash = fetched[0]
         return password_hasher.verify(current_secret_hash, raw_password)
-    except:
+    except Exception:  # pylint: disable=broad-exception-caught
         return False
-
-
-def _get_password_hash_for_user(user_id: int) -> str:
-    with get_connection() as connection, connection.cursor() as cursor:
-        cursor.execute("SELECT password_hash FROM users WHERE id = %s", (user_id,))
-        fetched = cursor.fetchone()
-
-    return fetched[0]
