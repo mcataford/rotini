@@ -13,3 +13,7 @@ class CreateUserRequestData(pydantic.BaseModel):
 
     username: str
     password: str
+
+
+class UsernameAlreadyExists(Exception):
+    pass

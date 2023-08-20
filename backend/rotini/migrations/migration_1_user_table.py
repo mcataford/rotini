@@ -17,7 +17,8 @@ UP_SQL = """CREATE TABLE
     password_hash varchar(128) NOT NULL,
     created_at timestamp DEFAULT now(),
     updated_at timestamp DEFAULT now(),
-    password_updated_at timestamp DEFAULT now()
+    password_updated_at timestamp DEFAULT now(),
+    CONSTRAINT unique_username UNIQUE(username)
 )
 """
 

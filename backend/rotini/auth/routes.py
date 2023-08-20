@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, HTTPException
 
 from use_cases.exceptions import DoesNotExist
 
@@ -8,7 +8,7 @@ import auth.base as auth_base
 router = APIRouter(prefix="/auth")
 
 
-@router.post("/users/")
+@router.post("/users/", status_code=201)
 async def create_user(payload: auth_base.CreateUserRequestData):
     """
     POST /auth/users/
@@ -27,9 +27,12 @@ async def create_user(payload: auth_base.CreateUserRequestData):
         If the username already exists, or the password is not adequate,
         400 is returned.
     """
-    user = auth_use_cases.create_new_user(
-        username=payload.username, raw_password=payload.password
-    )
+    try:
+        user = auth_use_cases.create_new_user(
+            username=payload.username, raw_password=payload.password
+        )
+    except auth_base.UsernameAlreadyExists as exc:
+        raise HTTPException(status_code=400) from exc
 
     return user
 

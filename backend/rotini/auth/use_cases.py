@@ -11,6 +11,8 @@ import argon2
 from db import get_connection
 from use_cases.exceptions import DoesNotExist
 
+import auth.base as auth_base
+
 password_hasher = argon2.PasswordHasher()
 
 
@@ -40,14 +42,14 @@ def create_new_user(*, username: str, raw_password: str) -> User:
     password_hash = _hash_secret(raw_password)
 
     with get_connection() as connection, connection.cursor() as cursor:
-        cursor.execute(
-            "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id, username",
-            (username, password_hash),
-        )
-        returned = cursor.fetchone()
-
-    if returned is None:
-        raise RuntimeError("Uh")
+        try:
+            cursor.execute(
+                "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id, username",
+                (username, password_hash),
+            )
+            returned = cursor.fetchone()
+        except Exception as exc:
+            raise auth_base.UsernameAlreadyExists()
 
     inserted_id = returned[0]
     created_username = returned[1]
