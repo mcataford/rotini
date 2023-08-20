@@ -11,12 +11,7 @@ import typing_extensions as typing
 
 from db import get_connection
 from settings import settings
-
-
-class DoesNotExist(Exception):
-    """
-    General purpose exception signalling a failure to find a database record.
-    """
+from use_cases.exceptions import DoesNotExist
 
 
 class FileRecord(typing.TypedDict):
