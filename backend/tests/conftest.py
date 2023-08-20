@@ -33,3 +33,19 @@ def set_storage_path(tmp_path, monkeypatch):
     files_dir.mkdir()
 
     monkeypatch.setattr(settings, "STORAGE_ROOT", str(files_dir))
+
+
+@pytest.fixture(name="client_log_in")
+def fixture_client_log_in(client):
+    def _client_log_in(credentials):
+        return client.post("/auth/sessions/", json=credentials)
+
+    return _client_log_in
+
+
+@pytest.fixture(name="client_create_user")
+def fixture_client_create_user(client):
+    def _client_create_user(credentials):
+        return client.post("/auth/users/", json=credentials)
+
+    return _client_create_user

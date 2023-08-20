@@ -10,12 +10,11 @@ def fixture_test_user_creds():
 
 
 @pytest.fixture(name="test_user", autouse=True)
-def fixture_test_user(client, test_user_credentials):
+def fixture_test_user(client_create_user, test_user_credentials):
     """
     Sets up a test user using the `test_user_credentials` data.
     """
-    response = client.post("/auth/users/", json=test_user_credentials)
-    yield response
+    yield client_create_user(test_user_credentials)
 
 
 def test_create_user_returns_200_on_success():
@@ -30,10 +29,12 @@ def test_create_user_requires_username_and_password_supplied():
     pass
 
 
-def test_log_in_returns_200_and_user_on_success(client, test_user_credentials):
+def test_log_in_returns_200_and_user_on_success(
+    client_create_user, test_user_credentials
+):
     # The `test_user` fixture creates a user.
 
-    response = client.post("/auth/sessions/", json=test_user_credentials)
+    response = client_create_user(test_user_credentials)
 
     assert response.status_code == 200
 
@@ -42,19 +43,16 @@ def test_log_in_returns_200_and_user_on_success(client, test_user_credentials):
     assert returned["username"] == test_user_credentials["username"]
 
 
-def test_log_in_returns_401_on_wrong_password(client, test_user_credentials):
-    response = client.post(
-        "/auth/sessions/",
-        json={"username": test_user_credentials["username"], "password": "sillystring"},
+def test_log_in_returns_401_on_wrong_password(client_log_in, test_user_credentials):
+    response = client_log_in(
+        {"username": test_user_credentials["username"], "password": "sillystring"}
     )
 
     assert response.status_code == 401
 
 
-def test_log_in_returns_401_on_nonexistent_user(client):
-    response = client.post(
-        "/auth/sessions/", json={"username": "notauser", "password": "sillystring"}
-    )
+def test_log_in_returns_401_on_nonexistent_user(client_log_in):
+    response = client_log_in({"username": "notauser", "password": "sillystring"})
 
     assert response.status_code == 401
 
@@ -67,7 +65,7 @@ def test_log_in_returns_401_on_nonexistent_user(client):
         pytest.param({}, id="no_data"),
     ],
 )
-def test_log_in_returns_422_on_invalid_input(client, credentials):
-    response = client.post("/auth/sessions", json=credentials)
+def test_log_in_returns_422_on_invalid_input(client_log_in, credentials):
+    response = client_log_in(credentials)
 
     assert response.status_code == 422
