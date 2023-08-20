@@ -49,7 +49,7 @@ def create_new_user(*, username: str, raw_password: str) -> User:
             )
             returned = cursor.fetchone()
         except Exception as exc:
-            raise auth_base.UsernameAlreadyExists()
+            raise auth_base.UsernameAlreadyExists() from exc
 
     inserted_id = returned[0]
     created_username = returned[1]

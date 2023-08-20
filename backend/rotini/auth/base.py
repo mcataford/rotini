@@ -1,3 +1,6 @@
+"""
+Class declarations and constants for the auth module.
+"""
 import pydantic
 
 
@@ -16,4 +19,4 @@ class CreateUserRequestData(pydantic.BaseModel):
 
 
 class UsernameAlreadyExists(Exception):
-    pass
+    """Signals a unique constraint violation on username values"""
