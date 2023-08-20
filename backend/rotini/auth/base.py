@@ -6,3 +6,10 @@ class LoginRequestData(pydantic.BaseModel):
 
     username: str
     password: str
+
+
+class CreateUserRequestData(pydantic.BaseModel):
+    """Payload for user creation"""
+
+    username: str
+    password: str

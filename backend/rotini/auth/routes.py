@@ -3,14 +3,13 @@ from fastapi import APIRouter, Request, HTTPException
 from use_cases.exceptions import DoesNotExist
 
 import auth.use_cases as auth_use_cases
-
-from .base import LoginRequestData
+import auth.base as auth_base
 
 router = APIRouter(prefix="/auth")
 
 
 @router.post("/users/")
-async def create_user(request: Request):
+async def create_user(payload: auth_base.CreateUserRequestData):
     """
     POST /auth/users/
 
@@ -28,17 +27,15 @@ async def create_user(request: Request):
         If the username already exists, or the password is not adequate,
         400 is returned.
     """
-    body = await request.json()
-
     user = auth_use_cases.create_new_user(
-        username=body["username"], raw_password=body["password"]
+        username=payload.username, raw_password=payload.password
     )
 
     return user
 
 
 @router.post("/sessions/")
-async def log_in(payload: LoginRequestData):
+async def log_in(payload: auth_base.LoginRequestData):
     """
     Attempts to log a user in.
 
