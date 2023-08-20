@@ -17,24 +17,43 @@ def fixture_test_user(client_create_user, test_user_credentials):
     yield client_create_user(test_user_credentials)
 
 
-def test_create_user_returns_200_on_success():
-    pass
+def test_create_user_returns_201_on_success(client_create_user):
+    credentials = {"username": "newuser", "password": "test"}
+    response = client_create_user(credentials)
+
+    assert response.status_code == 201
 
 
-def test_create_user_with_nonunique_username_fails():
-    pass
+def test_create_user_with_nonunique_username_fails(client_create_user):
+    credentials = {"username": "newuser", "password": "test"}
+    client_create_user(credentials)
+
+    # Recreate the same user, name collision.
+    response = client_create_user(credentials)
+
+    assert response.status_code == 400
 
 
-def test_create_user_requires_username_and_password_supplied():
-    pass
-
-
-def test_log_in_returns_200_and_user_on_success(
-    client_create_user, test_user_credentials
+@pytest.mark.parametrize(
+    "credentials",
+    [
+        pytest.param({"username": "test"}, id="username_only"),
+        pytest.param({"password": "test"}, id="password_only"),
+        pytest.param({}, id="no_data"),
+    ],
+)
+def test_create_user_requires_username_and_password_supplied(
+    client_create_user, credentials
 ):
+    response = client_create_user(credentials)
+
+    assert response.status_code == 422
+
+
+def test_log_in_returns_200_and_user_on_success(client_log_in, test_user_credentials):
     # The `test_user` fixture creates a user.
 
-    response = client_create_user(test_user_credentials)
+    response = client_log_in(test_user_credentials)
 
     assert response.status_code == 200
 

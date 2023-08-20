@@ -18,8 +18,11 @@ def reset_database():
     """
     Empties all user tables between tests.
     """
+    tables = ["files", "users"]
+
     with get_connection() as conn, conn.cursor() as cursor:
-        cursor.execute("DELETE FROM files;")
+        for table in tables:
+            cursor.execute("DELETE FROM " + table + ";")
 
 
 @pytest.fixture(autouse=True)
