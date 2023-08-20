@@ -9,7 +9,9 @@ import pathlib
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import FileResponse
-import use_cases.files as files_use_cases
+
+import files.use_cases as files_use_cases
+
 from settings import settings
 
 router = APIRouter(prefix="/files")

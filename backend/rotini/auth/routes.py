@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from use_cases.exceptions import DoesNotExist
+from exceptions import DoesNotExist
 
 import auth.use_cases as auth_use_cases
 import auth.base as auth_base

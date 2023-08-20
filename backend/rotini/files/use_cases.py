@@ -11,7 +11,8 @@ import typing_extensions as typing
 
 from db import get_connection
 from settings import settings
-from use_cases.exceptions import DoesNotExist
+
+from exceptions import DoesNotExist
 
 
 class FileRecord(typing.TypedDict):

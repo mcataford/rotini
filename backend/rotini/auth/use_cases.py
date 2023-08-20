@@ -9,7 +9,7 @@ import typing_extensions as typing
 import argon2
 
 from db import get_connection
-from use_cases.exceptions import DoesNotExist
+from exceptions import DoesNotExist
 
 import auth.base as auth_base
 
