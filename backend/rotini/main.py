@@ -4,6 +4,7 @@ Rotini: a self-hosted cloud storage & productivity app.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+import api.users
 import api.files
 
 app = FastAPI()
@@ -19,6 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(api.files.router)
+app.include_router(api.users.router)
 
 
 @app.get("/", status_code=204)
