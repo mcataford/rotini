@@ -3,3 +3,5 @@ uvicorn[standard]
 python-multipart
 psycopg2
 typing_extensions
+
+argon2-cffi~=23.1
