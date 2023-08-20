@@ -1,6 +1,10 @@
 from fastapi import APIRouter, Request, HTTPException
 
-import use_cases.users as users_use_cases
+from use_cases.exceptions import DoesNotExist
+
+import auth.use_cases as auth_use_cases
+
+from .base import LoginRequestData
 
 router = APIRouter(prefix="/auth")
 
@@ -26,15 +30,15 @@ async def create_user(request: Request):
     """
     body = await request.json()
 
-    user = users_use_cases.create_new_user(
+    user = auth_use_cases.create_new_user(
         username=body["username"], raw_password=body["password"]
     )
 
     return user
 
 
-@router.post("/session/")
-async def log_in(request: Request):
+@router.post("/sessions/")
+async def log_in(payload: LoginRequestData):
     """
     Attempts to log a user in.
 
@@ -47,14 +51,12 @@ async def log_in(request: Request):
         If the credentials are incorrect, immediate failure.
     """
 
-    body = await request.json()
+    try:
+        user = auth_use_cases.get_user(username=payload.username)
+    except DoesNotExist as exc:
+        raise HTTPException(status_code=401) from exc
 
-    username = body["username"]
-    password = body["password"]
-
-    user = users_use_cases.get_user(username=username)
-
-    if not users_use_cases.validate_password_for_user(user["id"], password):
+    if not auth_use_cases.validate_password_for_user(user["id"], payload.password):
         raise HTTPException(status_code=401)
 
     return user
