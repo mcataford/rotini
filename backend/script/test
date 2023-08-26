@@ -1,7 +1,32 @@
 #!/bin/bash
 
-TEST_DB_CONTAINER=rotini-test-ephemeral
-FAILED=0
+# Test runner script
+#
+# This sets up an ephemeral database for test purposes, runs migrations on it
+# and triggers pytest. Regardless of outcome, the database container is cleaned
+# up after the fact.
+#
+# This will return 0 or 1 as exit code, depending on outcome.
+
+TEST_DB_CONTAINER="rotini-test-ephemeral-$(date +%s)"
+
+VENV_PYTHON=.venv/bin/python
+VENV_PYTEST=.venv/bin/pytest
+
+HEALTHCHECK_SLEEP=0.5
+
+# Log & exit.
+function fail {
+    echo $1
+    exit 1
+}
+
+# Cleanup before exit (success/failure)
+function cleanup {
+    docker rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
+}
+
+trap cleanup EXIT
 
 docker run \
     --name $TEST_DB_CONTAINER \
@@ -12,15 +37,8 @@ docker run \
 
 until [ -n "$(docker exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
     echo "Waiting for DB to come alive..."
-    sleep 0.1;
+    sleep $HEALTHCHECK_SLEEP;
 done;
 
-ROTINI_TEST=1 PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up || (echo "Migrations failed." && FAILED=1)
-ROTINI_TEST=1 .venv/bin/pytest . -vv -s || (echo "Test run failed." && FAILED=1)
-
-docker rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
-
-if [ $FAILED -eq 1 ];
-then
-    exit 1
-fi
+ROTINI_TEST=1 PYTHONPATH=rotini $VENV_PYTHON rotini/migrations/migrate.py up || fail "Migrations failed."
+ROTINI_TEST=1 $VENV_PYTEST . -vv -s || fail "Test run failed."
