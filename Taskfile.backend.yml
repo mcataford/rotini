@@ -5,7 +5,7 @@ env:
   VENV_PATH: "{{ .BE_BASE_PATH }}/.venv"
   VENV_BIN: "{{ .VENV_PATH }}/bin"
   VENV_ACTIVATE: "{{ .VENV_BIN }}/activate"
-  DOTENV: "{{ .BASE_PATH }}/.env"
+  DOTENV: "{{ .BE_BASE_PATH }}/.env"
 
 tasks:
   bootstrap:
@@ -52,6 +52,7 @@ tasks:
     deps: [bootstrap]
     env:
       PYTHONPATH: '..'
+      ROTINI_MIGRATE: 1
     dotenv:
       - "{{ .DOTENV }}"
     cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"

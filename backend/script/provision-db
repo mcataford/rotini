@@ -22,4 +22,4 @@ until [ -n "$(docker exec $CONTAINER_NAME pg_isready | grep accepting)" ]; do
     sleep 0.1;
 done;
 
-PYTHONPATH=rotini .venv/bin/python rotini/migrations/migrate.py up
+PYTHONPATH=rotini ROTINI_MIGRATE=1 .venv/bin/python rotini/migrations/migrate.py up
