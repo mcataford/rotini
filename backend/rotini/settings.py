@@ -4,6 +4,7 @@ import typing
 
 IS_CI = os.getenv("ROTINI_CI")
 IS_TEST = os.getenv("ROTINI_TEST")
+IS_MIGRATE = os.getenv("ROTINI_MIGRATE")
 
 
 class Settings:
@@ -43,8 +44,12 @@ if IS_CI is not None:
 elif IS_TEST is not None:
     import envs.test as test_config
 
-    settings = extract_settings("ci", test_config)
+    settings = extract_settings("test", test_config)
+elif IS_MIGRATE is not None:
+    import envs.migrate as migrate_config
+
+    settings = extract_settings("migrate", migrate_config)
 else:
     import envs.local as local_config
 
-    settings = extract_settings("ci", local_config)
+    settings = extract_settings("local", local_config)
