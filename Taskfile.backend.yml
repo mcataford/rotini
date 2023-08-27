@@ -6,6 +6,7 @@ env:
   VENV_BIN: "{{ .VENV_PATH }}/bin"
   VENV_ACTIVATE: "{{ .VENV_BIN }}/activate"
   DOTENV: "{{ .BE_BASE_PATH }}/.env"
+  APP_CONTAINER_NAME: "rotini_app"
 
 tasks:
   bootstrap:
@@ -39,8 +40,14 @@ tasks:
   start:
     desc: "Starts the backend application."
     deps: [docker-build]
-    cmd: docker run -d -p 8000:8000 --name rotini_app {{ .CLI_ARGS }} rotini:dev
+    cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway rotini:dev
     dir: backend/rotini
+  stop:
+    desc: "Stops the backend application."
+    cmd: docker rm -f {{ .APP_CONTAINER_NAME }}
+  logs:
+    desc: "Shortcut to Docker container logs"
+    cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
   start-db:
     desc: "Provisions a local Postgres database."
     dotenv:
@@ -66,3 +73,4 @@ tasks:
     desc: "Builds a docker image from /backend"
     cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
     dir: backend
+
