@@ -1,4 +1,5 @@
 import pytest
+import jwt
 
 
 @pytest.fixture(name="test_user_credentials")
@@ -60,6 +61,25 @@ def test_log_in_returns_200_and_user_on_success(client_log_in, test_user_credent
     returned = response.json()
 
     assert returned["username"] == test_user_credentials["username"]
+
+
+def test_log_in_attaches_identity_token_to_response_on_success(
+    client_log_in, test_user_credentials
+):
+    # This test specifically needs to inspect the JWT, hence the need to access
+    # use case logic that is otherwise an implementation detail.
+
+    import auth.use_cases as auth_use_cases
+
+    response = client_log_in(test_user_credentials)
+
+    returned_auth = response.headers.get("authorization")
+    token = returned_auth.split(" ")[1]  # Header of the form "Bearer <token>"
+
+    assert (
+        auth_use_cases.decode_token(token)["username"]
+        == test_user_credentials["username"]
+    )
 
 
 def test_log_in_returns_401_on_wrong_password(client_log_in, test_user_credentials):
