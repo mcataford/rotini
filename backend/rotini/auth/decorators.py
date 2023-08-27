@@ -15,11 +15,11 @@ def requires_logged_in(func):
     """
 
     @functools.wraps(func)
-    async def wrapper(*, request: fastapi.Request, **kwargs):
+    async def wrapper(request: fastapi.Request, *args, **kwargs):
         if not hasattr(request.state, "user"):
             raise fastapi.HTTPException(status_code=401)
 
-        response = await func(**kwargs)
+        response = await func(request, *args, **kwargs)
         return response
 
     return wrapper

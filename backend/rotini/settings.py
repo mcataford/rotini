@@ -24,7 +24,7 @@ class Settings:
     STORAGE_ROOT: typing.Optional[str] = "."
 
     JWT_SECRET_KEY: str = "placeholder"
-    JWT_LIFETIME: int = 60
+    JWT_LIFETIME: int = 900  # 15 minutes.
 
     def __init__(self, *_, **kwargs):
         for key, value in kwargs.items():
