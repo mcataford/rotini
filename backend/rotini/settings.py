@@ -14,12 +14,17 @@ class Settings:
     """
 
     ENV: str
+
     DATABASE_USERNAME: str
     DATABASE_PASSWORD: str
     DATABASE_HOST: str
     DATABASE_PORT: int
     DATABASE_NAME: str
+
     STORAGE_ROOT: typing.Optional[str] = "."
+
+    JWT_SECRET_KEY: str = "placeholder"
+    JWT_LIFETIME: int = 60
 
     def __init__(self, *_, **kwargs):
         for key, value in kwargs.items():

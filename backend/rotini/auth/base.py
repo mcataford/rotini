@@ -18,5 +18,14 @@ class CreateUserRequestData(pydantic.BaseModel):
     password: str
 
 
+class IdentityTokenData(pydantic.BaseModel):
+    """Contents of an identity token"""
+
+    exp: int
+    user_id: int
+    username: str
+    token_id: str
+
+
 class UsernameAlreadyExists(Exception):
     """Signals a unique constraint violation on username values"""

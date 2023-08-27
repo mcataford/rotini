@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 
 from exceptions import DoesNotExist
 
@@ -59,4 +60,9 @@ async def log_in(payload: auth_base.LoginRequestData):
     if not auth_use_cases.validate_password_for_user(user["id"], payload.password):
         raise HTTPException(status_code=401)
 
-    return user
+    token = auth_use_cases.generate_token_for_user(user)
+
+    return JSONResponse(
+        content={"username": user["username"]},
+        headers={"Authorization": f"Bearer {token}"},
+    )

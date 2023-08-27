@@ -4,12 +4,15 @@ User-related use cases.
 Functions in this file are focused on users and passwords.
 """
 import datetime
-import typing_extensions as typing
+import uuid
 
+import typing_extensions as typing
 import argon2
+import jwt
 
 from db import get_connection
 from exceptions import DoesNotExist
+from settings import settings
 
 import auth.base as auth_base
 
@@ -35,11 +38,11 @@ def create_new_user(*, username: str, raw_password: str) -> User:
     """
     Creates a new user record given a username and password.
 
-    The password is hashed (see `_hash_secret`) and the hash is stored.
+    The password is hashed and the hash is stored.
 
     If successful, returns a dictionary representing the user.
     """
-    password_hash = _hash_secret(raw_password)
+    password_hash = password_hasher.hash(raw_password)
 
     with get_connection() as connection, connection.cursor() as cursor:
         try:
@@ -61,13 +64,6 @@ def create_new_user(*, username: str, raw_password: str) -> User:
         updated_at=datetime.datetime.now(),
         password_updated_at=datetime.datetime.now(),
     )
-
-
-def _hash_secret(secret: str) -> str:
-    """
-    Produces a hash of the given secret.
-    """
-    return password_hasher.hash(secret)
 
 
 def get_user(
@@ -120,3 +116,34 @@ def validate_password_for_user(user_id: int, raw_password: str) -> bool:
         return password_hasher.verify(current_secret_hash, raw_password)
     except Exception:  # pylint: disable=broad-exception-caught
         return False
+
+
+def generate_token_for_user(user: User) -> str:
+    """
+    Generates an identity token for a given user.
+    """
+    token_data: auth_base.IdentityTokenData = {
+        "exp": (
+            datetime.datetime.now() + datetime.timedelta(seconds=settings.JWT_LIFETIME)
+        ).timestamp(),
+        "user_id": user["id"],
+        "username": user["username"],
+        "token_id": str(uuid.uuid4()),
+    }
+
+    return jwt.encode(token_data, settings.JWT_SECRET_KEY, algorithm="HS256")
+
+
+def decode_token(
+    token: str,
+) -> typing.Union[typing.NoReturn, auth_base.IdentityTokenData]:
+    """
+    Decodes the given token.
+
+    This may raise if the token is expired or invalid.
+    """
+    token_data: auth_base.IdentityTokenData = jwt.decode(
+        token, settings.JWT_SECRET_KEY, algorithms=["HS256"]
+    )
+
+    return token_data
