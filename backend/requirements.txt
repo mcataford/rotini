@@ -27,9 +27,13 @@ psycopg2==2.9.7
 pycparser==2.21
     # via cffi
 pydantic==2.1.1
-    # via fastapi
+    # via
+    #   -r requirements.in
+    #   fastapi
 pydantic-core==2.4.0
     # via pydantic
+pyjwt==2.8.0
+    # via -r requirements.in
 python-dotenv==1.0.0
     # via uvicorn
 python-multipart==0.0.6
