@@ -7,23 +7,38 @@ files that live in the system.
 
 import pathlib
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, HTTPException, UploadFile, Request
 from fastapi.responses import FileResponse
 
 import files.use_cases as files_use_cases
-
+import auth.decorators as auth_decorators
 from settings import settings
 
 router = APIRouter(prefix="/files")
 
 
-@router.get("/")
-def list_files():
-    return files_use_cases.get_all_file_records()
+@router.get("/", status_code=200)
+@auth_decorators.requires_logged_in
+async def list_files(request: Request):
+    """
+    Fetches all files owned by the logged-in user.
+
+    200 { [<FileRecord>, ...] }
+
+        If the user is logged in, file records that they
+        own are returned.
+
+    401 {}
+
+        If the request is not authenticated, it fails.
+    """
+    current_user_id = request.state.user["user_id"]
+    return files_use_cases.get_all_files_owned_by_user(current_user_id)
 
 
 @router.post("/", status_code=201)
-async def upload_file(file: UploadFile) -> files_use_cases.FileRecord:
+@auth_decorators.requires_logged_in
+async def upload_file(request: Request, file: UploadFile) -> files_use_cases.FileRecord:
     """
     Receives files uploaded by the user, saving them to disk and
     recording their existence in the database.
@@ -40,7 +55,9 @@ async def upload_file(file: UploadFile) -> files_use_cases.FileRecord:
     with open(dest_path, "wb") as f:
         f.write(content)
 
-    created_record = files_use_cases.create_file_record(str(dest_path), size)
+    created_record = files_use_cases.create_file_record(
+        str(dest_path), size, request.state.user["user_id"]
+    )
 
     return created_record
 
