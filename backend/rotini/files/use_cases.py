@@ -12,22 +12,15 @@ import typing_extensions as typing
 from db import get_connection
 from settings import settings
 
+from permissions.base import Permissions
+from permissions.files import set_file_permission
+
 from exceptions import DoesNotExist
 
-
-class FileRecord(typing.TypedDict):
-    """
-    Database record associated with a file tracked
-    by the system.
-    """
-
-    id: str
-    size: int
-    path: str
-    filename: str
+from files.base import FileRecord
 
 
-def create_file_record(path: str, size: int) -> FileRecord:
+def create_file_record(path: str, size: int, owner_id: int) -> FileRecord:
     """
     Creates a record representing an uploaded file in the database.
 
@@ -43,20 +36,34 @@ def create_file_record(path: str, size: int) -> FileRecord:
 
         inserted_id = cursor.fetchone()[0]
 
+    set_file_permission(inserted_id, owner_id, list(Permissions))
+
     filename = pathlib.Path(path).name
 
     return FileRecord(id=inserted_id, size=size, path=path, filename=filename)
 
 
-def get_all_file_records() -> typing.Tuple[FileRecord]:
+def get_all_files_owned_by_user(user_id: int) -> typing.Tuple[FileRecord]:
     """
-    Fetches all availables files from the database.
-    """
+    Gets all the file records owned by the user.
 
+    A file is considered owned if the user has all permissions on a given file. There
+    can be more than one owner to a file, but all files must have an owner.
+    """
     rows = None
 
     with get_connection() as connection, connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM files;")
+        cursor.execute(
+            """SELECT
+	            f.*
+            from files f
+            join permissions_files pf 
+            on f.id = pf.file_id 
+            where 
+                pf.user_id = %s
+                and pf.value = %s;""",
+            (user_id, sum(p.value for p in Permissions)),
+        )
         rows = cursor.fetchall()
 
     if rows is None:
