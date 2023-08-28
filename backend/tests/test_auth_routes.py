@@ -1,36 +1,21 @@
 import pytest
-import jwt
+
+pytestmark = pytest.mark.anyio
 
 
-@pytest.fixture(name="test_user_credentials")
-def fixture_test_user_creds():
-    """
-    Test user credentials.
-    """
-    return {"username": "testuser", "password": "testpassword"}
-
-
-@pytest.fixture(name="test_user", autouse=True)
-def fixture_test_user(client_create_user, test_user_credentials):
-    """
-    Sets up a test user using the `test_user_credentials` data.
-    """
-    yield client_create_user(test_user_credentials)
-
-
-def test_create_user_returns_201_on_success(client_create_user):
+async def test_create_user_returns_201_on_success(client_create_user):
     credentials = {"username": "newuser", "password": "test"}
-    response = client_create_user(credentials)
+    response = await client_create_user(credentials)
 
     assert response.status_code == 201
 
 
-def test_create_user_with_nonunique_username_fails(client_create_user):
+async def test_create_user_with_nonunique_username_fails(client_create_user):
     credentials = {"username": "newuser", "password": "test"}
-    client_create_user(credentials)
+    await client_create_user(credentials)
 
     # Recreate the same user, name collision.
-    response = client_create_user(credentials)
+    response = await client_create_user(credentials)
 
     assert response.status_code == 400
 
@@ -43,18 +28,20 @@ def test_create_user_with_nonunique_username_fails(client_create_user):
         pytest.param({}, id="no_data"),
     ],
 )
-def test_create_user_requires_username_and_password_supplied(
+async def test_create_user_requires_username_and_password_supplied(
     client_create_user, credentials
 ):
-    response = client_create_user(credentials)
+    response = await client_create_user(credentials)
 
     assert response.status_code == 422
 
 
-def test_log_in_returns_200_and_user_on_success(client_log_in, test_user_credentials):
+async def test_log_in_returns_200_and_user_on_success(
+    client_log_in, test_user_credentials
+):
     # The `test_user` fixture creates a user.
 
-    response = client_log_in(test_user_credentials)
+    response = await client_log_in(test_user_credentials)
 
     assert response.status_code == 200
 
@@ -63,7 +50,7 @@ def test_log_in_returns_200_and_user_on_success(client_log_in, test_user_credent
     assert returned["username"] == test_user_credentials["username"]
 
 
-def test_log_in_attaches_identity_token_to_response_on_success(
+async def test_log_in_attaches_identity_token_to_response_on_success(
     client_log_in, test_user_credentials
 ):
     # This test specifically needs to inspect the JWT, hence the need to access
@@ -71,7 +58,7 @@ def test_log_in_attaches_identity_token_to_response_on_success(
 
     import auth.use_cases as auth_use_cases
 
-    response = client_log_in(test_user_credentials)
+    response = await client_log_in(test_user_credentials)
 
     returned_auth = response.headers.get("authorization")
     token = returned_auth.split(" ")[1]  # Header of the form "Bearer <token>"
@@ -82,16 +69,18 @@ def test_log_in_attaches_identity_token_to_response_on_success(
     )
 
 
-def test_log_in_returns_401_on_wrong_password(client_log_in, test_user_credentials):
-    response = client_log_in(
+async def test_log_in_returns_401_on_wrong_password(
+    client_log_in, test_user_credentials
+):
+    response = await client_log_in(
         {"username": test_user_credentials["username"], "password": "sillystring"}
     )
 
     assert response.status_code == 401
 
 
-def test_log_in_returns_401_on_nonexistent_user(client_log_in):
-    response = client_log_in({"username": "notauser", "password": "sillystring"})
+async def test_log_in_returns_401_on_nonexistent_user(client_log_in):
+    response = await client_log_in({"username": "notauser", "password": "sillystring"})
 
     assert response.status_code == 401
 
@@ -104,7 +93,7 @@ def test_log_in_returns_401_on_nonexistent_user(client_log_in):
         pytest.param({}, id="no_data"),
     ],
 )
-def test_log_in_returns_422_on_invalid_input(client_log_in, credentials):
-    response = client_log_in(credentials)
+async def test_log_in_returns_422_on_invalid_input(client_log_in, credentials):
+    response = await client_log_in(credentials)
 
     assert response.status_code == 422

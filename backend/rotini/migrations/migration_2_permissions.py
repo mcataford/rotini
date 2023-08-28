@@ -18,8 +18,8 @@ UP_SQL = """CREATE TABLE
     value bigint NOT NULL,
     created_at timestamp DEFAULT now(),
     updated_at timestamp DEFAULT now(),
-    CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES files(id),
-    CONSTRAINT user_fk FOREIGN KEY(user_id) REFERENCES users(id),
+    CONSTRAINT file_fk FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE CASCADE,
+    CONSTRAINT user_fk FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT unique_permission_per_file_per_user UNIQUE(file_id, user_id)
 );
 """
