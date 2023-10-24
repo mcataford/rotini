@@ -14,10 +14,10 @@ WORKDIR /app
 
 COPY ./pyproject.toml ./pyproject.toml
 
+COPY ./rotini ./rotini
+
 RUN python3 -m pip install -U pip
 RUN python3 -m pip install -e .
-
-COPY ./rotini ./rotini
 
 WORKDIR ./rotini
 
