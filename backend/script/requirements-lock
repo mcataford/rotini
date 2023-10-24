@@ -1,6 +1,0 @@
-#!/bin/bash
-
-PIP_COMPILE=.venv/bin/pip-compile
-
-$PIP_COMPILE requirements.in --no-header \
-    && $PIP_COMPILE requirements_dev.in --no-header

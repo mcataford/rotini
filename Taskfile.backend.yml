@@ -64,11 +64,6 @@ tasks:
       - "{{ .DOTENV }}"
     cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"
     dir: backend/rotini/migrations
-  lock-deps:
-    desc: "Locks production and development dependencies"
-    deps: [bootstrap]
-    cmd: . script/requirements-lock
-    dir: backend
   docker-build:
     desc: "Builds a docker image from /backend"
     cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
