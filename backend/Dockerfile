@@ -12,10 +12,10 @@ RUN apt-get install -y \
 
 WORKDIR /app
 
-COPY ./requirements.txt ./requirements.txt
+COPY ./pyproject.toml ./pyproject.toml
 
-RUN python3 -m pip install -U pip==23.0.0 pip-tools==7.1.0
-RUN python3 -m pip install -r ./requirements.txt
+RUN python3 -m pip install -U pip
+RUN python3 -m pip install -e .
 
 COPY ./rotini ./rotini
 

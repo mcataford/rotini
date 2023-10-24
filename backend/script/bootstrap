@@ -4,6 +4,6 @@ python -m venv .venv
 
 . .venv/bin/activate
 
-pip install -U pip==23.0.0 pip-tools==7.1.0
+pip install -U pip
 
-pip-sync requirements.txt requirements_dev.txt
+pip install -e '.[dev]'
