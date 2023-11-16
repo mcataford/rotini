@@ -14,7 +14,7 @@ tasks:
     cmds:
       - . script/bootstrap
     sources:
-      - "{{ .BE_BASE_PATH }}/*.in"
+      - "{{ .BE_BASE_PATH }}/pyproject.toml"
     generates:
       - "{{ .VENV_PATH }}/*"
     dir: backend

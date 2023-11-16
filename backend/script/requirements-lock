@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PIP_COMPILE=.venv/bin/pip-compile
+PYTHON=.venv/bin/python
 
-$PIP_COMPILE requirements.in --no-header \
-    && $PIP_COMPILE requirements_dev.in --no-header
+$PYTHON -m piptools compile -o requirements.txt pyproject.toml --no-header \
+    && $PYTHON -m piptools compile -o requirements_dev.txt --no-header --extra dev --constraint requirements.txt pyproject.toml 

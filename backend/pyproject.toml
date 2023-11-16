@@ -1,3 +1,30 @@
+[project]
+name = "rotini"
+version = "0.0.0"
+requires-python = ">= 3.10"
+dependencies = [
+   "fastapi",
+   "uvicorn[standard]",
+   "python-multipart",
+   "typing_extensions",
+   "pydantic",
+   "pyjwt",
+   "argon2-cffi",
+   "psycopg2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "anyio",
+    "black",
+    "pylint",
+    "pytest",
+    "httpx",
+]
+
+[tool.setuptools]
+packages = ["rotini"]
+
 [tool.pytest.ini_options]
 pythonpath=[
     ".",
