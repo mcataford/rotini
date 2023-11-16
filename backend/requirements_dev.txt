@@ -1,20 +1,39 @@
+annotated-types==0.5.0
+    # via
+    #   -c requirements.txt
+    #   pydantic
 anyio==3.7.1
     # via
     #   -c requirements.txt
-    #   -r requirements_dev.in
     #   httpcore
+    #   rotini (pyproject.toml)
+    #   starlette
+    #   watchfiles
+argon2-cffi==23.1.0
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
+argon2-cffi-bindings==21.2.0
+    # via
+    #   -c requirements.txt
+    #   argon2-cffi
 astroid==2.15.6
     # via pylint
 black==23.7.0
-    # via -r requirements_dev.in
+    # via rotini (pyproject.toml)
 certifi==2023.7.22
     # via
     #   httpcore
     #   httpx
+cffi==1.15.1
+    # via
+    #   -c requirements.txt
+    #   argon2-cffi-bindings
 click==8.1.6
     # via
     #   -c requirements.txt
     #   black
+    #   uvicorn
 dill==0.3.7
     # via pylint
 exceptiongroup==1.1.2
@@ -22,14 +41,23 @@ exceptiongroup==1.1.2
     #   -c requirements.txt
     #   anyio
     #   pytest
+fastapi==0.101.0
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
 h11==0.14.0
     # via
     #   -c requirements.txt
     #   httpcore
+    #   uvicorn
 httpcore==0.17.3
     # via httpx
+httptools==0.6.0
+    # via
+    #   -c requirements.txt
+    #   uvicorn
 httpx==0.24.1
-    # via -r requirements_dev.in
+    # via rotini (pyproject.toml)
 idna==3.4
     # via
     #   -c requirements.txt
@@ -57,16 +85,53 @@ platformdirs==3.10.0
     #   pylint
 pluggy==1.2.0
     # via pytest
+psycopg2==2.9.7
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
+pycparser==2.21
+    # via
+    #   -c requirements.txt
+    #   cffi
+pydantic==2.1.1
+    # via
+    #   -c requirements.txt
+    #   fastapi
+    #   rotini (pyproject.toml)
+pydantic-core==2.4.0
+    # via
+    #   -c requirements.txt
+    #   pydantic
+pyjwt==2.8.0
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
 pylint==2.17.5
-    # via -r requirements_dev.in
+    # via rotini (pyproject.toml)
 pytest==7.4.0
-    # via -r requirements_dev.in
+    # via rotini (pyproject.toml)
+python-dotenv==1.0.0
+    # via
+    #   -c requirements.txt
+    #   uvicorn
+python-multipart==0.0.6
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
+pyyaml==6.0.1
+    # via
+    #   -c requirements.txt
+    #   uvicorn
 sniffio==1.3.0
     # via
     #   -c requirements.txt
     #   anyio
     #   httpcore
     #   httpx
+starlette==0.27.0
+    # via
+    #   -c requirements.txt
+    #   fastapi
 tomli==2.0.1
     # via
     #   black
@@ -78,5 +143,26 @@ typing-extensions==4.7.1
     # via
     #   -c requirements.txt
     #   astroid
+    #   fastapi
+    #   pydantic
+    #   pydantic-core
+    #   rotini (pyproject.toml)
+    #   uvicorn
+uvicorn[standard]==0.23.2
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
+uvloop==0.17.0
+    # via
+    #   -c requirements.txt
+    #   uvicorn
+watchfiles==0.19.0
+    # via
+    #   -c requirements.txt
+    #   uvicorn
+websockets==11.0.3
+    # via
+    #   -c requirements.txt
+    #   uvicorn
 wrapt==1.15.0
     # via astroid

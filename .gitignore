@@ -12,6 +12,7 @@ bin
 
 .venv
 **/*.pyc
+*.egg-info*
 
 */.pnp.*
 */.yarn/*

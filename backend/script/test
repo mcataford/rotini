@@ -37,8 +37,10 @@ docker run \
 
 until [ -n "$(docker exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
     echo "Waiting for DB to come alive..."
-    sleep $HEALTHCHECK_SLEEP;
+    sleep $HEALTHCHECK_SLEEP
 done;
+
+sleep $HEALTHCHECK_SLEEP
 
 ROTINI_TEST=1 PYTHONPATH=rotini $VENV_PYTHON rotini/migrations/migrate.py up || fail "Migrations failed."
 ROTINI_TEST=1 $VENV_PYTEST . -vv -s || fail "Test run failed."
