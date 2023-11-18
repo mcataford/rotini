@@ -43,6 +43,11 @@ dill==0.3.7
 django==4.2.7
     # via
     #   -c requirements.txt
+    #   djangorestframework
+    #   rotini (pyproject.toml)
+djangorestframework==3.14.0
+    # via
+    #   -c requirements.txt
     #   rotini (pyproject.toml)
 exceptiongroup==1.1.2
     # via
@@ -115,7 +120,14 @@ pyjwt==2.8.0
     #   -c requirements.txt
     #   rotini (pyproject.toml)
 pylint==2.17.5
+    # via
+    #   pylint-django
+    #   pylint-plugin-utils
+    #   rotini (pyproject.toml)
+pylint-django==2.5.5
     # via rotini (pyproject.toml)
+pylint-plugin-utils==0.8.2
+    # via pylint-django
 pytest==7.4.0
     # via rotini (pyproject.toml)
 python-dotenv==1.0.0
@@ -126,6 +138,10 @@ python-multipart==0.0.6
     # via
     #   -c requirements.txt
     #   rotini (pyproject.toml)
+pytz==2023.3.post1
+    # via
+    #   -c requirements.txt
+    #   djangorestframework
 pyyaml==6.0.1
     # via
     #   -c requirements.txt

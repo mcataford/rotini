@@ -12,6 +12,7 @@ dependencies = [
    "argon2-cffi",
    "psycopg2",
    "django",
+   "djangorestframework",
 ]
 
 [project.optional-dependencies]
@@ -19,6 +20,7 @@ dev = [
     "anyio",
     "black",
     "pylint",
+    "pylint_django",
     "pytest",
     "httpx",
 ]
@@ -31,3 +33,7 @@ pythonpath=[
     ".",
     "./rotini",
 ]
+
+[tool.pylint.'MASTER']
+load-plugins="pylint_django"
+
