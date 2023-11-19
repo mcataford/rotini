@@ -3,13 +3,8 @@ name = "rotini"
 version = "0.0.0"
 requires-python = ">= 3.10"
 dependencies = [
-   "fastapi",
    "uvicorn[standard]",
    "python-multipart",
-   "typing_extensions",
-   "pydantic",
-   "pyjwt",
-   "argon2-cffi",
    "psycopg2",
    "django",
    "djangorestframework",
@@ -21,17 +16,18 @@ dev = [
     "black",
     "pylint",
     "pylint_django",
+    "pytest-django",
     "pytest",
-    "httpx",
 ]
 
 [tool.setuptools]
 packages = ["rotini"]
 
 [tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE="base.settings"
 pythonpath=[
     ".",
-    "./rotini",
+    "./rotini_django",
 ]
 
 [tool.pylint.'MASTER']
