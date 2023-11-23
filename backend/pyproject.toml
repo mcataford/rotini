@@ -5,6 +5,7 @@ requires-python = ">= 3.10"
 dependencies = [
    "uvicorn[standard]",
    "python-multipart",
+   "pyjwt",
    "psycopg2",
    "django",
    "djangorestframework",

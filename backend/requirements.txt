@@ -20,6 +20,8 @@ idna==3.4
     # via anyio
 psycopg2==2.9.7
     # via rotini (pyproject.toml)
+pyjwt==2.8.0
+    # via rotini (pyproject.toml)
 python-dotenv==1.0.0
     # via uvicorn
 python-multipart==0.0.6
