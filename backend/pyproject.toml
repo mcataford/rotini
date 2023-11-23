@@ -28,7 +28,7 @@ packages = ["rotini"]
 DJANGO_SETTINGS_MODULE="base.settings"
 pythonpath=[
     ".",
-    "./rotini_django",
+    "./rotini",
 ]
 
 [tool.pylint.'MASTER']

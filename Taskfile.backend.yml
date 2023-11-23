@@ -42,11 +42,6 @@ tasks:
     deps: [docker-build]
     cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway rotini:dev
     dir: backend/rotini
-  start-django:
-    desc: "Starts the backend application."
-    deps: [docker-build-django]
-    cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway rotini:dev-django
-    dir: backend/rotini
   stop:
     desc: "Stops the backend application."
     cmd: docker rm -f {{ .APP_CONTAINER_NAME }}
@@ -77,9 +72,5 @@ tasks:
   docker-build:
     desc: "Builds a docker image from /backend"
     cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
-    dir: backend
-  docker-build-django:
-    desc: "Builds a docker image from /backend"
-    cmd: docker build --file Dockerfile-django -t rotini:dev-django .
     dir: backend
 
