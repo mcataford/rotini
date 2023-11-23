@@ -21,5 +21,3 @@ until [ -n "$(docker exec $CONTAINER_NAME pg_isready | grep accepting)" ]; do
     echo "Waiting for DB to come alive..."
     sleep 0.1;
 done;
-
-PYTHONPATH=rotini ROTINI_MIGRATE=1 .venv/bin/python rotini/migrations/migrate.py up

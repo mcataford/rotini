@@ -23,5 +23,5 @@ import auth.urls
 urlpatterns = [
     django_urls.path("admin/", admin.site.urls),
     django_urls.path("", django_urls.include(files_urls.urlpatterns)),
-    django_urls.path("", django_urls.include(auth.urls.urlpatterns)),
+    django_urls.path("auth/", django_urls.include(auth.urls.urlpatterns)),
 ]

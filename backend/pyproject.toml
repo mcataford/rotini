@@ -30,6 +30,9 @@ pythonpath=[
     ".",
     "./rotini",
 ]
+python_files=[
+    "*_test.py"
+]
 
 [tool.pylint.'MASTER']
 load-plugins="pylint_django"
