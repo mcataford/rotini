@@ -1,28 +1,44 @@
-import django.http as django_http
-import django.contrib.auth as django_auth
-import rest_framework.views as drf_views
-import rest_framework.status as drf_status
+import django.http
+import django.contrib.auth
+import rest_framework.views
+import rest_framework.status
 
-import auth.jwt as jwt_utils
+import auth.jwt
 
 
-class LoginView(drf_views.APIView):
-    def post(self, request: django_http.HttpRequest) -> django_http.HttpResponse:
+class LoginView(rest_framework.views.APIView):
+    """
+    Handles signing in for existing users.
+
+    If valid credentials are provided, a token is included in the
+    response that can then be used to make authenticated requests.
+
+    POST /auth/login/
+    {
+      "username": "testuser",
+      "password": "password"
+    }
+
+    200: The token is included as part of response cookies.
+    401: The credentials provided were incorrect.
+    """
+
+    def post(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
         credentials = {
             "username": request.data.get("username"),
             "password": request.data.get("password"),
         }
 
-        user = django_auth.authenticate(**credentials)
+        user = django.contrib.auth.authenticate(**credentials)
 
         if user is not None:
-            django_auth.login(request, user)
+            django.contrib.auth.login(request, user)
 
-            token = jwt_utils.generate_token_for_user(user_id=user.id)
-            response = django_http.HttpResponse(status=drf_status.HTTP_200_OK)
+            token = auth.jwt.generate_token_for_user(user_id=user.id)
+            response = django.http.HttpResponse(status=200)
 
             response.set_cookie("rotini_jwt", token)
 
             return response
-        else:
-            return django_http.HttpResponse(status=drf_status.HTTP_401_UNAUTHORIZED)
+
+        return django.http.HttpResponse(status=401)
