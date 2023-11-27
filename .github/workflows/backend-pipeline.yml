@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
@@ -43,7 +43,7 @@ jobs:
     name: Lint
     needs: setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
@@ -68,7 +68,7 @@ jobs:
     name: Test
     needs: setup
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Development Docker Image
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Task
         uses: arduino/setup-task@v1
         with:
