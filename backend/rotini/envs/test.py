@@ -1,9 +1,0 @@
-import os
-
-DATABASE_USERNAME = "postgres"
-DATABASE_PASSWORD = "test"
-DATABASE_HOST = "localhost"
-DATABASE_PORT = 5431
-DATABASE_NAME = "postgres"
-
-STORAGE_ROOT = os.getenv("ROTINI_STORAGE_ROOT")

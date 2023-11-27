@@ -1,6 +1,4 @@
-ARG PYTHON_VERSION
-
-FROM python:$PYTHON_VERSION-slim
+FROM python:3.11-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -21,4 +19,4 @@ COPY ./rotini ./rotini
 
 WORKDIR ./rotini
 
-CMD python3 -m uvicorn main:app --host 0.0.0.0
+CMD python3 -m uvicorn base.asgi:application --host 0.0.0.0

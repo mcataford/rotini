@@ -1,34 +1,16 @@
-annotated-types==0.5.0
-    # via
-    #   -c requirements.txt
-    #   pydantic
 anyio==3.7.1
     # via
     #   -c requirements.txt
-    #   httpcore
     #   rotini (pyproject.toml)
-    #   starlette
     #   watchfiles
-argon2-cffi==23.1.0
+asgiref==3.7.2
     # via
     #   -c requirements.txt
-    #   rotini (pyproject.toml)
-argon2-cffi-bindings==21.2.0
-    # via
-    #   -c requirements.txt
-    #   argon2-cffi
+    #   django
 astroid==2.15.6
     # via pylint
 black==23.7.0
     # via rotini (pyproject.toml)
-certifi==2023.7.22
-    # via
-    #   httpcore
-    #   httpx
-cffi==1.15.1
-    # via
-    #   -c requirements.txt
-    #   argon2-cffi-bindings
 click==8.1.6
     # via
     #   -c requirements.txt
@@ -36,33 +18,32 @@ click==8.1.6
     #   uvicorn
 dill==0.3.7
     # via pylint
+django==4.2.7
+    # via
+    #   -c requirements.txt
+    #   djangorestframework
+    #   rotini (pyproject.toml)
+djangorestframework==3.14.0
+    # via
+    #   -c requirements.txt
+    #   rotini (pyproject.toml)
 exceptiongroup==1.1.2
     # via
     #   -c requirements.txt
     #   anyio
     #   pytest
-fastapi==0.101.0
-    # via
-    #   -c requirements.txt
-    #   rotini (pyproject.toml)
 h11==0.14.0
     # via
     #   -c requirements.txt
-    #   httpcore
     #   uvicorn
-httpcore==0.17.3
-    # via httpx
 httptools==0.6.0
     # via
     #   -c requirements.txt
     #   uvicorn
-httpx==0.24.1
-    # via rotini (pyproject.toml)
 idna==3.4
     # via
     #   -c requirements.txt
     #   anyio
-    #   httpx
 iniconfig==2.0.0
     # via pytest
 isort==5.12.0
@@ -89,26 +70,24 @@ psycopg2==2.9.7
     # via
     #   -c requirements.txt
     #   rotini (pyproject.toml)
-pycparser==2.21
-    # via
-    #   -c requirements.txt
-    #   cffi
-pydantic==2.1.1
-    # via
-    #   -c requirements.txt
-    #   fastapi
-    #   rotini (pyproject.toml)
-pydantic-core==2.4.0
-    # via
-    #   -c requirements.txt
-    #   pydantic
 pyjwt==2.8.0
     # via
     #   -c requirements.txt
     #   rotini (pyproject.toml)
 pylint==2.17.5
+    # via
+    #   pylint-django
+    #   pylint-plugin-utils
+    #   rotini (pyproject.toml)
+pylint-django==2.5.5
     # via rotini (pyproject.toml)
+pylint-plugin-utils==0.8.2
+    # via pylint-django
 pytest==7.4.0
+    # via
+    #   pytest-django
+    #   rotini (pyproject.toml)
+pytest-django==4.7.0
     # via rotini (pyproject.toml)
 python-dotenv==1.0.0
     # via
@@ -118,6 +97,10 @@ python-multipart==0.0.6
     # via
     #   -c requirements.txt
     #   rotini (pyproject.toml)
+pytz==2023.3.post1
+    # via
+    #   -c requirements.txt
+    #   djangorestframework
 pyyaml==6.0.1
     # via
     #   -c requirements.txt
@@ -126,12 +109,10 @@ sniffio==1.3.0
     # via
     #   -c requirements.txt
     #   anyio
-    #   httpcore
-    #   httpx
-starlette==0.27.0
+sqlparse==0.4.4
     # via
     #   -c requirements.txt
-    #   fastapi
+    #   django
 tomli==2.0.1
     # via
     #   black
@@ -142,11 +123,8 @@ tomlkit==0.12.1
 typing-extensions==4.7.1
     # via
     #   -c requirements.txt
+    #   asgiref
     #   astroid
-    #   fastapi
-    #   pydantic
-    #   pydantic-core
-    #   rotini (pyproject.toml)
     #   uvicorn
 uvicorn[standard]==0.23.2
     # via

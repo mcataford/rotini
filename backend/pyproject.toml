@@ -3,14 +3,12 @@ name = "rotini"
 version = "0.0.0"
 requires-python = ">= 3.10"
 dependencies = [
-   "fastapi",
    "uvicorn[standard]",
    "python-multipart",
-   "typing_extensions",
-   "pydantic",
    "pyjwt",
-   "argon2-cffi",
    "psycopg2",
+   "django",
+   "djangorestframework",
 ]
 
 [project.optional-dependencies]
@@ -18,15 +16,46 @@ dev = [
     "anyio",
     "black",
     "pylint",
+    "pylint_django",
+    "pytest-django",
     "pytest",
-    "httpx",
 ]
 
 [tool.setuptools]
 packages = ["rotini"]
 
 [tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE="base.settings"
 pythonpath=[
     ".",
     "./rotini",
 ]
+python_files=[
+    "*_test.py"
+]
+
+[tool.pylint.'MASTER']
+load-plugins="pylint_django"
+django-settings-module="base.settings"
+
+[tool.pylint.main]
+ignore-paths = ["^\\\\.venv|^/.venv"]
+ignore-patterns = ["^\\.#"]
+py-version = "3.11"
+source-roots = ["rotini"]
+suggestion-mode = true
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pylint."messages control"]
+disable = ["missing-class-docstring", "too-many-ancestors", "raw-checker-failed", "bad-inline-option", "locally-disabled", "file-ignored", "suppressed-message", "useless-suppression", "deprecated-pragma", "use-symbolic-message-instead", "invalid-name", "missing-function-docstring", "missing-module-docstring", "too-many-locals", "line-too-long", "too-few-public-methods", "fixme"]
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where it
+# should appear only once). See also the "--disable" option for examples.
+enable = ["c-extension-no-member"]
+
+[tool.pylint.similarities]
+min-similarity-lines = 10

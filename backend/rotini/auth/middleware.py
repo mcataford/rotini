@@ -1,42 +1,41 @@
-"""
-Authentication & authorization middleware logic.
-"""
 import logging
 
-import jwt.exceptions
-from fastapi import Request
-from starlette.middleware.base import BaseHTTPMiddleware
+import django.http
+import django.contrib.auth
 
-import auth.use_cases as auth_use_cases
+import auth.jwt
 
 logger = logging.getLogger(__name__)
 
+AuthUser = django.contrib.auth.get_user_model()
 
-class AuthenticationMiddleware(BaseHTTPMiddleware):
+
+class JwtMiddleware:
     """
-    Decodes Authorization headers if present on the request and sets
-    identifying fields in the request state.
-
-    This information is then leveraged by individual routes to determine
-    authorization.
+    Middleware that handles using credentials supplied via the authorization
+    headers on requests to log users in seamlessly.
     """
 
-    async def dispatch(self, request: Request, call_next):
-        auth_header = request.headers.get("authorization")
-        decoded_token = None
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-        if auth_header is not None:
-            _, token = auth_header.split(" ")
+    def __call__(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
+        authorization_header = request.META.get("HTTP_AUTHORIZATION")
+
+        if authorization_header is not None:
             try:
-                decoded_token = auth_use_cases.decode_token(token)
-            except jwt.exceptions.ExpiredSignatureError as exc:
-                logger.exception(exc)
+                _, token = authorization_header.split(" ")
+                decoded_token = auth.jwt.decode_token(token)
 
-        if decoded_token is not None:
-            logger.info(decoded_token)
-            request.state.user = {
-                "username": decoded_token["username"],
-                "user_id": decoded_token["user_id"],
-            }
+                logger.info("Token: %s\nDecoded token: %s", token, decoded_token)
 
-        return await call_next(request)
+                user = AuthUser.objects.get(pk=decoded_token["user_id"])
+
+                request.user = user
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                logger.exception(
+                    e, extra={"authorization_provided": authorization_header}
+                )
+                return django.http.HttpResponse(status=401)
+
+        return self.get_response(request)
