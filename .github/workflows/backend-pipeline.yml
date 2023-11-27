@@ -26,7 +26,7 @@ jobs:
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ steps.get-python-version.outputs.python_version }}
       - uses: actions/cache@v3
@@ -47,7 +47,7 @@ jobs:
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ steps.get-python-version.outputs.python_version }}
       - name: Setup Task
@@ -72,7 +72,7 @@ jobs:
       - name: get-python-version
         run: |
           echo "python_version=$(cat .python-version)" >> $GITHUB_OUTPUT
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ steps.get-python-version.outputs.python_version }}
       - name: Setup Task
