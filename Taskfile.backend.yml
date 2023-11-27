@@ -37,10 +37,12 @@ tasks:
     deps: [bootstrap]
     cmd: . script/test
     dir: backend
+    dotenv:
+      - ../backend-test.env
   start:
     desc: "Starts the backend application."
     deps: [docker-build]
-    cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway rotini:dev
+    cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway --env-file ../../backend.env rotini:dev
     dir: backend/rotini
   stop:
     desc: "Stops the backend application."

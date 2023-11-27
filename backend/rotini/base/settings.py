@@ -11,7 +11,8 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-ia%*ioce3mw$s5$y2@976@qv*3p@e+qis61h6d%5&o(!okdx&*"
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+JWT_SIGNING_SECRET = os.environ["JWT_SIGNING_SECRET"]
 
 DEBUG = True
 
