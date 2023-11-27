@@ -25,6 +25,8 @@ tasks:
       - "{{ .VENV_BIN }}/black . --check"
       - "{{ .VENV_BIN }}/pylint ./rotini"
     dir: backend
+    dotenv:
+      - ../backend-test.env
   lintfix:
     desc: "Lints and fixes /backend using black + pylint."
     deps: [bootstrap]
@@ -32,6 +34,8 @@ tasks:
       - "{{ .VENV_BIN }}/black ."
       - "{{ .VENV_BIN }}/pylint ./rotini"
     dir: backend
+    dotenv:
+      - ../backend-test.env
   test:
     desc: "Run the test suites."
     deps: [bootstrap]

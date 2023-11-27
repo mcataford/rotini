@@ -32,8 +32,10 @@ class JwtMiddleware:
                 user = AuthUser.objects.get(pk=decoded_token["user_id"])
 
                 request.user = user
-            except Exception as e:
-                print(e)
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                logger.exception(
+                    e, extra={"authorization_provided": authorization_header}
+                )
                 return django.http.HttpResponse(status=401)
 
         return self.get_response(request)
