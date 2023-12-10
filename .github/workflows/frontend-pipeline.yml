@@ -168,7 +168,7 @@ jobs:
           yarn netlify deploy --dir=packages/app/dist --json | jq .deploy_url > output.log
           echo "::set-output name=draft-url::$(cat output.log)"
       - name: Report
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           DRAFT_URL: ${{ steps.preview-deploy.outputs.draft-url }}
         with:
