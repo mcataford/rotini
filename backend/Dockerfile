@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY ./requirements.txt ./requirements.txt
 
-RUN python3 -m pip install -U pip==23.0.0 pip-tools==7.1.0
+RUN python3 -m pip install -U pip==23.3 pip-tools==7.3.0
 RUN python3 -m pip install -r ./requirements.txt
 
 COPY ./rotini ./rotini

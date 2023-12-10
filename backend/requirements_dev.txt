@@ -18,7 +18,7 @@ click==8.1.7
     #   uvicorn
 dill==0.3.7
     # via pylint
-django==4.2.7
+django==4.2.8
     # via
     #   -c requirements.txt
     #   djangorestframework
@@ -118,7 +118,7 @@ tomli==2.0.1
     #   pytest
 tomlkit==0.12.3
     # via pylint
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   -c requirements.txt
     #   asgiref
