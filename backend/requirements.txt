@@ -4,7 +4,7 @@ asgiref==3.7.2
     # via django
 click==8.1.7
     # via uvicorn
-django==4.2.7
+django==5.0
     # via
     #   djangorestframework
     #   rotini (pyproject.toml)
