@@ -45,7 +45,7 @@ tasks:
       - ../backend-test.env
   start:
     desc: "Starts the backend application."
-    deps: [docker-build]
+    deps: [build]
     env:
       APP_CONTAINER_NAME: "{{ .APP_CONTAINER_NAME }}"
     cmd: . script/start.sh
@@ -62,23 +62,13 @@ tasks:
       - "{{ .DOTENV }}"
     cmd: . script/provision-db
     dir: backend
-  migrate:
-    desc: "Applies migrations. Usage: be:migrate -- <up|down>"
-    deps: [bootstrap]
-    env:
-      PYTHONPATH: '..'
-      ROTINI_MIGRATE: 1
-    dotenv:
-      - "{{ .DOTENV }}"
-    cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"
-    dir: backend/rotini/migrations
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
     cmd: . script/requirements-lock
     dir: backend
-  docker-build:
+  build:
     desc: "Builds a docker image from /backend"
-    cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
+    cmd: . script/build.sh
     dir: backend
 
