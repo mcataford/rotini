@@ -88,18 +88,6 @@ jobs:
       - name: Test
         run: |
           task be:test
-  docker-build:
-    runs-on: ubuntu-latest
-    name: Build Development Docker Image
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Task
-        uses: arduino/setup-task@v1
-        with:
-          version: ${{ inputs.task-version }}
-      - name: Build
-        run: |
-          task be:docker-build
   notify-success:
     runs-on: ubuntu-latest
     name: Notify success
