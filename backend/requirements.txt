@@ -1,4 +1,4 @@
-anyio==4.1.0
+anyio==4.2.0
     # via watchfiles
 asgiref==3.7.2
     # via django
