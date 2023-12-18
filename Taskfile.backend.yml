@@ -19,21 +19,19 @@ tasks:
       - "{{ .VENV_PATH }}/*"
     dir: backend
   lint:
-    desc: "Lints /backend using black + pylint."
+    desc: "Checks /backend for linting and formatting problems."
     deps: [bootstrap]
-    cmds:
-      - "{{ .VENV_BIN }}/black . --check"
-      - "{{ .VENV_BIN }}/pylint ./rotini"
+    cmd: . script/format.sh
     dir: backend
     dotenv:
       - ../backend-test.env
   lintfix:
-    desc: "Lints and fixes /backend using black + pylint."
+    desc: "Resolves linting and formatting problems in /backend."
     deps: [bootstrap]
-    cmds:
-      - "{{ .VENV_BIN }}/black ."
-      - "{{ .VENV_BIN }}/pylint ./rotini"
+    cmd: . script/format.sh
     dir: backend
+    env:
+      FIX: 1
     dotenv:
       - ../backend-test.env
   test:
