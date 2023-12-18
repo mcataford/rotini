@@ -34,28 +34,23 @@ tasks:
     cmd: . script/test
     dotenv:
       - ../backend-test.env
-  start:
+  lock-deps:
+    desc: "Locks production and development dependencies"
+    deps: [bootstrap]
+    cmd: . script/requirements-lock
+  docker:start:
     desc: "Starts the backend application."
     deps: [build]
     cmd: . script/start.sh
     dotenv:
       - ../backend.env
-  stop:
+  docker:stop:
     desc: "Stops the backend application."
     cmd: docker rm -f {{ .APP_CONTAINER_NAME }} {{ .DB_CONTAINER_NAME }}
-  logs:
+  docker:logs:
     desc: "Shortcut to Docker container logs"
     cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
-  start-db:
-    desc: "Provisions a local Postgres database."
-    dotenv:
-      - ../backend.env
-    cmd: . script/provision-db
-  lock-deps:
-    desc: "Locks production and development dependencies"
-    deps: [bootstrap]
-    cmd: . script/requirements-lock
-  build:
+  docker:build:
     desc: "Builds a docker image from /backend"
     cmd: . script/build.sh
 
