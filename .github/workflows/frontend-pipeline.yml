@@ -131,7 +131,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}-parcel
       - run: task fe:build
       - name: Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: packages/app/dist
