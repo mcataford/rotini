@@ -3,5 +3,7 @@ version: '3'
 # See environment-specific taskfiles for commands about
 # that environment.
 includes:
-  be: ./Taskfile.backend.yml
+  be:
+    taskfile: ./Taskfile.backend.yml
+    dir: backend
   fe: ./Taskfile.frontend.yml

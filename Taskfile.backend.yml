@@ -1,82 +1,56 @@
 version: '3'
 
 env:
-  BE_BASE_PATH: "/{{ .TASKFILE_DIR }}/backend"
-  VENV_PATH: "{{ .BE_BASE_PATH }}/.venv"
+  VENV_PATH: "{{ .TASKFILE_DIR }}/.venv"
   VENV_BIN: "{{ .VENV_PATH }}/bin"
-  VENV_ACTIVATE: "{{ .VENV_BIN }}/activate"
-  DOTENV: "{{ .BE_BASE_PATH }}/.env"
   APP_CONTAINER_NAME: "rotini_app"
+  DB_CONTAINER_NAME: "rotini_db"
 
 tasks:
   bootstrap:
     internal: true
-    cmds:
-      - . script/bootstrap
+    cmd: . script/bootstrap
     sources:
-      - "{{ .BE_BASE_PATH }}/pyproject.toml"
+      - ./pyproject.toml
     generates:
       - "{{ .VENV_PATH }}/*"
-    dir: backend
   lint:
-    desc: "Lints /backend using black + pylint."
+    desc: "Checks /backend for linting and formatting problems."
     deps: [bootstrap]
-    cmds:
-      - "{{ .VENV_BIN }}/black . --check"
-      - "{{ .VENV_BIN }}/pylint ./rotini"
-    dir: backend
+    cmd: . script/format.sh
     dotenv:
       - ../backend-test.env
   lintfix:
-    desc: "Lints and fixes /backend using black + pylint."
+    desc: "Resolves linting and formatting problems in /backend."
     deps: [bootstrap]
-    cmds:
-      - "{{ .VENV_BIN }}/black ."
-      - "{{ .VENV_BIN }}/pylint ./rotini"
-    dir: backend
+    cmd: . script/format.sh
+    env:
+      FIX: 1
     dotenv:
       - ../backend-test.env
   test:
     desc: "Run the test suites."
     deps: [bootstrap]
     cmd: . script/test
-    dir: backend
     dotenv:
       - ../backend-test.env
-  start:
-    desc: "Starts the backend application."
-    deps: [docker-build]
-    cmd: docker run -d -p 8000:8000 --name {{ .APP_CONTAINER_NAME }} {{ .CLI_ARGS }} --add-host docker.host.internal:host-gateway --env-file ../../backend.env rotini:dev
-    dir: backend/rotini
-  stop:
-    desc: "Stops the backend application."
-    cmd: docker rm -f {{ .APP_CONTAINER_NAME }}
-  logs:
-    desc: "Shortcut to Docker container logs"
-    cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
-  start-db:
-    desc: "Provisions a local Postgres database."
-    dotenv:
-      - "{{ .DOTENV }}"
-    cmd: . script/provision-db
-    dir: backend
-  migrate:
-    desc: "Applies migrations. Usage: be:migrate -- <up|down>"
-    deps: [bootstrap]
-    env:
-      PYTHONPATH: '..'
-      ROTINI_MIGRATE: 1
-    dotenv:
-      - "{{ .DOTENV }}"
-    cmd: "{{ .VENV_BIN }}/python migrate.py {{ .CLI_ARGS }}"
-    dir: backend/rotini/migrations
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
     cmd: . script/requirements-lock
-    dir: backend
-  docker-build:
+  docker:start:
+    desc: "Starts the backend application."
+    deps: [build]
+    cmd: . script/start.sh
+    dotenv:
+      - ../backend.env
+  docker:stop:
+    desc: "Stops the backend application."
+    cmd: docker rm -f {{ .APP_CONTAINER_NAME }} {{ .DB_CONTAINER_NAME }}
+  docker:logs:
+    desc: "Shortcut to Docker container logs"
+    cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
+  docker:build:
     desc: "Builds a docker image from /backend"
-    cmd: docker build --build-arg PYTHON_VERSION=$(cat .python-version) -t rotini:dev .
-    dir: backend
+    cmd: . script/build.sh
 
