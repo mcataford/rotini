@@ -6,4 +6,6 @@ includes:
   be:
     taskfile: ./Taskfile.backend.yml
     dir: backend
-  fe: ./Taskfile.frontend.yml
+  fe:
+    taskfile: ./Taskfile.frontend.yml
+    dir: frontend
