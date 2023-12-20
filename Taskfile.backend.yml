@@ -40,7 +40,7 @@ tasks:
     cmd: . script/requirements-lock
   docker:start:
     desc: "Starts the backend application."
-    deps: [build]
+    deps: [docker:build]
     cmd: . script/start.sh
     dotenv:
       - ../backend.env
