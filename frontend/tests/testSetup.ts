@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom"
+
 // URL.createObjectURL does not exist in jest-jsdom.
 globalThis.URL.createObjectURL = jest
 	.fn()

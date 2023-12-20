@@ -103,6 +103,7 @@ describe("FileDetails", () => {
 				path: "",
 				label: null,
 				params: {},
+				pattern: "",
 			},
 			navigate: navigateMock,
 		})

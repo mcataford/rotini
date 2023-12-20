@@ -13,6 +13,7 @@ interface Location {
 	params: {
 		[key: string]: string
 	}
+	pattern: string
 }
 
 interface LocationContextData {
@@ -25,6 +26,7 @@ const defaultValue = {
 		path: "",
 		label: "",
 		params: {},
+		pattern: "",
 	},
 	navigate: () => {},
 }
@@ -70,10 +72,15 @@ function deriveLocation(
 		}
 
 		if (collectedParts !== undefined)
-			return { path, label, params: collectedParts }
+			return {
+				path,
+				label,
+				pattern: `/${pattern.join("/")}`,
+				params: collectedParts,
+			}
 	}
 
-	return { path, label: null, params: {} }
+	return { path, pattern: path, label: null, params: {} }
 }
 
 /*
