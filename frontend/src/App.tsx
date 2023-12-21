@@ -12,6 +12,8 @@ import AsyncTaskContext from "./contexts/AsyncTaskContext"
 import LocationContext, { useLocationContext } from "./contexts/LocationContext"
 import { useOwnFileList } from "./hooks/files"
 
+import { Router, Route } from "./router"
+
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
 }
@@ -30,14 +32,24 @@ const App = () => {
 		<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 			<NavigationBar />
 			<Box component="main" sx={{ display: "flex", paddingTop: "10px" }}>
-				<Box component="div" sx={{ flexGrow: 1 }}>
-					<FileList data={data} />
-				</Box>
-				{location.label === routeLabels.ITEM_DETAILS ? (
-					<Box component="div" sx={{ flexGrow: 1 }}>
-						<FileDetails itemId={location.params.itemId} />
-					</Box>
-				) : null}
+				<Router>
+					<Route path="/">
+						<Box component="div" sx={{ flexGrow: 1 }}>
+							<FileList data={data} />
+						</Box>
+					</Route>
+					<Route path="/item/:itemId">
+						<>
+							<Box component="div" sx={{ flexGrow: 1 }}>
+								<FileList data={data} />
+							</Box>
+
+							<Box component="div" sx={{ flexGrow: 1 }}>
+								<FileDetails itemId={location.params.itemId} />
+							</Box>
+						</>
+					</Route>
+				</Router>
 			</Box>
 		</Box>
 	)
