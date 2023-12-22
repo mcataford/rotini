@@ -2,17 +2,17 @@ import MuiCard from "@mui/material/Card"
 import MuiTypography from "@mui/material/Typography"
 import MuiArticleIcon from "@mui/icons-material/Article"
 import MuiBox from "@mui/material/Box"
-import { byteSizeToUnits } from "../utils"
 import MuiDeleteIcon from "@mui/icons-material/Delete"
 import MuiDownloadIcon from "@mui/icons-material/Download"
 import MuiIconButton from "@mui/material/IconButton"
 
-import { useLocationContext } from "../contexts/LocationContext"
+import { byteSizeToUnits } from "../../utils"
+import { useLocationContext } from "../../contexts/LocationContext"
 import {
 	useFileDetails,
 	useFileMutations,
 	useFileFetches,
-} from "../hooks/files"
+} from "../../hooks/files"
 
 interface FileDetailsProps {
 	itemId: string

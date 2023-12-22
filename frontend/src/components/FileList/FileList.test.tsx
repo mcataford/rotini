@@ -1,8 +1,11 @@
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
-import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
-import FileList from "../src/components/FileList"
+import {
+	renderWithContexts as render,
+	getAxiosMockAdapter,
+} from "../../tests/helpers"
+import FileList from "."
 import AxiosMockAdapter from "axios-mock-adapter"
 
 describe("FileList", () => {
