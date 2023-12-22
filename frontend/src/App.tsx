@@ -6,13 +6,13 @@ import {
 } from "@tanstack/react-query"
 
 import NavigationBar from "./components/NavigationBar"
-import FileList from "./components/FileList"
-import FileDetails from "./components/FileDetails"
 import AsyncTaskContext from "./contexts/AsyncTaskContext"
 import LocationContext, { useLocationContext } from "./contexts/LocationContext"
 import { useOwnFileList } from "./hooks/files"
 
 import { Router, Route } from "./router"
+
+import FileListView from "./components/FileListView"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
@@ -34,20 +34,10 @@ const App = () => {
 			<Box component="main" sx={{ display: "flex", paddingTop: "10px" }}>
 				<Router>
 					<Route path="/">
-						<Box component="div" sx={{ flexGrow: 1 }}>
-							<FileList data={data} />
-						</Box>
+						<FileListView />
 					</Route>
 					<Route path="/item/:itemId">
-						<>
-							<Box component="div" sx={{ flexGrow: 1 }}>
-								<FileList data={data} />
-							</Box>
-
-							<Box component="div" sx={{ flexGrow: 1 }}>
-								<FileDetails itemId={location.params.itemId} />
-							</Box>
-						</>
+						<FileListView />
 					</Route>
 				</Router>
 			</Box>

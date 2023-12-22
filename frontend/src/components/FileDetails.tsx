@@ -29,7 +29,10 @@ function FileDetails({ itemId }: FileDetailsProps) {
 	const currentFileDetails = data
 
 	return (
-		<MuiCard sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+		<MuiCard
+			aria-label="file details"
+			sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+		>
 			<MuiBox
 				component="div"
 				sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
