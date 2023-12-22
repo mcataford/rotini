@@ -3,8 +3,7 @@
         "target": "ESNext",
         "jsx": "react-jsx",
         "module": "commonjs",
-        "baseUrl": "./src",
-        "rootDir": "./src",
+        "rootDir": ".",
         "moduleResolution": "node",
         "allowJs": false,
         "esModuleInterop": true,
@@ -13,6 +12,5 @@
         "noImplicitAny": true,
         "skipLibCheck": true,
         "types": ["jest"]
-    },
-    "include": ["src"]
+    }
 }
