@@ -3,11 +3,14 @@ import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 import { type UseQueryResult } from "@tanstack/react-query"
 
-import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
-import FileDetails from "../src/components/FileDetails"
-import { type FileData } from "../src/types/files"
-import * as fileQueries from "../src/hooks/files"
-import * as locationContextUtils from "../src/contexts/LocationContext"
+import {
+	renderWithContexts as render,
+	getAxiosMockAdapter,
+} from "../../tests/helpers"
+import FileDetails from "."
+import { type FileData } from "../../types/files"
+import * as fileQueries from "../../hooks/files"
+import * as locationContextUtils from "../../contexts/LocationContext"
 
 describe("FileDetails", () => {
 	const mockItem = {

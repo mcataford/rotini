@@ -1,13 +1,11 @@
 import { type ReactNode } from "react"
 import { render } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-import axios from "../src/axios"
+import axios from "../axios"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import AsyncTaskContext, {
-	type AsyncTask,
-} from "../src/contexts/AsyncTaskContext"
-import LocationContext from "../src/contexts/LocationContext"
+import AsyncTaskContext, { type AsyncTask } from "../contexts/AsyncTaskContext"
+import LocationContext from "../contexts/LocationContext"
 
 interface ContextInitialValues {
 	asyncTaskContext: Array<AsyncTask>

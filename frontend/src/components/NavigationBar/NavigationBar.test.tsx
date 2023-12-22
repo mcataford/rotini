@@ -1,10 +1,13 @@
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
-import { renderWithContexts as render, getAxiosMockAdapter } from "./helpers"
-import NavigationBar from "../src/components/NavigationBar"
+import {
+	renderWithContexts as render,
+	getAxiosMockAdapter,
+} from "../../tests/helpers"
+import NavigationBar from "."
 
-import { type FileData } from "../src/types/files"
+import { type FileData } from "../../types/files"
 
 describe("NavigationBar", () => {
 	describe("Upload functionality", () => {

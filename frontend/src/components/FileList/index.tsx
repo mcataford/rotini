@@ -11,11 +11,11 @@ import MuiListItemIcon from "@mui/material/ListItemIcon"
 import MuiIconButton from "@mui/material/IconButton"
 import MuiTypography from "@mui/material/Typography"
 
-import { byteSizeToUnits } from "../utils"
-import { useLocationContext } from "../contexts/LocationContext"
-import { useAsyncTaskContext } from "../contexts/AsyncTaskContext"
-import { useFileMutations, useFileFetches } from "../hooks/files"
-import { type FileData } from "../types/files"
+import { byteSizeToUnits } from "../../utils"
+import { useLocationContext } from "../../contexts/LocationContext"
+import { useAsyncTaskContext } from "../../contexts/AsyncTaskContext"
+import { useFileMutations, useFileFetches } from "../../hooks/files"
+import { type FileData } from "../../types/files"
 interface FileListProps {
 	data: Array<FileData>
 }
