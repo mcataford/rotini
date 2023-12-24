@@ -11,7 +11,7 @@ on:
         value: ${{ jobs.notify-success.outputs.pipeline_success }}
 
 env:
-  NODE_VERSION: lts/hydrogen
+  NODE_VERSION: lts/iron
   CI: 1
 
 defaults:
