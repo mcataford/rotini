@@ -13,6 +13,7 @@ import { useOwnFileList } from "./hooks/files"
 import { Router, Route } from "./router"
 
 import FileListView from "./components/FileListView"
+import RegisterView from "./components/RegisterView"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
@@ -38,6 +39,9 @@ const App = () => {
 					</Route>
 					<Route path="/item/:itemId">
 						<FileListView />
+					</Route>
+					<Route path="/register">
+						<RegisterView />
 					</Route>
 				</Router>
 			</Box>
