@@ -1,4 +1,4 @@
-import { screen, render } from "@testing-library/react"
+import { screen, render, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
@@ -71,4 +71,40 @@ describe("RegisterView", () => {
 
 		expect(requestBody).toEqual(testInput)
 	})
+
+	it.each`
+		scenario               | emailAddress         | password
+		${"no email value"}    | ${undefined}         | ${"password"}
+		${"no password value"} | ${"email@email.com"} | ${undefined}
+		${"empty form"}        | ${undefined}         | ${undefined}
+	`(
+		"the submission button is disabled if the form isn't validated ($scenario)",
+		async ({ emailAddress, password }) => {
+			const { user } = renderComponent()
+
+			if (emailAddress !== undefined) {
+				const emailInput = screen.getByLabelText("New account email address")
+				await user.type(emailInput, emailAddress)
+				await waitFor(() =>
+					expect(emailInput.getAttribute("value")).toEqual(emailAddress),
+				)
+			}
+			if (password !== undefined) {
+				const passwordInput = screen.getByLabelText(
+					"New account password input",
+				)
+
+				await user.type(passwordInput, password)
+				await waitFor(() =>
+					expect(passwordInput.getAttribute("value")).toEqual(password),
+				)
+			}
+
+			const submitButton = screen.getByText("Create account")
+
+			await waitFor(() =>
+				expect(submitButton.getAttribute("disabled")).not.toBeUndefined(),
+			)
+		},
+	)
 })

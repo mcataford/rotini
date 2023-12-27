@@ -12,6 +12,7 @@ import Button from "@mui/material/Button"
 
 import axiosWithDefaults from "../../axios"
 import TextInput from "../TextInput"
+import { validateEmail, validatePassword } from "./validation"
 
 function RegisterView() {
 	const [emailAddress, setEmailAddress] = React.useState<string | undefined>()
@@ -38,29 +39,36 @@ function RegisterView() {
 				label="Email"
 				ariaLabel="New account email address"
 				onChange={setEmailAddress}
+				validate={validateEmail}
 				value={emailAddress}
 			/>
 		),
-		[emailAddress, setEmailAddress],
+		[emailAddress, setEmailAddress, validateEmail],
 	)
 
 	const passwordField = React.useMemo(
 		() => (
 			<TextInput
-				errorText={"A valid password should be valid."}
+				errorText={"A valid password should have between 8-64 characters."}
 				label="Password"
 				ariaLabel="New account password input"
 				onChange={setPassword}
+				validate={validatePassword}
 				value={password}
 			/>
 		),
-		[setPassword, password],
+		[setPassword, password, validatePassword],
 	)
 
+	const isFormValid = React.useMemo(() => {
+		return validateEmail(emailAddress) && validatePassword(password)
+	}, [emailAddress, password, validatePassword, validateEmail])
+
 	const onCreateClick = React.useCallback(() => {
-		if (!emailAddress || !password) return
-		mutate({ email: emailAddress, password: password })
-	}, [mutate, emailAddress, password])
+		if (!isFormValid) return
+
+		mutate({ email: String(emailAddress), password: String(password) })
+	}, [mutate, emailAddress, password, isFormValid])
 
 	return (
 		<Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -77,6 +85,7 @@ function RegisterView() {
 					variant="contained"
 					onClick={onCreateClick}
 					aria-label="submit account registration"
+					disabled={!isFormValid}
 				>
 					Create account
 				</Button>
