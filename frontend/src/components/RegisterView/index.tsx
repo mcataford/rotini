@@ -38,6 +38,7 @@ function RegisterView() {
 				errorText={"Enter valid email of the format 'abc@xyz.org'"}
 				label="Email"
 				ariaLabel="New account email address"
+				inputType="email"
 				onChange={setEmailAddress}
 				validate={validateEmail}
 				value={emailAddress}
@@ -52,6 +53,7 @@ function RegisterView() {
 				errorText={"A valid password should have between 8-64 characters."}
 				label="Password"
 				ariaLabel="New account password input"
+				inputType="password"
 				onChange={setPassword}
 				validate={validatePassword}
 				value={password}
