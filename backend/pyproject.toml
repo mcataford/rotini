@@ -41,7 +41,7 @@ django-settings-module="base.settings"
 [tool.pylint.main]
 ignore-paths = ["^\\\\.venv|^/.venv"]
 ignore-patterns = ["^\\.#"]
-py-version = "3.11"
+py-version = "3.12"
 source-roots = ["rotini"]
 suggestion-mode = true
 
