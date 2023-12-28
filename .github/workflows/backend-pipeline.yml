@@ -23,10 +23,8 @@ jobs:
     name: Setup
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: ./.github/workflows/setup-python
         id: setup-python
-        with:
-          python-version-file: './backend/pyproject.toml'
       - uses: actions/cache@v3
         id: cache-restore
         with:
@@ -42,10 +40,8 @@ jobs:
     needs: setup
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: ./.github/workflows/setup-python
         id: setup-python
-        with:
-          python-version-file: './backend/pyproject.toml'
       - name: Setup Task
         uses: arduino/setup-task@v1
         with:
@@ -65,10 +61,8 @@ jobs:
     needs: setup
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: ./.github/workflows/setup-python
         id: setup-python
-        with:
-          python-version-file: './backend/pyproject.toml'
       - name: Setup Task
         uses: arduino/setup-task@v1
         with:

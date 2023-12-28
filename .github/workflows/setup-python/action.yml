@@ -1,0 +1,11 @@
+name: 'Setup Python'
+outputs:
+  python-version:
+    value: ${{ steps.setup-python.outputs.python-version }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      id: setup-python
+      with:
+        python-version-file: './backend/pyproject.toml' 
