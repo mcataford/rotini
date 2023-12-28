@@ -20,6 +20,7 @@ dev = [
     "pylint_django",
     "pytest-django",
     "pytest",
+    "freezegun",
 ]
 
 [tool.setuptools]
