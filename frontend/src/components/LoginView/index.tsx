@@ -7,23 +7,22 @@ import FormGroup from "@mui/material/FormGroup"
 import FormControl from "@mui/material/FormControl"
 import TextField from "@mui/material/TextField"
 import InputLabel from "@mui/material/InputLabel"
-import FormHelperText from "@mui/material/FormHelperText"
 import Button from "@mui/material/Button"
+import Link from "@mui/material/Link"
 
 import axiosWithDefaults from "../../axios"
 import TextInput from "../TextInput"
-import { validateEmail, validatePassword } from "./validation"
 
-function RegisterView() {
-	const [emailAddress, setEmailAddress] = React.useState<string | undefined>()
-	const [password, setPassword] = React.useState<string | undefined>()
+function LoginView() {
+	const [emailAddress, setEmailAddress] = React.useState<string>("")
+	const [password, setPassword] = React.useState<string>("")
 
 	const { mutate } = useMutation({
 		mutationFn: async ({
 			email,
 			password,
 		}: { email: string; password: string }) => {
-			const response = await axiosWithDefaults.post("/auth/user/", {
+			const response = await axiosWithDefaults.post("/auth/session/", {
 				username: email,
 				password,
 			})
@@ -35,65 +34,68 @@ function RegisterView() {
 	const emailField = React.useMemo(
 		() => (
 			<TextInput
-				errorText={"Enter valid email of the format 'abc@xyz.org'"}
 				label="Email"
-				ariaLabel="New account email address"
-				inputType="email"
+				ariaLabel="email address login input"
 				onChange={setEmailAddress}
-				validate={validateEmail}
 				value={emailAddress}
+				inputType="email"
 			/>
 		),
-		[emailAddress, setEmailAddress, validateEmail],
+		[emailAddress, setEmailAddress],
 	)
 
 	const passwordField = React.useMemo(
 		() => (
 			<TextInput
-				errorText={"A valid password should have between 8-64 characters."}
 				label="Password"
-				ariaLabel="New account password input"
-				inputType="password"
+				ariaLabel="password login input"
 				onChange={setPassword}
-				validate={validatePassword}
 				value={password}
+				inputType="password"
 			/>
 		),
-		[setPassword, password, validatePassword],
+		[setPassword, password],
 	)
 
 	const isFormValid = React.useMemo(() => {
-		return validateEmail(emailAddress) && validatePassword(password)
-	}, [emailAddress, password, validatePassword, validateEmail])
+		return Boolean(emailAddress) && Boolean(password)
+	}, [emailAddress, password])
 
-	const onCreateClick = React.useCallback(() => {
+	const onLoginClick = React.useCallback(() => {
 		if (!isFormValid) return
 
-		mutate({ email: String(emailAddress), password: String(password) })
+		mutate({ email: emailAddress, password })
 	}, [mutate, emailAddress, password, isFormValid])
 
 	return (
 		<Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-			<FormGroup sx={{ flexGrow: 0.1, display: "flex", gap: "10px" }}>
+			<FormGroup
+				sx={{
+					flexGrow: 0.1,
+					display: "flex",
+					gap: "10px",
+					textAlign: "center",
+				}}
+			>
 				<Typography variant="h1" sx={{ fontSize: "2rem" }}>
-					Create an account
-				</Typography>
-				<Typography>
-					{"Fill the form below to create an account and get started!"}
+					Log in
 				</Typography>
 				{emailField}
 				{passwordField}
 				<Button
 					variant="contained"
-					onClick={onCreateClick}
-					aria-label="submit account registration"
+					onClick={onLoginClick}
+					aria-label="submit login"
 					disabled={!isFormValid}
 				>
-					Create account
+					Log in
 				</Button>
+				<Typography>
+					Don't have an account yet? <Link href="/register">Create one!</Link>
+				</Typography>
 			</FormGroup>
 		</Box>
 	)
 }
 
-export default RegisterView
+export default LoginView

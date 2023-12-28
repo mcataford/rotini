@@ -17,6 +17,8 @@ interface Props {
 	ariaLabel: string
 	// Text to display if validation fails. Only used if a validation function is provided.
 	errorText?: string
+	// HTML5 input type of the input field.
+	inputType: string
 	// Text label visible to the user with the input.
 	label: string
 	// Function to run on each field change.
@@ -30,6 +32,7 @@ interface Props {
 function TextInput({
 	ariaLabel,
 	errorText,
+	inputType = "text",
 	label,
 	onChange,
 	validate = () => true,
@@ -52,6 +55,7 @@ function TextInput({
 				inputProps={{
 					"aria-label": ariaLabel,
 				}}
+				type={inputType}
 			/>
 			{helpText}
 		</FormControl>

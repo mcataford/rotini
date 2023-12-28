@@ -7,6 +7,7 @@ import TextInput, { type TextInputProps } from "."
 const defaultProps: TextInputProps = {
 	ariaLabel: "input element",
 	errorText: "",
+	inputType: "text",
 	label: "",
 	onChange: () => {},
 	validate: () => true,
@@ -65,6 +66,15 @@ describe("TextInput", () => {
 		expect(screen.queryByLabelText("testlabel")).toBeInTheDocument()
 	})
 
+	it("passes inputType as the type of the input element", () => {
+		const { user } = renderComponent({
+			inputType: "password",
+		})
+
+		expect(screen.getByLabelText("input element").getAttribute("type")).toEqual(
+			"password",
+		)
+	})
 	it("displays an error message if the field validation fails", async () => {
 		const mockInput = "thisisamockinput"
 		const mockErrorText = "thisinputiserroneous"
