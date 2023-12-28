@@ -5,11 +5,12 @@ env:
   VENV_BIN: "{{ .VENV_PATH }}/bin"
   APP_CONTAINER_NAME: "rotini_app"
   DB_CONTAINER_NAME: "rotini_db"
+  SHELL: /bin/bash
 
 tasks:
   bootstrap:
     internal: true
-    cmd: . script/bootstrap
+    cmd: $SHELL script/bootstrap
     sources:
       - ./pyproject.toml
     generates:
@@ -23,7 +24,7 @@ tasks:
   lintfix:
     desc: "Resolves linting and formatting problems in /backend."
     deps: [bootstrap]
-    cmd: . script/format.sh
+    cmd: $SHELL script/format.sh
     env:
       FIX: 1
     dotenv:
@@ -31,17 +32,17 @@ tasks:
   test:
     desc: "Run the test suites."
     deps: [bootstrap]
-    cmd: . script/test
+    cmd: $SHELL script/test
     dotenv:
       - ../backend-test.env
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
-    cmd: . script/requirements-lock
+    cmd: $SHELL script/requirements-lock
   docker:start:
     desc: "Starts the backend application."
     deps: [docker:build]
-    cmd: . script/start.sh
+    cmd: $SHELL script/start.sh
     dotenv:
       - ../backend.env
   docker:stop:
@@ -52,5 +53,5 @@ tasks:
     cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
   docker:build:
     desc: "Builds a docker image from /backend"
-    cmd: . script/build.sh
+    cmd: $SHELL script/build.sh
 
