@@ -14,6 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 JWT_SIGNING_SECRET = os.environ["JWT_SIGNING_SECRET"]
 
+# JWT time-to-live, in seconds.
+JWT_EXPIRATION = 600
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
@@ -46,7 +48,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "base.urls"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:1234"]
-
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1234"]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

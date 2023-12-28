@@ -9,11 +9,18 @@ import jwt
 def generate_token_for_user(user_id: int) -> str:
     """
     Generates an identity token for a given user.
+
+    The token expires in JWT_EXPIRATION seconds (defined in base.settings) and
+    only contains the user's ID and a token ID that can be used to track the
+    token once emitted.
     """
+
     token_data = {
-        "exp": (datetime.datetime.now() + datetime.timedelta(seconds=120)).timestamp(),
+        "exp": (
+            datetime.datetime.now()
+            + datetime.timedelta(seconds=django.conf.settings.JWT_EXPIRATION)
+        ).timestamp(),
         "user_id": user_id,
-        "username": "yolo",
         "token_id": str(uuid.uuid4()),
     }
 

@@ -33,6 +33,8 @@ djangorestframework==3.14.0
     # via
     #   -c requirements.txt
     #   rotini (pyproject.toml)
+freezegun==1.4.0
+    # via rotini (pyproject.toml)
 h11==0.14.0
     # via
     #   -c requirements.txt
@@ -88,6 +90,8 @@ pytest==7.4.3
     #   rotini (pyproject.toml)
 pytest-django==4.7.0
     # via rotini (pyproject.toml)
+python-dateutil==2.8.2
+    # via freezegun
 python-dotenv==1.0.0
     # via
     #   -c requirements.txt
@@ -104,6 +108,8 @@ pyyaml==6.0.1
     # via
     #   -c requirements.txt
     #   uvicorn
+six==1.16.0
+    # via python-dateutil
 sniffio==1.3.0
     # via
     #   -c requirements.txt
