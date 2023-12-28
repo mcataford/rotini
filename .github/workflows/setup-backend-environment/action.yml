@@ -1,0 +1,36 @@
+#
+# Standardized backend CI environment setup.
+#
+# This is expected to run before any step logic is executed.
+#
+
+name: 'Setup Backend Environment'
+inputs:
+  task-version:
+    required: true
+outputs:
+  python-version:
+    value: ${{ steps.setup-python.outputs.python-version }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - name: Setup Task
+      uses: arduino/setup-task@v1
+      with:
+        version: ${{ inputs.task-version }}
+    - uses: actions/setup-python@v5
+      id: setup-python
+      with:
+        python-version-file: './backend/pyproject.toml'
+    - uses: actions/cache@v3
+      id: cache-restore
+      with:
+        path: |
+          backend/.venv
+        key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.setup-python.outputs.python-version }}
+    - name: Install dependencies
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      run: . script/bootstrap
+      working-directory: backend
+      shell: bash
