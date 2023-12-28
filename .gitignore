@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Env files
 backend.env
+.python-version
 
 .task
 bin
