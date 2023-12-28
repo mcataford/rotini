@@ -38,7 +38,7 @@ function AsyncTaskContext({
 		(task: AsyncTask) => {
 			setAsyncTaskData([...asyncTaskData, task])
 		},
-		[asyncTaskData, setAsyncTaskData],
+		[asyncTaskData],
 	)
 
 	return (
