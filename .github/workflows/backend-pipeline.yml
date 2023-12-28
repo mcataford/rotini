@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             backend/.venv
-          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.setup-python.outputs.python-version }}
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-py-${{ steps.setup-python.outputs.python-version }}
       - name: Install dependencies
         if: steps.cache-restore.outputs.cache-hit != 'true'
         run: . script/bootstrap
@@ -51,7 +51,7 @@ jobs:
         with:
           path: |
             backend/.venv
-          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.setup-python.outputs.python-version }}
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-py-${{ steps.setup-python.outputs.python-version }}
       - name: Lint
         run: |
           task be:lint
@@ -72,7 +72,7 @@ jobs:
         with:
           path: |
             backend/.venv
-          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-${{ steps.setup-python.outputs.python-version }}
+          key: ${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}-py-${{ steps.setup-python.outputs.python-version }}
       - name: Test
         run: |
           task be:test
