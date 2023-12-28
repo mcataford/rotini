@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
 import axios from "../../axios"
+import * as locationHook from "../../contexts/LocationContext"
 import LoginView from "."
 
 function renderComponent() {
@@ -54,7 +55,7 @@ describe("LoginView", () => {
 	it("sends a request to the authentication API on submit", async () => {
 		const axiosMockAdapter = new AxiosMockAdapter(axios)
 
-		axiosMockAdapter.onPost("/auth/session/").reply(201, { token: "testtoken" })
+		axiosMockAdapter.onPost("/auth/session/").reply(201)
 
 		const { user } = renderComponent()
 
@@ -78,5 +79,73 @@ describe("LoginView", () => {
 		const requestBody = JSON.parse(axiosMockAdapter.history.post[0].data)
 
 		expect(requestBody).toEqual(testInput)
+	})
+
+	it("displays error messaging if the login attempt is not successful", async () => {
+		const axiosMockAdapter = new AxiosMockAdapter(axios)
+
+		axiosMockAdapter.onPost("/auth/session/").reply(400)
+
+		const { user } = renderComponent()
+
+		const testInput = {
+			username: "test@domain.com",
+			password: "password",
+		}
+
+		const emailInput = screen.getByLabelText(/email address login input/i)
+		await user.type(emailInput, testInput.username)
+
+		const passwordInput = screen.getByLabelText(/password login input/i)
+		await user.type(passwordInput, testInput.password)
+
+		const submitButton = screen.getByText("Log in", { selector: "button" })
+
+		await user.click(submitButton)
+
+		await waitFor(() => expect(screen.getByRole("alert")).toBeInTheDocument())
+
+		expect(
+			screen.getByText(
+				/this combination of email and password does not match our records\. verify if the email or password are incorrect\./i,
+			),
+		).toBeInTheDocument()
+	})
+
+	it("redirects the user on success", async () => {
+		const mockNavigate = jest.fn()
+		const mockLocationHook = jest
+			.spyOn(locationHook, "useLocationContext")
+			.mockImplementation(() => ({
+				location: {
+					path: "",
+					label: "",
+					params: {},
+					pattern: "",
+				},
+				navigate: mockNavigate,
+			}))
+		const axiosMockAdapter = new AxiosMockAdapter(axios)
+
+		axiosMockAdapter.onPost("/auth/session/").reply(201)
+
+		const { user } = renderComponent()
+
+		const testInput = {
+			username: "test@domain.com",
+			password: "password",
+		}
+
+		const emailInput = screen.getByLabelText(/email address login input/i)
+		await user.type(emailInput, testInput.username)
+
+		const passwordInput = screen.getByLabelText(/password login input/i)
+		await user.type(passwordInput, testInput.password)
+
+		const submitButton = screen.getByText("Log in", { selector: "button" })
+
+		await user.click(submitButton)
+
+		expect(mockNavigate).toHaveBeenCalledWith("/")
 	})
 })
