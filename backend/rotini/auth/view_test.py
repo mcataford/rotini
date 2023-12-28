@@ -65,11 +65,10 @@ def test_user_login_returns_valid_token_on_success(create_user_request, login_re
 
     assert login_response.status_code == 201
 
-    response_data = login_response.json()
     create_user_data = creation_response.json()
 
-    assert "token" in response_data
+    assert "jwt" in login_response.cookies
 
-    decoded_token = auth.jwt.decode_token(response_data["token"])
+    decoded_token = auth.jwt.decode_token(login_response.cookies["jwt"].value)
 
     assert decoded_token["user_id"] == create_user_data["id"]

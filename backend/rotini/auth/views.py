@@ -24,6 +24,8 @@ class SessionListView(rest_framework.views.APIView):
         If valid credentials are provided, a token is included in the
         response that can then be used to make authenticated requests.
 
+        The token in included in the response cookies.
+
         POST /auth/login/
         {
           "username": "testuser",
@@ -44,7 +46,13 @@ class SessionListView(rest_framework.views.APIView):
             django.contrib.auth.login(request, user)
 
             token = auth.jwt.generate_token_for_user(user_id=user.id)
-            return django.http.JsonResponse({"token": token}, status=201)
+            response = django.http.HttpResponse(status=201)
+
+            response.set_cookie(
+                "jwt", value=token, secure=False, domain="localhost", httponly=False
+            )
+
+            return response
 
         return django.http.HttpResponse(status=401)
 

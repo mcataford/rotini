@@ -21,14 +21,17 @@ def fixture_jwt_middleware():
     return auth.middleware.JwtMiddleware(_noop)
 
 
-def test_middleware_returns_401_on_invalid_authorization_header(jwt_middleware):
-    """If authorization headers are present but cannot be validated, 401."""
-    mock_request = django.http.HttpRequest()
+def test_middleware_does_not_append_user_details_to_request_if_invalid_credentials(
+    jwt_middleware,
+):
+    """If authorization headers are present but cannot be validated, no user details."""
+    mock_request = HttpRequestWithUser()
 
-    mock_request.META["HTTP_AUTHORIZATION"] = "Bearer notatoken"
-    response = jwt_middleware(mock_request)
+    mock_request.COOKIES["jwt"] = "notatoken"
 
-    assert response.status_code == 401
+    jwt_middleware(mock_request)
+
+    assert not hasattr(mock_request, "user")
 
 
 def test_middleware_adds_user_to_request_in_if_valid_token(
@@ -38,9 +41,8 @@ def test_middleware_adds_user_to_request_in_if_valid_token(
     mock_request = HttpRequestWithUser()
     test_user = AuthUser.objects.get(username=test_user_credentials["username"])
     token = auth.jwt.generate_token_for_user(test_user.id)
-    mock_request.META["HTTP_AUTHORIZATION"] = f"Bearer {token}"
+    mock_request.COOKIES["jwt"] = token
 
-    response = jwt_middleware(mock_request)
+    jwt_middleware(mock_request)
 
-    assert response.status_code != 401
     assert mock_request.user == test_user
