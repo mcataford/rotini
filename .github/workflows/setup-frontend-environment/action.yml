@@ -1,0 +1,41 @@
+#
+# Standardized frontend CI environment setup.
+#
+# This is expected to run before any step logic is executed.
+#
+
+env:
+  NODE_VERSION: lts/iron
+
+name: 'Setup Frontend Environment'
+inputs:
+  task-version:
+    required: true
+outputs:
+  python-version:
+    value: ${{ steps.setup-python.outputs.python-version }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - name: Setup Task
+      uses: arduino/setup-task@v1
+      with:
+        version: ${{ inputs.task-version }}
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    - uses: actions/cache@v3
+      id: cache-restore
+      with:
+        path: |
+          frontend/.yarn
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ env.NODE_VERSION }}
+    - name: Install dependencies
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      run: . script/bootstrap
+      env:
+        CI: 1
+      working-directory: frontend
+      shell: bash
+
