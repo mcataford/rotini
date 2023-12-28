@@ -14,6 +14,7 @@ import { Router, Route } from "./router"
 
 import FileListView from "./components/FileListView"
 import RegisterView from "./components/RegisterView"
+import LoginView from "./components/LoginView"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
@@ -42,6 +43,9 @@ const App = () => {
 					</Route>
 					<Route path="/register">
 						<RegisterView />
+					</Route>
+					<Route path="/login">
+						<LoginView />
 					</Route>
 				</Router>
 			</Box>
