@@ -1,17 +1,20 @@
 anyio==4.2.0
     # via watchfiles
 asgiref==3.7.2
-    # via django
+    # via
+    #   django
+    #   django-cors-headers
 click==8.1.7
     # via uvicorn
 django==4.2.8
     # via
+    #   django-cors-headers
     #   djangorestframework
     #   rotini (pyproject.toml)
+django-cors-headers==4.3.1
+    # via rotini (pyproject.toml)
 djangorestframework==3.14.0
     # via rotini (pyproject.toml)
-exceptiongroup==1.2.0
-    # via anyio
 h11==0.14.0
     # via uvicorn
 httptools==0.6.1
@@ -34,10 +37,6 @@ sniffio==1.3.0
     # via anyio
 sqlparse==0.4.4
     # via django
-typing-extensions==4.9.0
-    # via
-    #   asgiref
-    #   uvicorn
 uvicorn[standard]==0.25.0
     # via rotini (pyproject.toml)
 uvloop==0.19.0
