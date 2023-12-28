@@ -107,7 +107,7 @@ function FileList({ data }: FileListProps) {
 				key={`file list item ${itemData.filename}`}
 			/>
 		))
-	}, [dataWithPlaceholders])
+	}, [dataWithPlaceholders, onClickHandler, downloadFile, deleteFile])
 
 	return (
 		<MuiList sx={{ width: "100%", display: "flex", flexDirection: "column" }}>

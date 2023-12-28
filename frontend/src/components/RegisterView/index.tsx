@@ -44,7 +44,7 @@ function RegisterView() {
 				value={emailAddress}
 			/>
 		),
-		[emailAddress, setEmailAddress, validateEmail],
+		[emailAddress, setEmailAddress],
 	)
 
 	const passwordField = React.useMemo(
@@ -59,12 +59,12 @@ function RegisterView() {
 				value={password}
 			/>
 		),
-		[setPassword, password, validatePassword],
+		[setPassword, password],
 	)
 
 	const isFormValid = React.useMemo(() => {
 		return validateEmail(emailAddress) && validatePassword(password)
-	}, [emailAddress, password, validatePassword, validateEmail])
+	}, [emailAddress, password])
 
 	const onCreateClick = React.useCallback(() => {
 		if (!isFormValid) return

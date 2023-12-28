@@ -114,7 +114,7 @@ export function LocationContext({
 			history.pushState({}, "", path)
 			setLocation(deriveLocation(path, splitUrlPatterns))
 		},
-		[setLocation, deriveLocation, splitUrlPatterns],
+		[splitUrlPatterns],
 	)
 
 	return (
