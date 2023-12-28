@@ -7,8 +7,7 @@ import {
 
 import NavigationBar from "./components/NavigationBar"
 import AsyncTaskContext from "./contexts/AsyncTaskContext"
-import LocationContext, { useLocationContext } from "./contexts/LocationContext"
-import { useOwnFileList } from "./hooks/files"
+import LocationContext from "./contexts/LocationContext"
 
 import { Router, Route } from "./router"
 
@@ -25,11 +24,6 @@ const routes = {
 }
 
 const App = () => {
-	const { location } = useLocationContext()
-	const { isLoading, data } = useOwnFileList()
-
-	if (isLoading || !data) return
-
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 			<NavigationBar />
