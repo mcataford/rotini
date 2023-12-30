@@ -3,7 +3,18 @@
   "extends": [
     "config:recommended"
   ],
-  "ignorePaths": [
-    "**/frontend/**"
-  ]
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+        "description": "Backend-related updates",
+        "matchFileNames": ["backend/**"],
+        "labels": ["backend"]
+    },
+    {
+        "description": "Frontend-related updates",
+        "matchFileNames": ["frontend/**"],
+        "labels": ["frontend"]
+    }
+  ],
+  "reviewers": ["mcataford"]
 }
