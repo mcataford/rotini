@@ -4,9 +4,6 @@
 # This is expected to run before any step logic is executed.
 #
 
-env:
-  NODE_VERSION: lts/iron
-
 name: 'Setup Frontend Environment'
 inputs:
   task-version:
@@ -24,7 +21,7 @@ runs:
         version: ${{ inputs.task-version }}
     - uses: actions/setup-node@v4
       with:
-        node-version: ${{ env.NODE_VERSION }}
+        node-version: lts/iron
     - uses: actions/cache@v3
       id: cache-restore
       with:
