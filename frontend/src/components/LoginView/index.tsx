@@ -9,25 +9,29 @@ import TextField from "@mui/material/TextField"
 import InputLabel from "@mui/material/InputLabel"
 import Button from "@mui/material/Button"
 import Link from "@mui/material/Link"
+import Alert from "@mui/material/Alert"
 
 import axiosWithDefaults from "../../axios"
 import TextInput from "../TextInput"
+import { useLocationContext } from "../../contexts/LocationContext"
 
 function LoginView() {
 	const [emailAddress, setEmailAddress] = React.useState<string>("")
 	const [password, setPassword] = React.useState<string>("")
+	const { navigate } = useLocationContext()
 
-	const { mutate } = useMutation({
+	const { mutate, isError, isLoading } = useMutation({
 		mutationFn: async ({
 			email,
 			password,
 		}: { email: string; password: string }) => {
-			const response = await axiosWithDefaults.post("/auth/session/", {
+			return axiosWithDefaults.post("/auth/session/", {
 				username: email,
 				password,
 			})
-
-			return response
+		},
+		onSuccess: (response) => {
+			navigate("/")
 		},
 	})
 
@@ -71,22 +75,29 @@ function LoginView() {
 		<Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
 			<FormGroup
 				sx={{
-					flexGrow: 0.1,
 					display: "flex",
 					gap: "10px",
 					textAlign: "center",
+					width: "600px",
 				}}
 			>
 				<Typography variant="h1" sx={{ fontSize: "2rem" }}>
 					Log in
 				</Typography>
+				{isError ? (
+					<Alert severity="error">
+						{
+							"This combination of email and password does not match our records. Verify if the email or password are incorrect."
+						}
+					</Alert>
+				) : null}
 				{emailField}
 				{passwordField}
 				<Button
 					variant="contained"
 					onClick={onLoginClick}
 					aria-label="submit login"
-					disabled={!isFormValid}
+					disabled={!isFormValid || isLoading}
 				>
 					Log in
 				</Button>
