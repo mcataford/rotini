@@ -1,3 +1,5 @@
+import { expect, describe, it, vi } from "vitest"
+
 import { render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
@@ -41,7 +43,7 @@ describe("LoginView", () => {
 	})
 
 	it("renders a registration link", async () => {
-		const mock = jest.fn()
+		const mock = vi.fn()
 		const { user } = renderComponent()
 
 		expect(screen.getByText(/don\'t have an account yet?/i)).toBeInTheDocument()
@@ -113,8 +115,8 @@ describe("LoginView", () => {
 	})
 
 	it("redirects the user on success", async () => {
-		const mockNavigate = jest.fn()
-		const mockLocationHook = jest
+		const mockNavigate = vi.fn()
+		const mockLocationHook = vi
 			.spyOn(locationHook, "useLocationContext")
 			.mockImplementation(() => ({
 				location: {

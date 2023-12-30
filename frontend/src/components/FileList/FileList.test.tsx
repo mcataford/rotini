@@ -1,3 +1,4 @@
+import { expect, describe, it, vi } from "vitest"
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
@@ -28,14 +29,14 @@ describe("FileList", () => {
 		{ title: "Async Item 0", filename: "async.txt", size: 2, type: "upload" },
 	]
 
-	test("Renders list items provided", () => {
+	it("Renders list items provided", () => {
 		const { getAllByText } = render(<FileList data={mockItems} />)
 		const renderedItems = getAllByText(/Item/)
 
 		expect(renderedItems.length).toEqual(mockItems.length)
 	})
 
-	test("Prepends items in flight as tracked by async task context", () => {
+	it("Prepends items in flight as tracked by async task context", () => {
 		const { getAllByText, getByText } = render(
 			<FileList data={[mockItems[0]]} />,
 			{ asyncTaskContext: mockAsyncTasks },
@@ -50,7 +51,7 @@ describe("FileList", () => {
 	})
 
 	describe("FileListItem", () => {
-		test("Renders the item title", () => {
+		it("Renders the item title", () => {
 			const { getByLabelText, debug } = render(
 				<FileList data={[mockItems[0]]} />,
 			)
@@ -58,7 +59,7 @@ describe("FileList", () => {
 			within(title).getByText(mockItems[0].title)
 		})
 
-		test("Renders the item size", () => {
+		it("Renders the item size", () => {
 			const { getByLabelText, debug } = render(
 				<FileList data={[mockItems[0]]} />,
 			)
@@ -66,7 +67,7 @@ describe("FileList", () => {
 			within(title).getByText(`${mockItems[0].size} B`)
 		})
 
-		test.each(["download item", "delete item"])(
+		it.each(["download item", "delete item"])(
 			"Renders secondary action buttons (%s)",
 			(action) => {
 				const { getByLabelText, debug } = render(
@@ -76,7 +77,7 @@ describe("FileList", () => {
 			},
 		)
 
-		test("Clicking the delete button fires request to delete file", async () => {
+		it("Clicking the delete button fires request to delete file", async () => {
 			const expectedUrlPattern = new RegExp(`/files/${mockItems[0].id}/$`)
 
 			const axiosMock = getAxiosMockAdapter()
@@ -101,9 +102,9 @@ describe("FileList", () => {
 			expect(deleteRequest.url).toMatch(expectedUrlPattern)
 		})
 
-		test("Clicking the download button trigger a file download", async () => {
+		it("Clicking the download button trigger a file download", async () => {
 			// FIXME: Validating file downloads is ... tricky. The current interaction with dynamically created DOM
-			// elements is not visible by jest.
+			// elements is not visible by vi.
 			const expectedUrlPattern = new RegExp(
 				`/files/${mockItems[0].id}/content/$`,
 			)

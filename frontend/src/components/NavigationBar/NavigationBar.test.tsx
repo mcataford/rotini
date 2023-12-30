@@ -1,3 +1,4 @@
+import { vi, it, describe, expect } from "vitest"
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
 
@@ -11,12 +12,12 @@ import { type FileData } from "../../types/files"
 
 describe("NavigationBar", () => {
 	describe("Upload functionality", () => {
-		test("Renders the upload button", () => {
+		it("Renders the upload button", () => {
 			const { getByText } = render(<NavigationBar />)
 			getByText("Upload file")
 		})
 
-		test("Clicking the upload button and selecting a file POSTs the file", async () => {
+		it("Clicking the upload button and selecting a file POSTs the file", async () => {
 			const axiosMock = getAxiosMockAdapter()
 			const expectedUrlPattern = new RegExp("/files/$")
 			axiosMock.onPost(expectedUrlPattern).reply(200, {

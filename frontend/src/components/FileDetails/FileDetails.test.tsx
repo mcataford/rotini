@@ -1,3 +1,4 @@
+import { vi, expect, describe, it } from "vitest"
 import { act } from "@testing-library/react"
 import { within } from "@testing-library/dom"
 import userEvent from "@testing-library/user-event"
@@ -19,9 +20,9 @@ describe("FileDetails", () => {
 		size: 1,
 		id: "b61bf93d-a9db-473e-822e-a65003b1b7e3",
 	}
-	test("Clicking the download button trigger a file download", async () => {
+	it("Clicking the download button trigger a file download", async () => {
 		// FIXME: Validating file downloads is ... tricky. The current interaction with dynamically created DOM
-		// elements is not visible by jest.
+		// elements is not visible by vi.
 
 		const expectedUrlPattern = new RegExp(`/files/${mockItem.id}/content/$`)
 
@@ -29,12 +30,10 @@ describe("FileDetails", () => {
 
 		axiosMock.onGet(expectedUrlPattern).reply(200, mockItem)
 
-		jest
-			.spyOn(fileQueries, "useFileDetails")
-			.mockReturnValue({ data: mockItem, isLoading: false } as UseQueryResult<
-				FileData,
-				unknown
-			>)
+		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
+			data: mockItem,
+			isLoading: false,
+		} as UseQueryResult<FileData, unknown>)
 		const user = userEvent.setup()
 
 		const { getByLabelText, debug, rerender } = render(
@@ -54,19 +53,17 @@ describe("FileDetails", () => {
 		expect(downloadRequest.url).toMatch(expectedUrlPattern)
 	})
 
-	test("Clicking the delete button fires request to delete file", async () => {
+	it("Clicking the delete button fires request to delete file", async () => {
 		const expectedUrlPattern = new RegExp(`/files/${mockItem.id}/$`)
 
 		const axiosMock = getAxiosMockAdapter()
 
 		axiosMock.onDelete(expectedUrlPattern).reply(200, mockItem)
 
-		jest
-			.spyOn(fileQueries, "useFileDetails")
-			.mockReturnValue({ data: mockItem, isLoading: false } as UseQueryResult<
-				FileData,
-				unknown
-			>)
+		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
+			data: mockItem,
+			isLoading: false,
+		} as UseQueryResult<FileData, unknown>)
 		const user = userEvent.setup()
 
 		const { getByLabelText, debug, rerender } = render(
@@ -86,22 +83,20 @@ describe("FileDetails", () => {
 		expect(deleteRequest.url).toMatch(expectedUrlPattern)
 	})
 
-	test("Clicking the delete button redirects to the file list after success", async () => {
+	it("Clicking the delete button redirects to the file list after success", async () => {
 		const expectedUrlPattern = new RegExp(`/files/${mockItem.id}/$`)
 
 		const axiosMock = getAxiosMockAdapter()
 
 		axiosMock.onDelete(expectedUrlPattern).reply(200, mockItem)
 
-		jest
-			.spyOn(fileQueries, "useFileDetails")
-			.mockReturnValue({ data: mockItem, isLoading: false } as UseQueryResult<
-				FileData,
-				unknown
-			>)
+		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
+			data: mockItem,
+			isLoading: false,
+		} as UseQueryResult<FileData, unknown>)
 
-		const navigateMock = jest.fn().mockImplementation((a: string) => {})
-		jest.spyOn(locationContextUtils, "useLocationContext").mockReturnValue({
+		const navigateMock = vi.fn().mockImplementation((a: string) => {})
+		vi.spyOn(locationContextUtils, "useLocationContext").mockReturnValue({
 			location: {
 				path: "",
 				label: null,

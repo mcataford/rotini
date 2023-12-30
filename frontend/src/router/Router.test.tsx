@@ -1,3 +1,4 @@
+import { afterEach, describe, it, vi, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
 
 import { LocationContext } from "../contexts/LocationContext"
@@ -10,17 +11,17 @@ function renderComponent(component: React.ReactElement) {
 
 describe("Router", () => {
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it("throws an error if no Route exists for the given location", () => {
-		jest.spyOn(globalThis, "location", "get").mockReturnValue({
+		vi.spyOn(globalThis, "location", "get").mockReturnValue({
 			...globalThis.location,
 			pathname: "/doesnotexist",
 		})
 
 		// Silence the error to avoid logspam in tests.
-		jest.spyOn(console, "error").mockImplementation(() => {})
+		vi.spyOn(console, "error").mockImplementation(() => {})
 
 		expect(() =>
 			renderComponent(
@@ -34,7 +35,7 @@ describe("Router", () => {
 	})
 
 	it("renders the route matching the given location", () => {
-		jest.spyOn(globalThis, "location", "get").mockReturnValue({
+		vi.spyOn(globalThis, "location", "get").mockReturnValue({
 			...globalThis.location,
 			pathname: "/exists",
 		})
@@ -51,7 +52,7 @@ describe("Router", () => {
 	})
 
 	it("only renders the route that matches", () => {
-		jest.spyOn(globalThis, "location", "get").mockReturnValue({
+		vi.spyOn(globalThis, "location", "get").mockReturnValue({
 			...globalThis.location,
 			pathname: "/matches",
 		})
