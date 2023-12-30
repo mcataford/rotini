@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest"
 import React from "react"
 import { screen, render, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
@@ -46,7 +47,7 @@ function renderComponent(props?: Partial<TextInputProps>) {
 
 describe("TextInput", () => {
 	it("runs the provided onChange on input", async () => {
-		const mockOnChange = jest.fn()
+		const mockOnChange = vi.fn()
 		const mockInput = "testinput"
 
 		const { user } = renderComponent({ onChange: mockOnChange })

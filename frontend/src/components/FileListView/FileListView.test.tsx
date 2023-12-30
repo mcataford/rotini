@@ -1,3 +1,4 @@
+import { vi, expect, describe, it, afterEach } from "vitest"
 import { render, screen, waitFor } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
@@ -21,11 +22,11 @@ function renderComponent() {
 
 describe("FileListView", () => {
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it("renders no sidebar if no item is in the path", async () => {
-		jest.spyOn(globalThis, "location", "get").mockReturnValue({
+		vi.spyOn(globalThis, "location", "get").mockReturnValue({
 			...globalThis.location,
 			pathname: "/",
 		})
@@ -54,7 +55,7 @@ describe("FileListView", () => {
 
 	it("renders a sidebar if an item is selected", async () => {
 		const mockItemId = "b61bf93d-a9db-473e-822e-a65003b1b7e3"
-		jest.spyOn(globalThis, "location", "get").mockReturnValue({
+		vi.spyOn(globalThis, "location", "get").mockReturnValue({
 			...globalThis.location,
 			pathname: `/item/${mockItemId}/`,
 		})
