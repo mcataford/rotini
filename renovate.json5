@@ -18,7 +18,6 @@
     {
         "description": "Automerge patch updates in frontend packages",
         "matchFileNames": ["frontend/**"],
-        "labels": ["frontend", "automerge"],
         "matchUpdateTypes": ["patch"],
         "addLabels": ["automerge"],
         "automerge": true
