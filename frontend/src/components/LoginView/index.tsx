@@ -20,7 +20,7 @@ function LoginView() {
 	const [password, setPassword] = React.useState<string>("")
 	const { navigate } = useLocationContext()
 
-	const { mutate, isError, isLoading } = useMutation({
+	const { mutate, isError, isPending } = useMutation({
 		mutationFn: async ({
 			email,
 			password,
@@ -97,7 +97,7 @@ function LoginView() {
 					variant="contained"
 					onClick={onLoginClick}
 					aria-label="submit login"
-					disabled={!isFormValid || isLoading}
+					disabled={!isFormValid || isPending}
 				>
 					Log in
 				</Button>

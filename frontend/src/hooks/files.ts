@@ -4,18 +4,24 @@ import axios from "../axios"
 import { type FileData } from "../types/files"
 
 function useOwnFileList() {
-	return useQuery(["file-list"], async () => {
-		const response = await axios.get<Array<FileData>>("/files/")
+	return useQuery({
+		queryKey: ["file-list"],
+		queryFn: async () => {
+			const response = await axios.get<Array<FileData>>("/files/")
 
-		return response.data
+			return response.data
+		},
 	})
 }
 
 function useFileDetails(fileId: string) {
-	return useQuery(["file-details", fileId], async () => {
-		const response = await axios.get<FileData>(`/files/${fileId}/`)
+	return useQuery({
+		queryKey: ["file-details", fileId],
+		queryFn: async () => {
+			const response = await axios.get<FileData>(`/files/${fileId}/`)
 
-		return response.data
+			return response.data
+		},
 	})
 }
 
