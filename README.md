@@ -16,38 +16,31 @@ It's roadmap is currently TBD and will become better defined as it gets closer t
 ### Tooling
 
 Utility commands are managed by [go-task](https://github.com/go-task/task) and can be called from anywhere. Running `.
-script/bootstrap` installs `go-task` within the project and gets everything ready. From there, `task -l` provides a
+script/bootstrap` in the project root installs `go-task` within the project and gets everything ready. From there, `task -l` provides a
 breakdown of available tools.
 
 Note that this is the preferred way to running any tooling-related task within the repository, regardless of
-environment.
+environment. Individual scripts exist under `/{frontend,backend}/script` but generally assume that they will be called
+through `task` to inject some environment variables.
+
+#### Formatting
+
+Formatting in either frontend or backend environment can be done via `task {fe,be}:lint`. Applying fixes is available
+through the `lintfix` variant of the command.
+
+#### Running tests
+
+Test suites can be executed by environment via `task {fe,be}:test`.
 
 ### Running locally
 
-The application requires a Postgres database instance to be made available to the backend. This can be done for you via
-`task be:start-db`.
+The application requires a Postgres database instance to be made available to the backend. Setting up a local database
+is handled by the backend start command.
 
-Starting the backend and frontend applications can be done via `task be:start` and `task fe:start`.
+Starting the backend (including a database) and frontend applications can be done via `task be:docker:start` and `task fe:start`.
 
-#### Starting the backend application
+See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements around `*.env` files that aren't committed with the code.
 
-The backend application is available as a container, which you can run as
+## Production-ready deployments
 
-```sh
-task be:start
-```
-
-If you opt to run your database in an adjacent container, you can either run containers in such a manner than they share
-a network or define the database's host via `docker.host.internal`:
-
-```sh
-task be:start -- --add-host docker.host.internal:host-gateway
-```
-
-More generally, extra options can be passed to the `docker run` call that runs the application this way:
-
-```sh
-task be:start -- <options>
-```
-
-See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements.)
+_Coming soon!_
