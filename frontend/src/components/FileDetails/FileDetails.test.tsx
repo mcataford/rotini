@@ -33,7 +33,7 @@ describe("FileDetails", () => {
 		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
 			data: mockItem,
 			isLoading: false,
-		} as UseQueryResult<FileData, unknown>)
+		} as UseQueryResult<FileData, Error>)
 		const user = userEvent.setup()
 
 		const { getByLabelText, debug, rerender } = render(
@@ -63,7 +63,7 @@ describe("FileDetails", () => {
 		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
 			data: mockItem,
 			isLoading: false,
-		} as UseQueryResult<FileData, unknown>)
+		} as UseQueryResult<FileData, Error>)
 		const user = userEvent.setup()
 
 		const { getByLabelText, debug, rerender } = render(
@@ -93,7 +93,7 @@ describe("FileDetails", () => {
 		vi.spyOn(fileQueries, "useFileDetails").mockReturnValue({
 			data: mockItem,
 			isLoading: false,
-		} as UseQueryResult<FileData, unknown>)
+		} as UseQueryResult<FileData, Error>)
 
 		const navigateMock = vi.fn().mockImplementation((a: string) => {})
 		vi.spyOn(locationContextUtils, "useLocationContext").mockReturnValue({
