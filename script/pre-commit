@@ -1,0 +1,16 @@
+#!/bin/sh
+
+TASKS=""
+
+if [ -n "$(git diff --cached --name-only origin/main -- ./frontend)" ]; then
+    TASKS="$TASKS fe:lint fe:typecheck"
+fi
+
+if [ -n "$(git diff --cached --name-only origin/main -- ./backend)" ]; then
+    TASKS="$TASKS be:lint"
+fi
+
+if [ -n "$TASKS" ]; then
+    echo "Running $TASKS"
+    task $TASKS
+fi
