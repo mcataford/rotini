@@ -15,4 +15,8 @@ if [[ -z $BIN_MATCH ]]; then
     export PATH=$PATH:$BIN_PATH
 fi
 
+echo "Adding pre-commit hook"
+cp ./script/pre-commit ./.git/hooks
+chmod +x ./.git/hooks/pre-commit
+
 echo "All done!"
