@@ -2,7 +2,9 @@
 Global fixtures
 """
 
+import django.contrib.auth
 import django.test as django_test
+import django.urls
 import pytest
 
 
@@ -19,7 +21,15 @@ def fixture_test_user_creds():
     return {"username": "testuser", "password": "testpassword"}
 
 
-@pytest.fixture(name="test_user", autouse=True)
+@pytest.fixture(name="test_user")
+def fixture_test_user(test_user_credentials):
+    """Fetches the test user record and returns it."""
+    AuthUser = django.contrib.auth.get_user_model()
+
+    return AuthUser.objects.get(username=test_user_credentials["username"])
+
+
+@pytest.fixture(name="create_test_user", autouse=True)
 def fixture_create_test_user(django_user_model, test_user_credentials):
     django_user_model.objects.create_user(**test_user_credentials)
 
@@ -34,5 +44,8 @@ def fixture_no_auth_client() -> django_test.Client:
 def fixture_auth_client(test_user_credentials) -> django_test.Client:
     """Authenticated HTTP client."""
     client = django_test.Client()
-    assert client.login(**test_user_credentials)
+    response = client.post(
+        django.urls.reverse("auth-session-list"), test_user_credentials
+    )
+    assert response.status_code == 201
     return client

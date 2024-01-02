@@ -1,14 +1,23 @@
 import datetime
 import uuid
+import typing
 
 import django.conf
 
 import jwt
 
 
-def generate_token_for_user(user_id: int) -> str:
+class TokenData(typing.TypedDict):
+    exp: int
+    user_id: int
+    token_id: str
+
+
+def generate_token_for_user(user_id: int) -> tuple[str, TokenData]:
     """
     Generates an identity token for a given user.
+
+    Returns both the token data (decoded) and the encoding token string.
 
     The token expires in JWT_EXPIRATION seconds (defined in base.settings) and
     only contains the user's ID and a token ID that can be used to track the
@@ -24,8 +33,11 @@ def generate_token_for_user(user_id: int) -> str:
         "token_id": str(uuid.uuid4()),
     }
 
-    return jwt.encode(
-        token_data, django.conf.settings.JWT_SIGNING_SECRET, algorithm="HS256"
+    return (
+        jwt.encode(
+            token_data, django.conf.settings.JWT_SIGNING_SECRET, algorithm="HS256"
+        ),
+        token_data,
     )
 
 

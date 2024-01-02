@@ -5,7 +5,7 @@ import django.conf as django_conf
 import rest_framework.viewsets as drf_viewsets
 import rest_framework.status as drf_status
 import rest_framework.views as drf_views
-import rest_framework.permissions as drf_permissions
+from rest_framework.permissions import IsAuthenticated
 
 import files.serializers as files_serializers
 import files.models as files_models
@@ -47,7 +47,7 @@ class FileViewSet(drf_viewsets.ModelViewSet):
     queryset = files_models.File.objects.all()
     serializer_class = files_serializers.FileSerializer
 
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(owner_id=self.request.user.id)
@@ -100,8 +100,9 @@ class FileViewSet(drf_viewsets.ModelViewSet):
 class FileDataView(drf_views.APIView):
     """File downloads"""
 
+    permission_classes = [IsAuthenticated]
+
     queryset = files_models.File.objects.all()
-    permission_classes = [drf_permissions.IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(owner_id=self.request.user.id)
