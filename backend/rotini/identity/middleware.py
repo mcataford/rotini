@@ -3,7 +3,7 @@ import logging
 import django.http
 import django.contrib.auth
 
-import auth.jwt
+import identity.jwt
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class JwtMiddleware:
 
         if jwt_cookie is not None:
             try:
-                decoded_token = auth.jwt.decode_token(jwt_cookie)
+                decoded_token = identity.jwt.decode_token(jwt_cookie)
 
                 logger.info("Token: %s\nDecoded token: %s", jwt_cookie, decoded_token)
 

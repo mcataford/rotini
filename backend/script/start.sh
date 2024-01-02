@@ -24,4 +24,5 @@ docker run \
     --name $APP_CONTAINER_NAME \
     --env-file ../backend.env \
     --network rotini-local \
+    -v ./rotini:/app/rotini \
     rotini:dev

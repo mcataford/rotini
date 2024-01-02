@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "files",
+    "identity",
 ]
 
 MIDDLEWARE = [
@@ -39,7 +40,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "auth.middleware.JwtMiddleware",
+    "identity.middleware.JwtMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -47,8 +48,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "base.urls"
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:1234"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost:1234"]
+CORS_ALLOWED_ORIGINS = ["https://localhost:1234"]
+CSRF_TRUSTED_ORIGINS = ["https://localhost:1234"]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

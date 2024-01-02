@@ -1,4 +1,4 @@
-import auth.jwt
+import identity.jwt
 
 import pytest
 
@@ -69,6 +69,6 @@ def test_user_login_returns_valid_token_on_success(create_user_request, login_re
 
     assert "jwt" in login_response.cookies
 
-    decoded_token = auth.jwt.decode_token(login_response.cookies["jwt"].value)
+    decoded_token = identity.jwt.decode_token(login_response.cookies["jwt"].value)
 
     assert decoded_token["user_id"] == create_user_data["id"]

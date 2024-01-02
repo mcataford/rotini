@@ -1,8 +1,8 @@
 import pytest
 import django.http
 import django.contrib.auth
-import auth.middleware
-import auth.jwt
+import identity.middleware
+import identity.jwt
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -18,7 +18,7 @@ def fixture_jwt_middleware():
     def _noop(_: django.http.HttpRequest):
         return django.http.HttpResponse()
 
-    return auth.middleware.JwtMiddleware(_noop)
+    return identity.middleware.JwtMiddleware(_noop)
 
 
 def test_middleware_does_not_append_user_details_to_request_if_invalid_credentials(
@@ -40,7 +40,7 @@ def test_middleware_adds_user_to_request_in_if_valid_token(
     """If authorization headers are present and contain a valid JWT, sets user on request."""
     mock_request = HttpRequestWithUser()
     test_user = AuthUser.objects.get(username=test_user_credentials["username"])
-    token = auth.jwt.generate_token_for_user(test_user.id)
+    token = identity.jwt.generate_token_for_user(test_user.id)
     mock_request.COOKIES["jwt"] = token
 
     jwt_middleware(mock_request)
