@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography"
 import UploadIcon from "@mui/icons-material/Upload"
 
 import { useFileMutations } from "../../hooks/files"
+import { useLogout } from "../../queries/auth"
 
 function UploadFileButton() {
 	const fileRef = useRef(null)
@@ -45,6 +46,8 @@ function UploadFileButton() {
 }
 
 function NavigationBar() {
+	const { logout } = useLogout()
+
 	return (
 		<AppBar position="sticky" sx={{ display: "flex" }}>
 			<Toolbar>
@@ -52,6 +55,14 @@ function NavigationBar() {
 					Rotini
 				</Typography>
 				<UploadFileButton />
+				<Button
+					color="inherit"
+					onClick={() => {
+						logout()
+					}}
+				>
+					Log out
+				</Button>
 			</Toolbar>
 		</AppBar>
 	)
