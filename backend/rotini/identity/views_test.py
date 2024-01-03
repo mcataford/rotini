@@ -1,9 +1,10 @@
-import identity.jwt
-
 import pytest
 
 import django.urls
 import django.contrib.auth
+
+import identity.jwt
+from identity.models import AuthenticationToken
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -28,6 +29,16 @@ def fixture_login_request(auth_client):
         )
 
     return _login_request
+
+
+@pytest.fixture(name="logout_request")
+def fixture_logout_request(auth_client):
+    def _logout_request():
+        return auth_client.delete(
+            django.urls.reverse("auth-session-list"),
+        )
+
+    return _logout_request
 
 
 def test_create_new_user_returns_created_resource_on_success(create_user_request):
@@ -70,5 +81,21 @@ def test_user_login_returns_valid_token_on_success(create_user_request, login_re
     assert "jwt" in login_response.cookies
 
     decoded_token = identity.jwt.decode_token(login_response.cookies["jwt"].value)
-
     assert decoded_token["user_id"] == create_user_data["id"]
+
+
+def test_user_logout_ends_session(login_request, logout_request, test_user_credentials):
+    login_response = login_request(
+        test_user_credentials["username"], test_user_credentials["password"]
+    )
+
+    token = login_response.cookies["jwt"].value
+    token_id = identity.jwt.decode_token(token)["token_id"]
+    token_record = AuthenticationToken.objects.get(id=token_id)
+    assert not token_record.revoked
+
+    logout_response = logout_request()
+    token_record.refresh_from_db()
+
+    assert logout_response.status_code == 204
+    assert token_record.revoked

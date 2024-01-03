@@ -8,6 +8,7 @@ import rest_framework.status
 
 import identity.jwt
 from identity.models import AuthenticationToken
+from identity.token_management import revoke_token_by_id
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -66,6 +67,24 @@ class SessionListView(rest_framework.views.APIView):
             return response
 
         return django.http.HttpResponse(status=401)
+
+    def delete(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
+        """
+        Logs out the requesting user.
+
+        The token associated with the user's session is revoked
+        and cannot be reused after this is called.
+        """
+
+        current_token_id = request.session.get("token_id", None)
+
+        if current_token_id is None:
+            return django.http.HttpResponse(status=400)
+
+        revoke_token_by_id(current_token_id)
+        django.contrib.auth.logout(request)
+
+        return django.http.HttpResponse(status=204)
 
 
 class UserListView(rest_framework.views.APIView):

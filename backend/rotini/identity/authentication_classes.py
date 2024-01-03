@@ -44,6 +44,8 @@ class JwtAuthentication(authentication.BaseAuthentication):
             if auth_token.revoked:
                 raise RevokedTokenException("Revoked tokens cannot be used")
 
+            request.session["token_id"] = decoded_token["token_id"]
+
             return user, None
 
         except Exception as e:  # pylint: disable=broad-exception-caught
