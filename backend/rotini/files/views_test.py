@@ -16,12 +16,12 @@ pytestmark = [pytest.mark.anyio, pytest.mark.django_db]
     ],
     ids=["details-data", "list", "details"],
 )
-def test_files_views_return_401_if_unauthenticated(
+def test_files_views_return_403_if_not_authenticated(
     no_auth_client, route_name, route_params
 ):
     """The files API requires authentication."""
     response = no_auth_client.get(django_urls.reverse(route_name, kwargs=route_params))
-    assert response.status_code == drf_status.HTTP_401_UNAUTHORIZED
+    assert response.status_code == drf_status.HTTP_403_FORBIDDEN
 
 
 def test_file_downloads_404_if_does_not_exist(auth_client):

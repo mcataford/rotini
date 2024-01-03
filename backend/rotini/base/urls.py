@@ -18,10 +18,10 @@ from django.contrib import admin
 import django.urls as django_urls
 
 import files.urls as files_urls
-import auth.urls
+import identity.urls
 
 urlpatterns = [
     django_urls.path("admin/", admin.site.urls),
     django_urls.path("", django_urls.include(files_urls.urlpatterns)),
-    django_urls.path("auth/", django_urls.include(auth.urls.urlpatterns)),
+    django_urls.path("auth/", django_urls.include(identity.urls.urlpatterns)),
 ]

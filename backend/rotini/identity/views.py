@@ -1,11 +1,13 @@
 import logging
+import datetime
 
 import django.http
 import django.contrib.auth
 import rest_framework.views
 import rest_framework.status
 
-import auth.jwt
+import identity.jwt
+from identity.models import AuthenticationToken
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -45,8 +47,17 @@ class SessionListView(rest_framework.views.APIView):
         if user is not None:
             django.contrib.auth.login(request, user)
 
-            token = auth.jwt.generate_token_for_user(user_id=user.id)
-            response = django.http.HttpResponse(status=201)
+            token, token_data = identity.jwt.generate_token_for_user(user_id=user.id)
+
+            token_tracker = AuthenticationToken.objects.create(
+                id=token_data["token_id"],
+                user_id=token_data["user_id"],
+                expires_at=datetime.datetime.fromtimestamp(token_data["exp"]),
+            )
+
+            response = django.http.JsonResponse(
+                {"refresh_token": token_tracker.refresh_token}, status=201
+            )
 
             response.set_cookie(
                 "jwt", value=token, secure=False, domain="localhost", httponly=False
