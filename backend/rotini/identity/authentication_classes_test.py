@@ -21,6 +21,8 @@ def test_jwt_authentication_accepts_valid_unrevoked_tokens(test_user):
     )
 
     request = HttpRequest()
+    # Middleware would set up the session dict in a normal context.
+    request.session = {}
     request.COOKIES["jwt"] = auth_token
 
     user, _ = JwtAuthentication().authenticate(request)

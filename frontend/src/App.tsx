@@ -14,6 +14,7 @@ import { Router, Route } from "./router"
 import FileListView from "./components/FileListView"
 import RegisterView from "./components/RegisterView"
 import LoginView from "./components/LoginView"
+import LogoutView from "./components/LogoutView"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",
@@ -40,6 +41,9 @@ const App = () => {
 					</Route>
 					<Route path="/login">
 						<LoginView />
+					</Route>
+					<Route path="/logout">
+						<LogoutView />
 					</Route>
 				</Router>
 			</Box>
