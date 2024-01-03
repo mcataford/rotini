@@ -1,7 +1,7 @@
 import logging
 import datetime
 
-import django.http
+from django.http import HttpResponse, JsonResponse, HttpRequest
 import django.contrib.auth
 import rest_framework.views
 import rest_framework.status
@@ -9,6 +9,7 @@ import rest_framework.status
 import identity.jwt
 from identity.models import AuthenticationToken
 from identity.token_management import revoke_token_by_id
+from identity.serializers import UserSerializer
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -20,7 +21,7 @@ class SessionListView(rest_framework.views.APIView):
     Views handling authenticated user sessions.
     """
 
-    def post(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
+    def post(self, request: HttpRequest) -> HttpResponse:
         """
         Handles signing in for existing users.
 
@@ -56,7 +57,7 @@ class SessionListView(rest_framework.views.APIView):
                 expires_at=datetime.datetime.fromtimestamp(token_data["exp"]),
             )
 
-            response = django.http.JsonResponse(
+            response = JsonResponse(
                 {"refresh_token": token_tracker.refresh_token}, status=201
             )
 
@@ -66,9 +67,9 @@ class SessionListView(rest_framework.views.APIView):
 
             return response
 
-        return django.http.HttpResponse(status=401)
+        return HttpResponse(status=401)
 
-    def delete(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
+    def delete(self, request: HttpRequest) -> HttpResponse:
         """
         Logs out the requesting user.
 
@@ -79,12 +80,12 @@ class SessionListView(rest_framework.views.APIView):
         current_token_id = request.session.get("token_id", None)
 
         if current_token_id is None:
-            return django.http.HttpResponse(status=400)
+            return HttpResponse(status=400)
 
         revoke_token_by_id(current_token_id)
         django.contrib.auth.logout(request)
 
-        return django.http.HttpResponse(status=204)
+        return HttpResponse(status=204)
 
 
 class UserListView(rest_framework.views.APIView):
@@ -92,7 +93,9 @@ class UserListView(rest_framework.views.APIView):
     Routes dealing with non-specific users (without IDs).
     """
 
-    def post(self, request: django.http.HttpRequest) -> django.http.HttpResponse:
+    queryset = AuthUser.objects.all()
+
+    def post(self, request: HttpRequest) -> HttpResponse:
         """
         Allows the creation of new users.
 
@@ -115,8 +118,24 @@ class UserListView(rest_framework.views.APIView):
             )
         except Exception as e:  # pylint: disable=broad-exception-caught
             logger.exception(e)
-            return django.http.HttpResponse(status=400)
+            return HttpResponse(status=400)
 
-        return django.http.JsonResponse(
+        return JsonResponse(
             {"username": new_user.username, "id": new_user.id}, status=201
         )
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """
+        Retrieves data about the current user.
+
+        If the request is made unauthenticated, a 403 is returned.
+        """
+
+        if not request.user.is_authenticated:
+            return HttpResponse(status=403)
+
+        current_user = self.queryset.get(id=request.user.id)
+
+        current_user_data = UserSerializer(current_user).data
+
+        return JsonResponse(current_user_data, status=200)

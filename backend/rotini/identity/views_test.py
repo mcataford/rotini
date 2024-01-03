@@ -1,10 +1,13 @@
+import typing
+
 import pytest
 
 import django.urls
 import django.contrib.auth
-
+from django.test import Client
 import identity.jwt
 from identity.models import AuthenticationToken
+from identity.serializers import UserSerializer
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -39,6 +42,15 @@ def fixture_logout_request(auth_client):
         )
 
     return _logout_request
+
+
+@pytest.fixture(name="get_current_user_request")
+def fixture_get_current_user(auth_client):
+    def _get_current_user_request(client: typing.Optional[Client] = None):
+        chosen_client = client if client is not None else auth_client
+        return chosen_client.get(django.urls.reverse("auth-user-list"))
+
+    return _get_current_user_request
 
 
 def test_create_new_user_returns_created_resource_on_success(create_user_request):
@@ -99,3 +111,22 @@ def test_user_logout_ends_session(login_request, logout_request, test_user_crede
 
     assert logout_response.status_code == 204
     assert token_record.revoked
+
+
+def test_get_current_user_returns_data_if_authenticated(
+    test_user, login_request, test_user_credentials, get_current_user_request
+):
+    login_request(test_user_credentials["username"], test_user_credentials["password"])
+
+    response = get_current_user_request()
+    test_user.refresh_from_db()
+    assert response.status_code == 200
+    assert response.json() == UserSerializer(test_user).data
+
+
+def test_get_current_user_returns_403_if_unauthenticated(
+    no_auth_client, get_current_user_request
+):
+    response = get_current_user_request(no_auth_client)
+
+    assert response.status_code == 403
