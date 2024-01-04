@@ -27,3 +27,17 @@ def test_token_decode_fails_if_expired():
 
     with pytest.raises(jwt.ExpiredSignatureError):
         identity.jwt.decode_token(token)
+
+
+def test_token_decode_succeeds_if_expired_and_allow_expired_truthy():
+    MOCK_USER_ID = 1
+
+    with freezegun.freeze_time("2012-01-01"):
+        token, token_data = identity.jwt.generate_token_for_user(MOCK_USER_ID)
+
+    assert token is not None
+
+    decoded_token = identity.jwt.decode_token(token, allow_expired=True)
+
+    assert decoded_token is not None
+    assert decoded_token == token_data
