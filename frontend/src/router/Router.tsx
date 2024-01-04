@@ -1,6 +1,6 @@
 import React, { Children } from "react"
 
-import { useLocationContext } from "../contexts/LocationContext"
+import { useLocationContext } from "@/contexts/LocationContext"
 
 interface RouterProps {
 	children: React.ReactNode

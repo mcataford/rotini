@@ -6,13 +6,9 @@ import MuiDeleteIcon from "@mui/icons-material/Delete"
 import MuiDownloadIcon from "@mui/icons-material/Download"
 import MuiIconButton from "@mui/material/IconButton"
 
-import { byteSizeToUnits } from "../../utils"
-import { useLocationContext } from "../../contexts/LocationContext"
-import {
-	useFileDetails,
-	useFileMutations,
-	useFileFetches,
-} from "../../hooks/files"
+import { byteSizeToUnits } from "@/utils"
+import { useLocationContext } from "@/contexts/LocationContext"
+import { useFileDetails, useFileMutations, useFileFetches } from "@/hooks/files"
 
 interface FileDetailsProps {
 	itemId: string

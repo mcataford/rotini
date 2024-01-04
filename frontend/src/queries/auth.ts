@@ -6,8 +6,9 @@
  *
  */
 import { useQueryClient, useMutation } from "@tanstack/react-query"
-import { useLocationContext } from "../contexts/LocationContext"
-import axiosWithDefaults from "../axios"
+
+import { useLocationContext } from "@/contexts/LocationContext"
+import axiosWithDefaults from "@/axios"
 
 /*
  * Handles the log-out interaction.

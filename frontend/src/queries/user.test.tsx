@@ -4,7 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import axiosWithDefaults from "../axios"
+import axiosWithDefaults from "@/axios"
 import { useCurrentUser } from "./user"
 
 function WithProviders({ children }: { children: React.ReactNode }) {

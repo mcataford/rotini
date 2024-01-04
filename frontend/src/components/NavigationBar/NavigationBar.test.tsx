@@ -4,11 +4,11 @@ import userEvent from "@testing-library/user-event"
 import { screen, render, waitFor } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 
-import * as locationHook from "../../contexts/LocationContext"
-import { getAxiosMockAdapter } from "../../tests/helpers"
+import * as locationHook from "@/contexts/LocationContext"
+import { getAxiosMockAdapter } from "@/tests/helpers"
 import NavigationBar from "."
 
-import { type FileData } from "../../types/files"
+import { type FileData } from "@/types/files"
 
 function renderComponent() {
 	const wrapper = ({ children }: { children: React.ReactNode }) => (

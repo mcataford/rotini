@@ -1,7 +1,7 @@
 import { afterEach, describe, it, vi, expect } from "vitest"
 import { render, screen } from "@testing-library/react"
 
-import { LocationContext } from "../contexts/LocationContext"
+import { LocationContext } from "@/contexts/LocationContext"
 import Router from "./Router"
 import Route from "./Route"
 

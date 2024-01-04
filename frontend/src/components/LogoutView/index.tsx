@@ -2,7 +2,7 @@ import React from "react"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 
-import { useLogout } from "../../queries/auth"
+import { useLogout } from "@/queries/auth"
 
 function LogoutView() {
 	const { logout } = useLogout()

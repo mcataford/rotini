@@ -5,16 +5,16 @@ import {
 	useQuery,
 } from "@tanstack/react-query"
 
-import NavigationBar from "./components/NavigationBar"
-import AsyncTaskContext from "./contexts/AsyncTaskContext"
-import LocationContext from "./contexts/LocationContext"
+import NavigationBar from "@/components/NavigationBar"
+import AsyncTaskContext from "@/contexts/AsyncTaskContext"
+import LocationContext from "@/contexts/LocationContext"
 
-import { Router, Route } from "./router"
+import { Router, Route } from "@/router"
 
-import FileListView from "./components/FileListView"
-import RegisterView from "./components/RegisterView"
-import LoginView from "./components/LoginView"
-import LogoutView from "./components/LogoutView"
+import FileListView from "@/components/FileListView"
+import RegisterView from "@/components/RegisterView"
+import LoginView from "@/components/LoginView"
+import LogoutView from "@/components/LogoutView"
 
 const routeLabels = {
 	ITEM_DETAILS: "item-details",

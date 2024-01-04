@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event"
 import {
 	renderWithContexts as render,
 	getAxiosMockAdapter,
-} from "../../tests/helpers"
+} from "@/tests/helpers"
 import FileList from "."
 import AxiosMockAdapter from "axios-mock-adapter"
 

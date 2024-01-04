@@ -5,8 +5,8 @@ import userEvent from "@testing-library/user-event"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import axios from "../../axios"
-import * as locationHook from "../../contexts/LocationContext"
+import axios from "@/axios"
+import * as locationHook from "@/contexts/LocationContext"
 import LoginView from "."
 
 function renderComponent() {

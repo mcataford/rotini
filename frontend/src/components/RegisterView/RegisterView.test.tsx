@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import axios from "../../axios"
+import axios from "@/axios"
 import RegisterView from "."
 
 function renderComponent() {

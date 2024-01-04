@@ -4,8 +4,8 @@ import { renderHook, waitFor } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import * as locationHook from "../contexts/LocationContext"
-import axiosWithDefaults from "../axios"
+import * as locationHook from "@/contexts/LocationContext"
+import axiosWithDefaults from "@/axios"
 import { useLogout } from "./auth"
 
 function WithProviders({ children }: { children: React.ReactNode }) {
