@@ -24,13 +24,26 @@ function renderComponent() {
 
 describe("NavigationBar", () => {
 	describe("Upload functionality", () => {
-		it("Renders the upload button", () => {
+		it("does not render the upload button if not authenticated", () => {
+			const axiosMock = getAxiosMockAdapter()
+
+			axiosMock.onGet("/auth/user/").reply(403)
 			renderComponent()
-			expect(screen.queryByText("Upload file")).toBeInTheDocument()
+			expect(screen.queryByText("Upload file")).not.toBeInTheDocument()
 		})
 
+		it("renders the upload button if authenticated", async () => {
+			const axiosMock = getAxiosMockAdapter()
+
+			axiosMock.onGet("/auth/user/").reply(200)
+			renderComponent()
+			await waitFor(() =>
+				expect(screen.queryByText("Upload file")).toBeInTheDocument(),
+			)
+		})
 		it("Clicking the upload button and selecting a file POSTs the file", async () => {
 			const axiosMock = getAxiosMockAdapter()
+			axiosMock.onGet("/auth/user/").reply(200)
 			const expectedUrlPattern = new RegExp("/files/$")
 			axiosMock.onPost(expectedUrlPattern).reply(200, {
 				id: "b61bf93d-a9db-473e-822e-a65003b1b7e3",
@@ -40,6 +53,9 @@ describe("NavigationBar", () => {
 			})
 
 			const { user, container } = renderComponent()
+			await waitFor(() =>
+				expect(screen.queryByText("Upload file")).toBeInTheDocument(),
+			)
 			const uploadButton = screen.getByText("Upload file")
 			const mockFile = new File(["test"], "test.txt", { type: "text/plain" })
 
@@ -60,16 +76,27 @@ describe("NavigationBar", () => {
 	})
 
 	describe("Log out", () => {
-		it("renders a logout button", () => {
+		it("does not render the upload button if not authenticated", () => {
+			const axiosMock = getAxiosMockAdapter()
+
+			axiosMock.onGet("/auth/user/").reply(403)
 			renderComponent()
+			expect(screen.queryByText("Log out")).not.toBeInTheDocument()
+		})
 
-			expect(screen.queryByText("Log out")).toBeInTheDocument()
+		it("renders the upload button if authenticated", async () => {
+			const axiosMock = getAxiosMockAdapter()
 
-			const button = screen.getByText("Log out")
+			axiosMock.onGet("/auth/user/").reply(200)
+			renderComponent()
+			await waitFor(() =>
+				expect(screen.queryByText("Log out")).toBeInTheDocument(),
+			)
 		})
 
 		it("sends a logout request and redirects to the login page when logging out", async () => {
 			const axiosMock = getAxiosMockAdapter()
+			axiosMock.onGet("/auth/user/").reply(200)
 			axiosMock.onDelete("/auth/session/").reply(204)
 			const mockNavigate = vi.fn()
 			const mockLocationHook = vi
@@ -85,7 +112,9 @@ describe("NavigationBar", () => {
 				}))
 
 			const { user } = renderComponent()
-
+			await waitFor(() =>
+				expect(screen.queryByText("Log out")).toBeInTheDocument(),
+			)
 			const logoutButton = screen.getByText("Log out")
 
 			await user.click(logoutButton)

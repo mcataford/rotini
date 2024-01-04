@@ -1,5 +1,4 @@
 import React from "react"
-import { useMutation } from "@tanstack/react-query"
 
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
@@ -11,29 +10,14 @@ import Button from "@mui/material/Button"
 import Link from "@mui/material/Link"
 import Alert from "@mui/material/Alert"
 
+import { useLogin } from "../../queries/auth"
 import axiosWithDefaults from "../../axios"
 import TextInput from "../TextInput"
-import { useLocationContext } from "../../contexts/LocationContext"
 
 function LoginView() {
 	const [emailAddress, setEmailAddress] = React.useState<string>("")
 	const [password, setPassword] = React.useState<string>("")
-	const { navigate } = useLocationContext()
-
-	const { mutate, isError, isPending } = useMutation({
-		mutationFn: async ({
-			email,
-			password,
-		}: { email: string; password: string }) => {
-			return axiosWithDefaults.post("/auth/session/", {
-				username: email,
-				password,
-			})
-		},
-		onSuccess: (response) => {
-			navigate("/")
-		},
-	})
+	const { login, isError, isPending } = useLogin()
 
 	const emailField = React.useMemo(
 		() => (
@@ -68,8 +52,8 @@ function LoginView() {
 	const onLoginClick = React.useCallback(() => {
 		if (!isFormValid) return
 
-		mutate({ email: emailAddress, password })
-	}, [mutate, emailAddress, password, isFormValid])
+		login({ email: emailAddress, password })
+	}, [login, emailAddress, password, isFormValid])
 
 	return (
 		<Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>

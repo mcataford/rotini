@@ -5,7 +5,7 @@
  * affect the user's session.
  *
  */
-import { useMutation } from "@tanstack/react-query"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { useLocationContext } from "../contexts/LocationContext"
 import axiosWithDefaults from "../axios"
 
@@ -15,14 +15,19 @@ import axiosWithDefaults from "../axios"
  * Using `logout` will instruct the application to invalidate
  * the current authentication token and will redirect the user
  * to the login page.
+ *
+ * On success, the current-user query is invalidated so that the
+ * application is made aware that the user is no longer authenticated.
  */
 function useLogout() {
 	const { navigate } = useLocationContext()
+	const queryClient = useQueryClient()
 	const logoutMutation = useMutation({
 		mutationFn: async () => {
 			return axiosWithDefaults.delete("/auth/session/")
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["current-user"] })
 			navigate("/login")
 		},
 	})
@@ -36,8 +41,37 @@ function useLogout() {
 	}
 }
 
-export { useLogout }
+/*
+ * Handles the log-in interaction.
+ *
+ * Using `login` will send a request to create a session and on success,
+ * refetch the current user data.
+ */
+function useLogin() {
+	const queryClient = useQueryClient()
+	const { navigate } = useLocationContext()
+	const { mutate, isError, failureReason, isPending } = useMutation({
+		mutationFn: async ({
+			email,
+			password,
+		}: { email: string; password: string }) => {
+			return axiosWithDefaults.post("/auth/session/", {
+				username: email,
+				password,
+			})
+		},
+		onSuccess: async () => {
+			await queryClient.refetchQueries({ queryKey: ["current-user"] })
+			navigate("/")
+		},
+	})
+
+	return { login: mutate, isError, isPending }
+}
+
+export { useLogout, useLogin }
 
 export default {
 	useLogout,
+	useLogin,
 }
