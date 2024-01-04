@@ -7,9 +7,9 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import UploadIcon from "@mui/icons-material/Upload"
 
-import { useFileMutations } from "../../hooks/files"
-import { useLogout } from "../../queries/auth"
-import { useCurrentUser } from "../../queries/user"
+import { useFileMutations } from "@/hooks/files"
+import { useLogout } from "@/queries/auth"
+import { useCurrentUser } from "@/queries/user"
 
 function UploadFileButton() {
 	const fileRef = useRef(null)

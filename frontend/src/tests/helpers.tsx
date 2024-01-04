@@ -4,8 +4,8 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import axios from "../axios"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import AsyncTaskContext, { type AsyncTask } from "../contexts/AsyncTaskContext"
-import LocationContext from "../contexts/LocationContext"
+import AsyncTaskContext, { type AsyncTask } from "@/contexts/AsyncTaskContext"
+import LocationContext from "@/contexts/LocationContext"
 
 interface ContextInitialValues {
 	asyncTaskContext: Array<AsyncTask>

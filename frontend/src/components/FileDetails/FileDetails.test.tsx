@@ -7,11 +7,11 @@ import { type UseQueryResult } from "@tanstack/react-query"
 import {
 	renderWithContexts as render,
 	getAxiosMockAdapter,
-} from "../../tests/helpers"
+} from "@/tests/helpers"
 import FileDetails from "."
-import { type FileData } from "../../types/files"
-import * as fileQueries from "../../hooks/files"
-import * as locationContextUtils from "../../contexts/LocationContext"
+import { type FileData } from "@/types/files"
+import * as fileQueries from "@/hooks/files"
+import * as locationContextUtils from "@/contexts/LocationContext"
 
 describe("FileDetails", () => {
 	const mockItem = {

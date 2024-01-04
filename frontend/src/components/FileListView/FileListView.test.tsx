@@ -3,8 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AxiosMockAdapter from "axios-mock-adapter"
 
-import axios from "../../axios"
-import { LocationContext } from "../../contexts/LocationContext"
+import axios from "@/axios"
+import { LocationContext } from "@/contexts/LocationContext"
 import FileListView from "."
 
 const routes = {

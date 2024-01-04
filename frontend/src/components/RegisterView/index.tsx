@@ -10,8 +10,8 @@ import InputLabel from "@mui/material/InputLabel"
 import FormHelperText from "@mui/material/FormHelperText"
 import Button from "@mui/material/Button"
 
-import axiosWithDefaults from "../../axios"
-import TextInput from "../TextInput"
+import axiosWithDefaults from "@/axios"
+import TextInput from "@/components/TextInput"
 import { validateEmail, validatePassword } from "./validation"
 
 function RegisterView() {

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-import axiosWithDefaults from "../axios"
+import axiosWithDefaults from "@/axios"
 
 /*
  * Current user data fetch.

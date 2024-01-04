@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-import axios from "../axios"
-import { type FileData } from "../types/files"
+import axios from "@/axios"
+import { type FileData } from "@/types/files"
 
 function useOwnFileList() {
 	return useQuery({

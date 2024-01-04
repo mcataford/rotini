@@ -2,10 +2,10 @@ import React from "react"
 
 import Box from "@mui/material/Box"
 
-import FileList from "../FileList"
-import FileDetails from "../FileDetails"
-import { useOwnFileList } from "../../hooks/files"
-import { useLocationContext } from "../../contexts/LocationContext"
+import FileList from "@/components/FileList"
+import FileDetails from "@/components/FileDetails"
+import { useOwnFileList } from "@/hooks/files"
+import { useLocationContext } from "@/contexts/LocationContext"
 
 function FileListView() {
 	const { isLoading, data } = useOwnFileList()

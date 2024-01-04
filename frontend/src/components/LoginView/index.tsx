@@ -10,9 +10,9 @@ import Button from "@mui/material/Button"
 import Link from "@mui/material/Link"
 import Alert from "@mui/material/Alert"
 
-import { useLogin } from "../../queries/auth"
-import axiosWithDefaults from "../../axios"
-import TextInput from "../TextInput"
+import { useLogin } from "@/queries/auth"
+import axiosWithDefaults from "@/axios"
+import TextInput from "@/components/TextInput"
 
 function LoginView() {
 	const [emailAddress, setEmailAddress] = React.useState<string>("")

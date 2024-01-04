@@ -12,10 +12,10 @@
   },
   "scripts": {
     "start": "vite ./src --config ./vite.config.js",
-    "build": "vite build ./src",
+    "build": "vite build ./src --config ./vite.config.js",
     "lint": "biome check src *.js --verbose && biome format src *.js --verbose",
     "lint:fix": "biome check src ./*.js --apply --verbose && biome format src ./*.js --write --verbose",
-    "test": "yarn vitest run src",
+    "test": "yarn vitest run",
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
