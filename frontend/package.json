@@ -15,7 +15,7 @@
     "build": "vite build ./src --config ./vite.config.js",
     "lint": "biome check src *.js --verbose && biome format src *.js --verbose",
     "lint:fix": "biome check src ./*.js --apply --verbose && biome format src ./*.js --write --verbose",
-    "test": "yarn vitest run",
+    "test": "yarn vitest --watch=false",
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
