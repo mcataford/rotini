@@ -26,7 +26,7 @@ def generate_token_for_user(user_id: int) -> tuple[str, TokenData]:
 
     token_data = {
         "exp": (
-            datetime.datetime.now()
+            datetime.datetime.now(datetime.timezone.utc)
             + datetime.timedelta(seconds=django.conf.settings.JWT_EXPIRATION)
         ).timestamp(),
         "user_id": user_id,

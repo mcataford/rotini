@@ -1,5 +1,6 @@
 import logging
 import datetime
+import json
 
 from django.http import HttpResponse, JsonResponse, HttpRequest
 import django.contrib.auth
@@ -8,8 +9,9 @@ import rest_framework.status
 
 import identity.jwt
 from identity.models import AuthenticationToken
-from identity.token_management import revoke_token_by_id
+from identity.token_management import revoke_token_by_id, renew_token
 from identity.serializers import UserSerializer
+from identity.authentication_classes import JwtAuthenticationAllowExpired
 
 AuthUser = django.contrib.auth.get_user_model()
 
@@ -20,6 +22,8 @@ class SessionListView(rest_framework.views.APIView):
     """
     Views handling authenticated user sessions.
     """
+
+    authentication_classes = [JwtAuthenticationAllowExpired]
 
     def post(self, request: HttpRequest) -> HttpResponse:
         """
@@ -69,6 +73,35 @@ class SessionListView(rest_framework.views.APIView):
 
         return HttpResponse(status=401)
 
+    def put(self, request: HttpRequest) -> HttpResponse:
+        """
+        Refreshes a session using a refresh token (provided via body).
+
+        On success, returns a new authentication token via cookie and
+        a new refresh token via response body.
+
+        The previous auth+refresh token pair is invalidated and cannot be reused.
+        """
+
+        request_body = json.loads(request.body.decode("utf-8"))
+
+        current_auth_token = request.COOKIES.get("jwt", None)
+        current_refresh_token = request_body.get("refresh_token", None)
+        if not current_auth_token or not current_refresh_token:
+            return HttpResponse(status=400)
+
+        new_token, _, new_refresh_token = renew_token(
+            current_auth_token, current_refresh_token
+        )
+
+        response = JsonResponse({"refresh_token": new_refresh_token}, status=201)
+
+        response.set_cookie(
+            "jwt", value=new_token, secure=True, domain="localhost", httponly=False
+        )
+
+        return response
+
     def delete(self, request: HttpRequest) -> HttpResponse:
         """
         Logs out the requesting user.
@@ -79,6 +112,9 @@ class SessionListView(rest_framework.views.APIView):
 
         current_token_id = request.session.get("token_id", None)
 
+        if request.session.get("expired", False):
+            return HttpResponse(status=403)
+
         if current_token_id is None:
             return HttpResponse(status=400)
 
@@ -86,6 +122,26 @@ class SessionListView(rest_framework.views.APIView):
         django.contrib.auth.logout(request)
 
         return HttpResponse(status=204)
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """
+        Verifies if the current session is still valid.
+        """
+
+        current_token_id = request.session.get("token_id", None)
+
+        token_record = AuthenticationToken.objects.get(id=current_token_id)
+
+        if (
+            token_record.expires_at + datetime.timedelta(minutes=5)
+        ) < datetime.datetime.now(datetime.timezone.utc):
+            return HttpResponse(status=401)
+
+        should_refresh = datetime.datetime.now(
+            datetime.timezone.utc
+        ) > token_record.expires_at - datetime.timedelta(minutes=8)
+
+        return JsonResponse({"should_refresh": should_refresh}, status=200)
 
 
 class UserListView(rest_framework.views.APIView):

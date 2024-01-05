@@ -1,6 +1,8 @@
 import typing
+import json
 
 import pytest
+import freezegun
 
 import django.urls
 import django.contrib.auth
@@ -42,6 +44,29 @@ def fixture_logout_request(auth_client):
         )
 
     return _logout_request
+
+
+@pytest.fixture(name="refresh_session_request")
+def fixture_refresh_session_request(auth_client):
+    def _refresh_session_request(refresh_token: typing.Optional[str] = None):
+        data = {"refresh_token": refresh_token} if refresh_token else {}
+        return auth_client.put(
+            django.urls.reverse("auth-session-list"),
+            json.dumps(data),
+            content_type="application/json",
+        )
+
+    return _refresh_session_request
+
+
+@pytest.fixture(name="get_session_request")
+def fixture_get_session_request(auth_client):
+    def _get_session_request():
+        return auth_client.get(
+            django.urls.reverse("auth-session-list"),
+        )
+
+    return _get_session_request
 
 
 @pytest.fixture(name="get_current_user_request")
@@ -130,3 +155,67 @@ def test_get_current_user_returns_403_if_unauthenticated(
     response = get_current_user_request(no_auth_client)
 
     assert response.status_code == 403
+
+
+def test_get_session_returns_401_if_token_expired_past_threshold(
+    test_user_credentials, login_request, get_session_request
+):
+    with freezegun.freeze_time("2012-01-01"):
+        login_request(
+            test_user_credentials["username"], test_user_credentials["password"]
+        )
+
+    response = get_session_request()
+
+    assert response.status_code == 401
+
+
+def test_get_session_returns_whether_token_should_be_refreshed(
+    login_request, get_session_request, test_user_credentials
+):
+    login_request(test_user_credentials["username"], test_user_credentials["password"])
+
+    response = get_session_request()
+
+    assert response.status_code == 200
+    assert response.json() == {"should_refresh": False}
+
+
+def test_session_refresh_rejects_with_400_if_no_refresh_token(
+    login_request,
+    refresh_session_request,
+    test_user_credentials,
+):
+    login_request(test_user_credentials["username"], test_user_credentials["password"])
+
+    response = refresh_session_request()
+
+    assert response.status_code == 400
+
+
+def test_session_refresh_rejects_with_400_if_not_authenticated(refresh_session_request):
+    response = refresh_session_request()
+
+    assert response.status_code == 400
+
+
+def test_session_refresh_attaches_new_token_to_response(
+    login_request,
+    refresh_session_request,
+    test_user_credentials,
+):
+    login_response = login_request(
+        test_user_credentials["username"], test_user_credentials["password"]
+    )
+
+    login_response_data = login_response.json()
+
+    refresh_response = refresh_session_request(login_response_data["refresh_token"])
+
+    refresh_response_data = refresh_response.json()
+
+    assert refresh_response.status_code == 201
+    assert (
+        refresh_response_data["refresh_token"] != login_response_data["refresh_token"]
+    )
+    assert refresh_response.cookies["jwt"].value != login_response.cookies["jwt"].value
