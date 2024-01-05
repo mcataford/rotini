@@ -1,3 +1,5 @@
+import React from "react"
+
 import { Box } from "@mui/material"
 import {
 	QueryClient,
@@ -10,6 +12,8 @@ import AsyncTaskContext from "@/contexts/AsyncTaskContext"
 import LocationContext from "@/contexts/LocationContext"
 
 import { Router, Route } from "@/router"
+
+import setupAuthTokenAutoRefresh from "@/authRefresh"
 
 import FileListView from "@/components/FileListView"
 import RegisterView from "@/components/RegisterView"
@@ -25,6 +29,14 @@ const routes = {
 }
 
 const App = () => {
+	React.useEffect(() => {
+		const stopAutoRefresh = setupAuthTokenAutoRefresh()
+
+		return () => {
+			stopAutoRefresh?.()
+		}
+	}, [])
+
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 			<NavigationBar />

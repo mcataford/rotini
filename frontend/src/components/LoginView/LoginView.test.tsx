@@ -129,7 +129,9 @@ describe("LoginView", () => {
 			}))
 		const axiosMockAdapter = new AxiosMockAdapter(axios)
 
-		axiosMockAdapter.onPost("/auth/session/").reply(201)
+		axiosMockAdapter
+			.onPost("/auth/session/")
+			.reply(201, { refresh_token: "notatoken" })
 
 		const { user } = renderComponent()
 
