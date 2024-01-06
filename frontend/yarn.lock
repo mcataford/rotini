@@ -2120,21 +2120,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.17.4":
-  version: 5.17.4
-  resolution: "@tanstack/query-core@npm:5.17.4"
-  checksum: e1e4860bb7b1f0609c285e108a338a4015701968f52472161be5a48ff50efa6c717cdb1f407e930d6b3883b5679be7d3e83e299a48b2895d1eb1f640f812c136
+"@tanstack/query-core@npm:5.17.7":
+  version: 5.17.7
+  resolution: "@tanstack/query-core@npm:5.17.7"
+  checksum: 901808daed3fc2be1613ab2302feddb077225b5bac708aeeb5008f649d96995d75c115061a066ab654a9e7bf5775006d59700760d7f8e8bab8d21ac66b35abc3
   languageName: node
   linkType: hard
 
 "@tanstack/react-query@npm:^5.0.0":
-  version: 5.17.5
-  resolution: "@tanstack/react-query@npm:5.17.5"
+  version: 5.17.7
+  resolution: "@tanstack/react-query@npm:5.17.7"
   dependencies:
-    "@tanstack/query-core": "npm:5.17.4"
+    "@tanstack/query-core": "npm:5.17.7"
   peerDependencies:
     react: ^18.0.0
-  checksum: 8cc9876491de8e3047377fe246fd9f36715577c088ea7c4e353433ddb380b071385e5263345214e5ce65538094e14cc59dd232a3d20c6374e9ae1b026a95c243
+  checksum: 31422f32d2b8ef31c74f5f18170c1ed2d85d5e74a74357603bf8564de90b61e1024fe97ee0bedf88050a7318fbf44c6866339ea573420243e3db212768cb6c74
   languageName: node
   linkType: hard
 
