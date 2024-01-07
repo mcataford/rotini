@@ -43,6 +43,6 @@ done;
 sleep $HEALTHCHECK_SLEEP
 
 #ROTINI_TEST=1 PYTHONPATH=rotini $VENV_PYTHON rotini/migrations/migrate.py up || fail "Migrations failed."
-$VENV_PYTEST . -vv -s || fail "Test run failed."
+$VENV_PYTEST . -vv -s $@ || fail "Test run failed."
 
 cleanup

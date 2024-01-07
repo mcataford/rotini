@@ -32,7 +32,7 @@ tasks:
   test:
     desc: "Run the test suites."
     deps: [bootstrap]
-    cmd: $SHELL script/test
+    cmd: $SHELL script/test {{ .CLI_ARGS }}
     dotenv:
       - ../backend-test.env
   lock-deps:

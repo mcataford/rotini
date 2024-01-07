@@ -7,6 +7,7 @@
  */
 import { useQueryClient, useMutation } from "@tanstack/react-query"
 
+import { setRefreshToken, unsetRefreshToken } from "@/authRefresh"
 import { useLocationContext } from "@/contexts/LocationContext"
 import axiosWithDefaults from "@/axios"
 
@@ -29,6 +30,7 @@ function useLogout() {
 		},
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({ queryKey: ["current-user"] })
+			unsetRefreshToken()
 			navigate("/login")
 		},
 	})
@@ -61,7 +63,8 @@ function useLogin() {
 				password,
 			})
 		},
-		onSuccess: async () => {
+		onSuccess: async (response) => {
+			setRefreshToken(response.data.refresh_token)
 			await queryClient.refetchQueries({ queryKey: ["current-user"] })
 			navigate("/")
 		},
