@@ -44,7 +44,7 @@ describe("NavigationBar", () => {
 		it("Clicking the upload button and selecting a file POSTs the file", async () => {
 			const axiosMock = getAxiosMockAdapter()
 			axiosMock.onGet("/auth/user/").reply(200)
-			const expectedUrlPattern = new RegExp("/files/$")
+			const expectedUrlPattern = /files\/$/
 			axiosMock.onPost(expectedUrlPattern).reply(200, {
 				id: "b61bf93d-a9db-473e-822e-a65003b1b7e3",
 				filename: "test.txt",

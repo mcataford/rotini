@@ -44,7 +44,7 @@ function RegisterView() {
 				value={emailAddress}
 			/>
 		),
-		[emailAddress, setEmailAddress],
+		[emailAddress],
 	)
 
 	const passwordField = React.useMemo(
@@ -59,7 +59,7 @@ function RegisterView() {
 				value={password}
 			/>
 		),
-		[setPassword, password],
+		[password],
 	)
 
 	const isFormValid = React.useMemo(() => {

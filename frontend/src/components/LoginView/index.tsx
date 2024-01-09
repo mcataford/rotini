@@ -29,7 +29,7 @@ function LoginView() {
 				inputType="email"
 			/>
 		),
-		[emailAddress, setEmailAddress],
+		[emailAddress],
 	)
 
 	const passwordField = React.useMemo(
@@ -42,7 +42,7 @@ function LoginView() {
 				inputType="password"
 			/>
 		),
-		[setPassword, password],
+		[password],
 	)
 
 	const isFormValid = React.useMemo(() => {
