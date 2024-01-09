@@ -98,11 +98,14 @@ export function LocationContext({
 				label,
 				pattern.split("/").filter((pattern) => Boolean(pattern)),
 			])
-			.reduce((splitUrlMap, current) => {
-				const [label, pattern] = current
-				splitUrlMap[label] = pattern
-				return splitUrlMap
-			}, {} as { [key: string]: Array<string> })
+			.reduce(
+				(splitUrlMap, current) => {
+					const [label, pattern] = current
+					splitUrlMap[label] = pattern
+					return splitUrlMap
+				},
+				{} as { [key: string]: Array<string> },
+			)
 	}, [routes])
 
 	const [location, setLocation] = useState<Location>(
