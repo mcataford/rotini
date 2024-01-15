@@ -2168,13 +2168,13 @@ __metadata:
   linkType: hard
 
 "@tanstack/react-query@npm:^5.0.0":
-  version: 5.17.10
-  resolution: "@tanstack/react-query@npm:5.17.10"
+  version: 5.17.12
+  resolution: "@tanstack/react-query@npm:5.17.12"
   dependencies:
     "@tanstack/query-core": "npm:5.17.10"
   peerDependencies:
     react: ^18.0.0
-  checksum: d0dd578c1cb7dba4f96650a4488d4b320603d1c5f1a23e72800b89d31f0f71200d78567294c7cadba9ffe53088773ea254758921b71157aa863d717465038e30
+  checksum: e11c0601209aa4e5ce297a0e67cec2e35a71226531ffa47956ba5549f770ec1a332e7c8cc84d0f22e293d12d31d3ac9ba6bd4dad55ac8bdd4e7f4b50b3d5f8f0
   languageName: node
   linkType: hard
 
