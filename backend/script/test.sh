@@ -23,26 +23,25 @@ function fail {
 
 # Cleanup before exit (success/failure)
 function cleanup {
-    docker rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
+    $CONTAINER_MANAGER rm $TEST_DB_CONTAINER -f > /dev/null || echo "Failed to clean up test database container."
 }
 
 trap cleanup EXIT
 
-docker run \
+$CONTAINER_MANAGER run \
     --name $TEST_DB_CONTAINER \
     -e POSTGRES_PASSWORD=test \
     -p 5431:5432 \
     -d \
     postgres:15.4
 
-until [ -n "$(docker exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
+until [ -n "$($CONTAINER_MANAGER exec $TEST_DB_CONTAINER pg_isready | grep accepting)" ]; do
     echo "Waiting for DB to come alive..."
     sleep $HEALTHCHECK_SLEEP
 done;
 
 sleep $HEALTHCHECK_SLEEP
 
-#ROTINI_TEST=1 PYTHONPATH=rotini $VENV_PYTHON rotini/migrations/migrate.py up || fail "Migrations failed."
 $VENV_PYTEST . -vv -s $@ || fail "Test run failed."
 
 cleanup

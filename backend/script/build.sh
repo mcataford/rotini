@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t rotini:dev .
+$CONTAINER_MANAGER build -t rotini:dev .
