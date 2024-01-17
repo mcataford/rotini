@@ -23,6 +23,9 @@ Note that this is the preferred way to running any tooling-related task within t
 environment. Individual scripts exist under `/{frontend,backend}/script` but generally assume that they will be called
 through `task` to inject some environment variables.
 
+The project uses [Podman](https://podman.io/) as a default container manager, but is Docker-compatible
+(`Taskfile.backend.yml` can be made to specify `CONTAINER_MANAGER="docker"` to use it).
+
 #### Formatting
 
 Formatting in either frontend or backend environment can be done via `task {fe,be}:lint`. Applying fixes is available
@@ -37,7 +40,7 @@ Test suites can be executed by environment via `task {fe,be}:test`.
 The application requires a Postgres database instance to be made available to the backend. Setting up a local database
 is handled by the backend start command.
 
-Starting the backend (including a database) and frontend applications can be done via `task be:docker:start` and `task fe:start`.
+Starting the backend (including a database) and frontend applications can be done via `task be:container:start` and `task fe:start`.
 
 See the README files of each of those environments ([backend](./backend/README.md), [frontend](./frontend/README.md)) for specific requirements around `*.env` files that aren't committed with the code.
 

@@ -6,6 +6,7 @@ env:
   APP_CONTAINER_NAME: "rotini_app"
   DB_CONTAINER_NAME: "rotini_db"
   SHELL: /bin/bash
+  CONTAINER_MANAGER: "podman"
 
 tasks:
   bootstrap:
@@ -32,26 +33,28 @@ tasks:
   test:
     desc: "Run the test suites."
     deps: [bootstrap]
-    cmd: $SHELL script/test {{ .CLI_ARGS }}
+    cmd: $SHELL script/test.sh {{ .CLI_ARGS }}
     dotenv:
       - ../backend-test.env
   lock-deps:
     desc: "Locks production and development dependencies"
     deps: [bootstrap]
     cmd: $SHELL script/requirements-lock
-  docker:start:
+  container:start:
     desc: "Starts the backend application."
-    deps: [docker:build]
+    deps: [container:build]
     cmd: $SHELL script/start.sh
     dotenv:
       - ../backend.env
-  docker:stop:
+  container:stop:
     desc: "Stops the backend application."
-    cmd: docker rm -f {{ .APP_CONTAINER_NAME }} {{ .DB_CONTAINER_NAME }}
-  docker:logs:
-    desc: "Shortcut to Docker container logs"
-    cmd: docker logs {{ .APP_CONTAINER_NAME }} -f
-  docker:build:
-    desc: "Builds a docker image from /backend"
+    cmds:
+      - "{{ .CONTAINER_MANAGER }} rm -f {{ .APP_CONTAINER_NAME }}"
+      - "{{ .CONTAINER_MANAGER }} rm -f {{ .DB_CONTAINER_NAME }}"
+  container:logs:
+    desc: "Shortcut to container container logs"
+    cmd: "{{ .CONTAINER_MANAGER }} logs -f {{ .APP_CONTAINER_NAME }}"
+  container:build:
+    desc: "Builds a container image from /backend"
     cmd: $SHELL script/build.sh
 
