@@ -21,6 +21,19 @@
         "matchUpdateTypes": ["patch"],
         "addLabels": ["automerge"],
         "automerge": true
+    },
+    {
+        "description": "Automerge any test/formatting-related minor or patch updates",
+        "matchPackagePatterns": [
+            "^@testing-library\/",
+            "^axios-mock-adapter$",
+            "^jsdom$",
+            "^vitest$",
+            "^@biomejs\/"
+        ],
+        "matchUpdateTypes": ["minor", "patch"],
+        "addLabels": ["automerge", "test-dependencies"],
+        "automerge": true
     }
   ],
   "reviewers": ["mcataford"]
