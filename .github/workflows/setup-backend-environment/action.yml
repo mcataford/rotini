@@ -23,7 +23,7 @@ runs:
       id: setup-python
       with:
         python-version-file: './backend/pyproject.toml'
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: cache-restore
       with:
         path: |
