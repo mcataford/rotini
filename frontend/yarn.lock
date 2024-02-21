@@ -39,7 +39,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.23.7":
+"@babel/core@npm:^7.23.9":
   version: 7.23.9
   resolution: "@babel/core@npm:7.23.9"
   dependencies:
@@ -1176,7 +1176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.23.8":
+"@babel/preset-env@npm:^7.23.9":
   version: 7.23.9
   resolution: "@babel/preset-env@npm:7.23.9"
   dependencies:
@@ -2366,21 +2366,21 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-legacy@npm:^5.2.0":
-  version: 5.3.0
-  resolution: "@vitejs/plugin-legacy@npm:5.3.0"
+  version: 5.3.1
+  resolution: "@vitejs/plugin-legacy@npm:5.3.1"
   dependencies:
-    "@babel/core": "npm:^7.23.7"
-    "@babel/preset-env": "npm:^7.23.8"
-    browserslist: "npm:^4.22.2"
-    core-js: "npm:^3.35.0"
-    esbuild-plugin-browserslist: "npm:^0.10.0"
-    magic-string: "npm:^0.30.5"
+    "@babel/core": "npm:^7.23.9"
+    "@babel/preset-env": "npm:^7.23.9"
+    browserslist: "npm:^4.23.0"
+    core-js: "npm:^3.36.0"
+    esbuild-plugin-browserslist: "npm:^0.11.1"
+    magic-string: "npm:^0.30.7"
     regenerator-runtime: "npm:^0.14.1"
     systemjs: "npm:^6.14.3"
   peerDependencies:
     terser: ^5.4.0
     vite: ^5.0.0
-  checksum: 10/2426e13e46b313f466dd8f6d3e891ce4a622569d13752f922a2e706f099f049110e81c8a48dad98d1c55bdf7f4f815de9283425fba534cd674d4c402bb087e89
+  checksum: 10/6c39972c02617b039ca8af3db8961d07e5602c116974ce0e59765812bcb2bf42153201c11dfe2f68accfc7b1fa73b2c1d46db33e3f105eeed8ed332f2971634b
   languageName: node
   linkType: hard
 
@@ -2722,6 +2722,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"browserslist@npm:^4.23.0":
+  version: 4.23.0
+  resolution: "browserslist@npm:4.23.0"
+  dependencies:
+    caniuse-lite: "npm:^1.0.30001587"
+    electron-to-chromium: "npm:^1.4.668"
+    node-releases: "npm:^2.0.14"
+    update-browserslist-db: "npm:^1.0.13"
+  bin:
+    browserslist: cli.js
+  checksum: 10/496c3862df74565dd942b4ae65f502c575cbeba1fa4a3894dad7aa3b16130dc3033bc502d8848147f7b625154a284708253d9598bcdbef5a1e34cf11dc7bad8e
+  languageName: node
+  linkType: hard
+
 "buffer-from@npm:^1.0.0":
   version: 1.1.2
   resolution: "buffer-from@npm:1.1.2"
@@ -2777,6 +2791,13 @@ __metadata:
   version: 1.0.30001572
   resolution: "caniuse-lite@npm:1.0.30001572"
   checksum: 10/cf27b354c0af58d5468cdc0ecea5bff381bc382378016b36b05790929f80e321ee712470a536911dee82e946ad4be246a21326835f1da599c6ee12ec150ae8b7
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001587":
+  version: 1.0.30001588
+  resolution: "caniuse-lite@npm:1.0.30001588"
+  checksum: 10/09150ef2daa65c75cb2681832d5bc203760a02d9f71eb033dc0401fbfdbe026d3a84e54a8d2085f730a4f51eb074028b89013dd033841e1a0eb3c7323a50ed45
   languageName: node
   linkType: hard
 
@@ -2959,10 +2980,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.35.0":
-  version: 3.35.1
-  resolution: "core-js@npm:3.35.1"
-  checksum: 10/5d31f22eb05cf66bd1a2088a04b7106faa5d0b91c1ffa5d72c5203e4974c31bd7e11969297f540a806c00c74c23991eaad5639592df8b5dbe4412fff3c075cd5
+"core-js@npm:^3.36.0":
+  version: 3.36.0
+  resolution: "core-js@npm:3.36.0"
+  checksum: 10/896326c6391c1607dc645293c214cd31c6c535d4a77a88b15fc29e787199f9b06dc15986ddfbc798335bf7a7afd1e92152c94aa5a974790a7f97a98121774302
   languageName: node
   linkType: hard
 
@@ -3167,6 +3188,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"electron-to-chromium@npm:^1.4.668":
+  version: 1.4.677
+  resolution: "electron-to-chromium@npm:1.4.677"
+  checksum: 10/9ed79243d7841e2853a4021d75741e99c0c24928974730a747478dc6ab4470906739b14eaae2e5b761b4dfabe9bbeeccbae5ac1176837ad8ec157a64278c227e
+  languageName: node
+  linkType: hard
+
 "emoji-regex@npm:^8.0.0":
   version: 8.0.0
   resolution: "emoji-regex@npm:8.0.0"
@@ -3237,16 +3265,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-plugin-browserslist@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "esbuild-plugin-browserslist@npm:0.10.0"
+"esbuild-plugin-browserslist@npm:^0.11.1":
+  version: 0.11.1
+  resolution: "esbuild-plugin-browserslist@npm:0.11.1"
   dependencies:
     debug: "npm:^4.3.4"
     zod: "npm:^3.21.4"
   peerDependencies:
     browserslist: ^4.21.8
-    esbuild: ~0.19.2
-  checksum: 10/39c5b237fbd01a4e8aec150426f82593522be82b545dd0f342d342eec0a8a750b27ee04d8aba040b8a36b0f90ab6902eaf4653e4f9b46d2487078972f0760c55
+    esbuild: ~0.20.0
+  checksum: 10/00862b0bf848c82559be4722a0a37f789b95438271a8047b21ed6590439003ce731e1f0fbc0828b7beae8c21147514c98ad0690470022b1a8477f9f2536cabb2
   languageName: node
   linkType: hard
 
@@ -4239,6 +4267,15 @@ __metadata:
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
   checksum: 10/c8a6b25f813215ca9db526f3a407d6dc0bf35429c2b8111d6f1c2cf6cf6afd5e2d9f9cd189416a0e3959e20ecd635f73639f9825c73de1074b29331fe36ace59
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:^0.30.7":
+  version: 0.30.7
+  resolution: "magic-string@npm:0.30.7"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
+  checksum: 10/883eaaf6792a3263e44f4bcdcd35ace272268e4b98ed5a770ad711947958d2f9fc683e474945e306e2bdc152b7e44d369ee312690d87025b9879fc63fbe1409c
   languageName: node
   linkType: hard
 
