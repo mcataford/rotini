@@ -2366,21 +2366,21 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-legacy@npm:^5.2.0":
-  version: 5.3.1
-  resolution: "@vitejs/plugin-legacy@npm:5.3.1"
+  version: 5.3.2
+  resolution: "@vitejs/plugin-legacy@npm:5.3.2"
   dependencies:
     "@babel/core": "npm:^7.23.9"
     "@babel/preset-env": "npm:^7.23.9"
     browserslist: "npm:^4.23.0"
+    browserslist-to-esbuild: "npm:^2.1.1"
     core-js: "npm:^3.36.0"
-    esbuild-plugin-browserslist: "npm:^0.11.1"
     magic-string: "npm:^0.30.7"
     regenerator-runtime: "npm:^0.14.1"
     systemjs: "npm:^6.14.3"
   peerDependencies:
     terser: ^5.4.0
     vite: ^5.0.0
-  checksum: 10/6c39972c02617b039ca8af3db8961d07e5602c116974ce0e59765812bcb2bf42153201c11dfe2f68accfc7b1fa73b2c1d46db33e3f105eeed8ed332f2971634b
+  checksum: 10/24b773b7c87d52ffd4d097e9ede909a0cc744b7f9fd183cf45dcc08e438326511629503fc1fd6edabc243e5f7052bd781e7330f091c6436622abe67bfab3456e
   languageName: node
   linkType: hard
 
@@ -2705,6 +2705,19 @@ __metadata:
   dependencies:
     balanced-match: "npm:^1.0.0"
   checksum: 10/a61e7cd2e8a8505e9f0036b3b6108ba5e926b4b55089eeb5550cd04a471fe216c96d4fe7e4c7f995c728c554ae20ddfc4244cad10aef255e72b62930afd233d1
+  languageName: node
+  linkType: hard
+
+"browserslist-to-esbuild@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "browserslist-to-esbuild@npm:2.1.1"
+  dependencies:
+    meow: "npm:^13.0.0"
+  peerDependencies:
+    browserslist: "*"
+  bin:
+    browserslist-to-esbuild: cli/index.js
+  checksum: 10/5e91b23ba5ac47412b7456bbb74ee11b35d1083163e9e8e001e48f3a975c65758a4559ab532812d8518877a1d8f68c5b649b88a08722b9543b38e633e6943f7d
   languageName: node
   linkType: hard
 
@@ -3262,19 +3275,6 @@ __metadata:
     isarray: "npm:^2.0.5"
     stop-iteration-iterator: "npm:^1.0.0"
   checksum: 10/bc2194befbe55725f9489098626479deee3c801eda7e83ce0dff2eb266a28dc808edb9b623ff01d31ebc1328f09d661333d86b601036692c2e3c1a6942319433
-  languageName: node
-  linkType: hard
-
-"esbuild-plugin-browserslist@npm:^0.11.1":
-  version: 0.11.1
-  resolution: "esbuild-plugin-browserslist@npm:0.11.1"
-  dependencies:
-    debug: "npm:^4.3.4"
-    zod: "npm:^3.21.4"
-  peerDependencies:
-    browserslist: ^4.21.8
-    esbuild: ~0.20.0
-  checksum: 10/00862b0bf848c82559be4722a0a37f789b95438271a8047b21ed6590439003ce731e1f0fbc0828b7beae8c21147514c98ad0690470022b1a8477f9f2536cabb2
   languageName: node
   linkType: hard
 
@@ -4299,6 +4299,13 @@ __metadata:
     socks-proxy-agent: "npm:^7.0.0"
     ssri: "npm:^10.0.0"
   checksum: 10/b4b442cfaaec81db159f752a5f2e3ee3d7aa682782868fa399200824ec6298502e01bdc456e443dc219bcd5546c8e4471644d54109c8599841dc961d17a805fa
+  languageName: node
+  linkType: hard
+
+"meow@npm:^13.0.0":
+  version: 13.2.0
+  resolution: "meow@npm:13.2.0"
+  checksum: 10/4eff5bc921fed0b8a471ad79069d741a0210036d717547d0c7f36fdaf84ef7a3036225f38b6a53830d84dc9cbf8b944b097fde62381b8b5b215119e735ce1063
   languageName: node
   linkType: hard
 
@@ -5946,12 +5953,5 @@ __metadata:
   version: 1.0.0
   resolution: "yocto-queue@npm:1.0.0"
   checksum: 10/2cac84540f65c64ccc1683c267edce396b26b1e931aa429660aefac8fbe0188167b7aee815a3c22fa59a28a58d898d1a2b1825048f834d8d629f4c2a5d443801
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.21.4":
-  version: 3.22.4
-  resolution: "zod@npm:3.22.4"
-  checksum: 10/73622ca36a916f785cf528fe612a884b3e0f183dbe6b33365a7d0fc92abdbedf7804c5e2bd8df0a278e1472106d46674281397a3dd800fa9031dc3429758c6ac
   languageName: node
   linkType: hard
