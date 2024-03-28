@@ -1,6 +1,6 @@
 anyio==4.2.0
     # via watchfiles
-asgiref==3.7.2
+asgiref==3.8.1
     # via
     #   django
     #   django-cors-headers
