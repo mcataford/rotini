@@ -13,7 +13,7 @@ django==4.2.11
     #   rotini (pyproject.toml)
 django-cors-headers==4.3.1
     # via rotini (pyproject.toml)
-djangorestframework==3.14.0
+djangorestframework==3.15.1
     # via rotini (pyproject.toml)
 h11==0.14.0
     # via uvicorn
