@@ -29,7 +29,7 @@ python-dotenv==1.0.1
     # via uvicorn
 python-multipart==0.0.7
     # via rotini (pyproject.toml)
-pytz==2023.4
+pytz==2024.1
     # via djangorestframework
 pyyaml==6.0.1
     # via uvicorn
