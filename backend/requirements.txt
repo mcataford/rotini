@@ -19,7 +19,7 @@ h11==0.14.0
     # via uvicorn
 httptools==0.6.1
     # via uvicorn
-idna==3.6
+idna==3.7
     # via anyio
 psycopg2==2.9.9
     # via rotini (pyproject.toml)
