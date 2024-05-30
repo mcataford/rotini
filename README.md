@@ -3,6 +3,10 @@
 </p>
 <h1 align="center">Rotini</h1>
 
+> # ✈️ Moved away!
+>
+> This project has moved away from Github and is now hosted [elsewhere](https://forge.karnov.club/marc/rotini).
+
 ## Overview
 
 **Rotini** is a self-hosted cloud storage application that gives you full-control over the data you store. It aims
